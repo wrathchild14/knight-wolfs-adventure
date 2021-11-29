@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
+using System.Collections.Generic;
 
 namespace Project1
 {
@@ -8,12 +10,9 @@ namespace Project1
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-
         private Rectangle mainFrame;
-
         private Player player;
-        private Enemy enemy;
-
+        private List<Enemy> enemies = new List<Enemy>();
         private Texture2D background;
 
         public Game1()
@@ -25,28 +24,47 @@ namespace Project1
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            base.Initialize();
-
-            mainFrame = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-
-            player = new Player(this);
-            enemy = new Enemy(this);
+            base.Initialize(); // this must be here
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            mainFrame = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            player = new Player(this);
+            
+            // generating enemies
+            Random r = new Random();
+            for (int i = 0; i < 3; i++)
+            {
+                enemies.Add(new Enemy(this, r.Next(400, 900), r.Next(200, 400), false));
+            }
+
+            for (int i = 0; i < 2; i++)
+            {
+                enemies.Add(new Enemy(this, r.Next(400, mainFrame.Width), r.Next(200, 400), true));
+            }
+
         }
 
         protected override void LoadContent()
         {
             background = Content.Load<Texture2D>("level-sewer");
-
-            // TODO: use this.Content to load your game content here
         }
 
         protected override void Update(GameTime gameTime)
         {
             player.Update(gameTime);
-            enemy.Update(gameTime);
-            base.Update(gameTime);
+            
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                if (enemies[i] != null)
+                {
+                    enemies[i].Update(gameTime);
+                    if (player.Rect.Intersects(enemies[i].Rect) && player.punching)
+                    {
+                        enemies[i] = null;
+                        enemies.Remove(enemies[i]);
+                    }
+                }
+            }
+            //base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -55,13 +73,15 @@ namespace Project1
 
             _spriteBatch.Begin();
             _spriteBatch.Draw(background, mainFrame, Color.White);
-
-            enemy.Draw(_spriteBatch);
+            
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                enemies[i].Draw(_spriteBatch);
+            }
+            
             player.Draw(_spriteBatch);
-
             _spriteBatch.End();
-            // TODO: Add your drawing code here
-            base.Draw(gameTime);
+            //base.Draw(gameTime);
         }
     }
 }

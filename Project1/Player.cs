@@ -7,15 +7,14 @@ namespace Project1
 {
     class Player : Sprite
     {
-        // public int Lifes { get; set; }
         private float speedX = 3.6f;
         private float speedY = 2.5f;
+        private float originalX;
+        public bool punching;
 
         public Player(Game1 game) : base(Vector2.Zero, 100, 100)
         {
             texture = game.Content.Load<Texture2D>("enemy-wolf");
-
-            // Lifes = 5;
         }
 
         public override void Update(GameTime gameTime)
@@ -23,12 +22,6 @@ namespace Project1
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 position.Y -= speedY;
-                /*
-                if (position.Y > allowedY)
-                {
-                    position.Y -= speedY;
-                }
-                 */
             }
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
@@ -43,6 +36,18 @@ namespace Project1
             {
                 position.X += speedX;
             }
+            if (punching)
+            {
+                position.X = originalX;
+                punching = false;
+            }
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
+                originalX = position.X;
+                punching = true;
+                position.X += 50;
+            }
+
         }
 
         public override void Draw(SpriteBatch spriteBatch)
