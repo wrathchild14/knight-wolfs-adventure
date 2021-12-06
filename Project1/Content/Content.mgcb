@@ -37,6 +37,13 @@
 /processorParam:TextureFormat=Color
 /build:enemy-wolf.png
 
+#begin File.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:File.spritefont;MyFont.spritefont
+
 #begin level-sewer.png
 /importer:TextureImporter
 /processor:TextureProcessor
