@@ -30,7 +30,7 @@ namespace Project1
             mainFrame = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             player = new Player(this);
             
-            scene = new Scene(this, player, 3, 2, mainFrame, _spriteBatch, myFont);
+            scene = new Scene(this, player, 8, mainFrame, _spriteBatch, myFont);
         }
 
         protected override void LoadContent()
@@ -41,7 +41,7 @@ namespace Project1
 
         protected override void Update(GameTime gameTime)
         {
-            scene.update(gameTime); // updates player and enemies
+            scene.Update(gameTime); // updates player and enemies
 
             //base.Update(gameTime);
         }
@@ -50,11 +50,10 @@ namespace Project1
         {
             GraphicsDevice.Clear(Color.LightGray);
 
-
             _spriteBatch.Begin();
             _spriteBatch.Draw(background, mainFrame, Color.White);
             
-            scene.draw(gameTime); // draws player and enemies
+            scene.Draw(gameTime); // draws player and enemies
 
             _spriteBatch.End();
             //base.Draw(gameTime);

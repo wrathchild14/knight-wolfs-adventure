@@ -9,34 +9,35 @@ namespace Project1
     {
         private List<Enemy> enemies = new List<Enemy>();
         private List<Enemy> standingEnemies = new List<Enemy>();
-        private Player player;
-        private SpriteBatch _spriteBatch;
-        private Random r = new Random();
-        private SpriteFont font;
+        private readonly Player player;
+        private readonly SpriteBatch _spriteBatch;
+        private static readonly Random r = new Random();
+        private readonly SpriteFont font;
         private int destroyed = 0;
         private Rectangle mainFrame;
-        Game1 game;
+        readonly Game1 game;
 
-        public Scene(Game1 game, Player player, int v1, int v2, Rectangle mainFrame, SpriteBatch _spriteBatch, SpriteFont myFont)
+        public Rectangle MainFrame { get => mainFrame; set => mainFrame = value; }
+
+        public Scene(Game1 game, Player player, int enemyCount, Rectangle mainFrame, SpriteBatch _spriteBatch, SpriteFont myFont)
         {
             this.player = player;
             this._spriteBatch = _spriteBatch;
             this.game = game;
-            this.font = myFont;
-            this.mainFrame = mainFrame;
+            font = myFont;
+            this.MainFrame = mainFrame;
 
-            for (int i = 0; i < v1; i++)
+            for (int i = 0; i < enemyCount; i++)
             {
-                enemies.Add(new Enemy(game, r.Next(400, 900), r.Next(200, 400), false));
-            }
-
-            for (int i = 0; i < v2; i++)
-            {
-                standingEnemies.Add(new Enemy(game, r.Next(400, this.mainFrame.Width), r.Next(200, 400), true));
+                enemies.Add(new Enemy(game,
+                                      r.Next(400, 900),
+                                      r.Next(200, 400),
+                                      false,
+                                      this.player));
             }
         }
 
-        internal void update(GameTime gameTime)
+        internal void Update(GameTime gameTime)
         {
             player.Update(gameTime);
 
@@ -45,8 +46,12 @@ namespace Project1
                 if (enemies[i] != null)
                 {
                     enemies[i].Update(gameTime);
-                    // if (player.Rect.Intersects(enemies[i].Rect) && player.punching)
-                    if (player.Rect.Intersects(enemies[i].Rect))
+
+                    Rectangle collisionRect = player.Rect;
+                    collisionRect.Width -= 50;
+                    collisionRect.Height -= 50;
+                    // if (player.Rect.Intersects(enemies[i].Rect))
+                    if (collisionRect.Intersects(enemies[i].Rect))
                     {
                         if (player.punching) { 
                             enemies[i] = null;
@@ -60,34 +65,13 @@ namespace Project1
                 }
             }
 
-            for (int i = 0; i < standingEnemies.Count; i++)
+            if (enemies.Count < 6)
             {
-                if (standingEnemies[i] != null)
-                {
-                    standingEnemies[i].Update(gameTime);
-                    // if (player.Rect.Intersects(standingEnemies[i].Rect) && player.punching)
-                    if (player.Rect.Intersects(standingEnemies[i].Rect) && player.punching)
-                    {
-                        if (player.punching)
-                        {
-                            standingEnemies[i] = null;
-                            standingEnemies.Remove(standingEnemies[i]);
-                            destroyed++;
-                        } else
-                        {
-                            game.Exit();
-                        }
-                    }
-                }
-            }
-
-            if (enemies.Count < 4)
-            {
-                enemies.Add(new Enemy(this.game, r.Next(this.mainFrame.Width, this.mainFrame.Width + 200), r.Next(200, 400), false));
+                enemies.Add(new Enemy(game, r.Next(MainFrame.Width - 50, MainFrame.Width + 200), r.Next(200, 400), false, player));
             }
         }
 
-        internal void draw(GameTime gameTime)
+        internal void Draw(GameTime gameTime)
         {
             for (int i = 0; i < enemies.Count; i++)
             {
@@ -101,7 +85,7 @@ namespace Project1
 
             player.Draw(_spriteBatch);
 
-            _spriteBatch.DrawString(this.font, destroyed.ToString(), new Vector2(10, 10), Color.White);
+            _spriteBatch.DrawString(font, destroyed.ToString(), new Vector2(10, 10), Color.White);
         }
     }
 }

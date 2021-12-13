@@ -18,7 +18,6 @@ namespace Project1
 
         public Rectangle Rect { get { return new Rectangle((int)position.X, (int)position.Y, width, height); } }
 
-
         public Sprite(Vector2 position, int width, int height)
         {
             this.position = position;
