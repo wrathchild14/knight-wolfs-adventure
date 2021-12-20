@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -15,6 +16,7 @@ namespace Project1
         private Texture2D background;
         private SpriteFont myFont;
         private Scene scene;
+        List<SoundEffect> effects = new List<SoundEffect>();
 
         public Game1()
         {
@@ -31,12 +33,21 @@ namespace Project1
             player = new Player(this);
             
             scene = new Scene(this, player, 8, mainFrame, _spriteBatch, myFont);
+
+            scene.punch = effects[2];
+            scene.end = effects[1];
         }
 
         protected override void LoadContent()
         {
             myFont = Content.Load<SpriteFont>("MyFont");
             background = Content.Load<Texture2D>("level-sewer");
+
+            effects.Add(Content.Load<SoundEffect>("start"));
+            effects.Add(Content.Load<SoundEffect>("end"));
+            effects.Add(Content.Load<SoundEffect>("punch"));
+
+            effects[0].Play();
         }
 
         protected override void Update(GameTime gameTime)

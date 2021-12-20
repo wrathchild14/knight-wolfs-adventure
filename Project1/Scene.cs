@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,10 @@ namespace Project1
         private int destroyed = 0;
         private Rectangle mainFrame;
         readonly Game1 game;
+
+        public SoundEffect punch;
+        public SoundEffect end;
+        private bool endGame = false;
 
         public Rectangle MainFrame { get => mainFrame; set => mainFrame = value; }
 
@@ -39,35 +44,46 @@ namespace Project1
 
         internal void Update(GameTime gameTime)
         {
-            player.Update(gameTime);
+            if (!endGame) { 
+                player.Update(gameTime);
 
-            for (int i = 0; i < enemies.Count; i++)
-            {
-                if (enemies[i] != null)
+                for (int i = 0; i < enemies.Count; i++)
                 {
-                    enemies[i].Update(gameTime);
-
-                    Rectangle collisionRect = player.Rect;
-                    collisionRect.Width -= 50;
-                    collisionRect.Height -= 50;
-                    // if (player.Rect.Intersects(enemies[i].Rect))
-                    if (collisionRect.Intersects(enemies[i].Rect))
+                    if (enemies[i] != null)
                     {
-                        if (player.punching) { 
-                            enemies[i] = null;
-                            enemies.Remove(enemies[i]);
-                            destroyed++;
-                        } else
+                        enemies[i].Update(gameTime);
+
+                        Rectangle collisionRect = player.Rect;
+                        collisionRect.Width -= 50;
+                        collisionRect.Height -= 50;
+                        // if (player.Rect.Intersects(enemies[i].Rect))
+                        if (collisionRect.Intersects(enemies[i].Rect))
                         {
-                            game.Exit();
+                            if (player.punching) { 
+                                enemies[i] = null;
+                                enemies.Remove(enemies[i]);
+                                destroyed++;
+                                punch.Play();
+                            } else
+                            {
+                                // end.Play();
+                                endGame = true;
+                                // game.Exit();
+                            }
                         }
                     }
                 }
-            }
 
-            if (enemies.Count < 6)
+                if (enemies.Count < 6)
+                {
+                    enemies.Add(new Enemy(game, r.Next(MainFrame.Width - 50, MainFrame.Width + 200), r.Next(200, 400), false, player));
+                }
+            }
+            else
             {
-                enemies.Add(new Enemy(game, r.Next(MainFrame.Width - 50, MainFrame.Width + 200), r.Next(200, 400), false, player));
+                end.Play();
+                System.Threading.Thread.Sleep(2000);
+                game.Exit();
             }
         }
 

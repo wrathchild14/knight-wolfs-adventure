@@ -13,6 +13,12 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin end.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:end.wav
+
 #begin enemy-fire.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -67,4 +73,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:p2.png
+
+#begin punch.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:punch.wav
+
+#begin start.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:start.wav
 
