@@ -48,7 +48,7 @@
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
-/build:File.spritefont;MyFont.spritefont
+/build:File.spritefont;defaultFont.spritefont
 
 #begin level-sewer.png
 /importer:TextureImporter

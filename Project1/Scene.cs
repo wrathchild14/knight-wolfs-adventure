@@ -20,7 +20,8 @@ namespace Project1
 
         public SoundEffect punch;
         public SoundEffect end;
-        private bool endGame = false;
+
+        public bool endGameBool = false;
 
         public Rectangle MainFrame { get => mainFrame; set => mainFrame = value; }
 
@@ -32,6 +33,8 @@ namespace Project1
             font = myFont;
             this.MainFrame = mainFrame;
 
+            // Stick to using the < 6 count
+            /*
             for (int i = 0; i < enemyCount; i++)
             {
                 enemies.Add(new Enemy(game,
@@ -40,11 +43,23 @@ namespace Project1
                                       false,
                                       this.player));
             }
+            */
+        }
+
+        void endGame()
+        {
+            endGameBool = true;
+            end.Play();
+            System.Threading.Thread.Sleep(2000);
+
+            player.Position = new Vector2(100, 100);
+            enemies.Clear();
+            destroyed = 0;
         }
 
         internal void Update(GameTime gameTime)
         {
-            if (!endGame) { 
+            if (!endGameBool) { 
                 player.Update(gameTime);
 
                 for (int i = 0; i < enemies.Count; i++)
@@ -67,7 +82,8 @@ namespace Project1
                             } else
                             {
                                 // end.Play();
-                                endGame = true;
+                                // endGameBool = true;
+                                endGame();
                                 // game.Exit();
                             }
                         }
@@ -79,12 +95,13 @@ namespace Project1
                     enemies.Add(new Enemy(game, r.Next(MainFrame.Width - 50, MainFrame.Width + 200), r.Next(200, 400), false, player));
                 }
             }
+            /*
             else
             {
-                end.Play();
-                System.Threading.Thread.Sleep(2000);
+                
                 game.Exit();
             }
+            */
         }
 
         internal void Draw(GameTime gameTime)

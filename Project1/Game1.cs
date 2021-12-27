@@ -10,6 +10,7 @@ namespace Project1
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
+        private MyControl controller;
         private SpriteBatch _spriteBatch;
         private Rectangle mainFrame;
         private Player player;
@@ -27,20 +28,24 @@ namespace Project1
 
         protected override void Initialize()
         {
+            // Adding the controller (UI)
+            controller = new MyControl(this);
+            this.Components.Add(controller);
+
             base.Initialize(); // this must be here
+            
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
             mainFrame = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
             player = new Player(this);
-            
             scene = new Scene(this, player, 8, mainFrame, _spriteBatch, myFont);
-
             scene.punch = effects[2];
             scene.end = effects[1];
         }
 
         protected override void LoadContent()
         {
-            myFont = Content.Load<SpriteFont>("MyFont");
+            myFont = Content.Load<SpriteFont>("defaultFont");
             background = Content.Load<Texture2D>("level-sewer");
 
             effects.Add(Content.Load<SoundEffect>("start"));
@@ -52,9 +57,18 @@ namespace Project1
 
         protected override void Update(GameTime gameTime)
         {
-            scene.Update(gameTime); // updates player and enemies
+            if (controller.play)
+            {
+                scene.Update(gameTime); // updates player and enemies
+                if (scene.endGameBool)
+                {
+                    controller.play = false;
+                    controller.Visible = true;
+                    scene.endGameBool = false;
+                }
+            }
 
-            //base.Update(gameTime);
+            base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -64,10 +78,13 @@ namespace Project1
             _spriteBatch.Begin();
             _spriteBatch.Draw(background, mainFrame, Color.White);
             
-            scene.Draw(gameTime); // draws player and enemies
+            if (controller.play)
+            {
+                scene.Draw(gameTime); // draws player and enemies
+            }
 
             _spriteBatch.End();
-            //base.Draw(gameTime);
+            base.Draw(gameTime);
         }
     }
 }
