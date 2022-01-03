@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Project1.States;
 using System;
 using System.Collections.Generic;
 
@@ -10,14 +11,12 @@ namespace Project1
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        private MyControl controller;
         private SpriteBatch _spriteBatch;
-        private Rectangle mainFrame;
-        private Player player;
-        private Texture2D background;
-        private SpriteFont myFont;
-        private Scene scene;
-        List<SoundEffect> effects = new List<SoundEffect>();
+        private MenuState _menuState;
+        List<SoundEffect> _effects = new List<SoundEffect>();
+
+        private State _currentState;
+        private State _nextState;
 
         public Game1()
         {
@@ -28,63 +27,53 @@ namespace Project1
 
         protected override void Initialize()
         {
-            // Adding the controller (UI)
-            controller = new MyControl(this);
-            this.Components.Add(controller);
-
-            base.Initialize(); // this must be here
-            
+            base.Initialize();
+            // Main spritebatch that we will pass around later
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            mainFrame = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
-            player = new Player(this);
-            scene = new Scene(this, player, 8, mainFrame, _spriteBatch, myFont);
-            scene.punch = effects[2];
-            scene.end = effects[1];
+         
+            // Scene initialization is put in GameState for now
+            _menuState = new MenuState(this, GraphicsDevice, Content);
+            _currentState = _menuState;
         }
 
         protected override void LoadContent()
         {
-            myFont = Content.Load<SpriteFont>("defaultFont");
-            background = Content.Load<Texture2D>("level-sewer");
-
-            effects.Add(Content.Load<SoundEffect>("start"));
-            effects.Add(Content.Load<SoundEffect>("end"));
-            effects.Add(Content.Load<SoundEffect>("punch"));
-
-            effects[0].Play();
+            // TODO: Effect start starts at "Play game", not before
+            Content.Load<SoundEffect>("start").Play();
         }
 
         protected override void Update(GameTime gameTime)
         {
-            if (controller.play)
+            if (_nextState != null)
             {
-                scene.Update(gameTime); // updates player and enemies
-                if (scene.endGameBool)
-                {
-                    controller.play = false;
-                    controller.Visible = true;
-                    scene.endGameBool = false;
-                }
+                _currentState = _nextState;
+                _nextState = null;
             }
-
+            // Handles all the updates/draws 
+            _currentState.Update(gameTime);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.LightGray);
-
-            _spriteBatch.Begin();
-            _spriteBatch.Draw(background, mainFrame, Color.White);
             
-            if (controller.play)
-            {
-                scene.Draw(gameTime); // draws player and enemies
-            }
-
+            _spriteBatch.Begin();
+            _currentState.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
+            
             base.Draw(gameTime);
+        }
+        
+        // State-change methods
+        public void ChangeState(State state)
+        {
+            _nextState = state;
+        }
+
+        public void ChangeStateMenu()
+        {
+            _nextState = _menuState;
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Project1
                 Vector2 moveDir = this.player.Position - position;
                 moveDir.Normalize();
                 //position += moveDir * speed * dt;
-                int state = 0;
+                // int state = 0;
                 position += moveDir * speed * dt; // move enemy towards player
             }
         }

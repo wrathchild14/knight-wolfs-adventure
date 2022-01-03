@@ -1,124 +1,89 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 
 namespace Project1
 {
+    // Class serves to enemies, player and gameplay. Doesn't draw the background
     class Scene
     {
-        private List<Enemy> enemies = new List<Enemy>();
-        private List<Enemy> standingEnemies = new List<Enemy>();
-        private readonly Player player;
-        private readonly SpriteBatch _spriteBatch;
-        private static readonly Random r = new Random();
-        private readonly SpriteFont font;
-        private int destroyed = 0;
-        private Rectangle mainFrame;
-        readonly Game1 game;
+        private List<Enemy> _enemies = new List<Enemy>();
+        private readonly Player _player;
+        private static readonly Random _random = new Random();
+        private int _destroyed = 0;
+        private Rectangle _mainFrame;
+        readonly Game1 _game;
+        
+        // Content loaders
+        public SoundEffect PunchSound;
+        public SoundEffect EndSound;
+        public SpriteFont Font;
 
-        public SoundEffect punch;
-        public SoundEffect end;
+        public Rectangle MainFrame { get => _mainFrame; set => _mainFrame = value; }
 
-        public bool endGameBool = false;
-
-        public Rectangle MainFrame { get => mainFrame; set => mainFrame = value; }
-
-        public Scene(Game1 game, Player player, int enemyCount, Rectangle mainFrame, SpriteBatch _spriteBatch, SpriteFont myFont)
+        public Scene(Game1 game, Player player, Rectangle mainFrame)
         {
-            this.player = player;
-            this._spriteBatch = _spriteBatch;
-            this.game = game;
-            font = myFont;
-            this.MainFrame = mainFrame;
-
-            // Stick to using the < 6 count
-            /*
-            for (int i = 0; i < enemyCount; i++)
-            {
-                enemies.Add(new Enemy(game,
-                                      r.Next(400, 900),
-                                      r.Next(200, 400),
-                                      false,
-                                      this.player));
-            }
-            */
+            _player = player;
+            _game = game;
+            _mainFrame = mainFrame;
         }
 
-        void endGame()
+        void EndGame()
         {
-            endGameBool = true;
-            end.Play();
-            System.Threading.Thread.Sleep(2000);
+            EndSound.Play();
+            System.Threading.Thread.Sleep(1500);
 
-            player.Position = new Vector2(100, 100);
-            enemies.Clear();
-            destroyed = 0;
+            // Exit to menu when game ends
+            _game.ChangeStateMenu();
         }
 
         internal void Update(GameTime gameTime)
         {
-            if (!endGameBool) { 
-                player.Update(gameTime);
+            _player.Update(gameTime);
 
-                for (int i = 0; i < enemies.Count; i++)
+            for (int i = 0; i < _enemies.Count; i++)
+            {
+                if (_enemies[i] != null)
                 {
-                    if (enemies[i] != null)
-                    {
-                        enemies[i].Update(gameTime);
+                    _enemies[i].Update(gameTime);
 
-                        Rectangle collisionRect = player.Rect;
-                        collisionRect.Width -= 50;
-                        collisionRect.Height -= 50;
-                        // if (player.Rect.Intersects(enemies[i].Rect))
-                        if (collisionRect.Intersects(enemies[i].Rect))
+                    // Making a rectangle to make collisions better
+                    Rectangle collisionRect = _player.Rect;
+                    collisionRect.Width -= 50;
+                    collisionRect.Height -= 50;
+                    if (collisionRect.Intersects(_enemies[i].Rect))
+                    {
+                        if (_player.punching) { 
+                            _enemies[i] = null;
+                            _enemies.Remove(_enemies[i]);
+                            _destroyed++;
+                            PunchSound.Play();
+                        } else
                         {
-                            if (player.punching) { 
-                                enemies[i] = null;
-                                enemies.Remove(enemies[i]);
-                                destroyed++;
-                                punch.Play();
-                            } else
-                            {
-                                // end.Play();
-                                // endGameBool = true;
-                                endGame();
-                                // game.Exit();
-                            }
+                            EndGame();
                         }
                     }
                 }
+            }
 
-                if (enemies.Count < 6)
-                {
-                    enemies.Add(new Enemy(game, r.Next(MainFrame.Width - 50, MainFrame.Width + 200), r.Next(200, 400), false, player));
-                }
-            }
-            /*
-            else
+            if (_enemies.Count < 10)
             {
-                
-                game.Exit();
+                _enemies.Add(new Enemy(_game, _random.Next(_mainFrame.Width - 50, _mainFrame.Width + 200), _random.Next(200, 400), false, _player));
             }
-            */
         }
 
-        internal void Draw(GameTime gameTime)
+        internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            for (int i = 0; i < enemies.Count; i++)
-            {
-                enemies[i].Draw(_spriteBatch);
-            }
+            foreach (var enemy in _enemies)
+                enemy.Draw(spriteBatch);
 
-            for (int i = 0; i < standingEnemies.Count; i++)
-            {
-                standingEnemies[i].Draw(_spriteBatch);
-            }
+            _player.Draw(spriteBatch);
 
-            player.Draw(_spriteBatch);
-
-            _spriteBatch.DrawString(font, destroyed.ToString(), new Vector2(10, 10), Color.White);
+            // Scoreboard
+            spriteBatch.DrawString(Font, _destroyed.ToString(), new Vector2(10, 10), Color.White);
         }
     }
 }
