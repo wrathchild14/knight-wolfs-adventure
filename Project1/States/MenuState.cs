@@ -57,15 +57,10 @@ namespace Project1.States
             };
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            foreach (var component in _components)
-                component.Draw(gameTime, spriteBatch);
-        }
-
         private void LoadGameButton_Click(object sender, EventArgs e)
         {
-            Console.WriteLine("Load Game");
+            // Last bool is if we are loading a game from stats.json
+            _game.ChangeState(new GameState(_game, _graphicsDevice, _content, true));
         }
 
         private void NewGameButton_Click(object sender, EventArgs e)
@@ -83,15 +78,21 @@ namespace Project1.States
             // remove sprites if they're not needed
         }
 
+        private void QuitGameButton_Click(object sender, EventArgs e)
+        {
+            _game.Exit();
+        }
+
         public override void Update(GameTime gameTime)
         {
             foreach (var component in _components)
                 component.Update(gameTime);
         }
 
-        private void QuitGameButton_Click(object sender, EventArgs e)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            _game.Exit();
+            foreach (var component in _components)
+                component.Draw(gameTime, spriteBatch);
         }
     }
 }

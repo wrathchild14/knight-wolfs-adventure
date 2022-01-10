@@ -12,7 +12,7 @@ namespace Project1
         private float originalX;
         public bool punching;
 
-        public Player(Game1 game) : base(Vector2.Zero, 100, 100)
+        public Player(Game1 game) : base(new Vector2(0, 200), 100, 100)
         {
             texture = game.Content.Load<Texture2D>("enemy-wolf");
         }

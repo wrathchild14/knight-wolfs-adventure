@@ -28,6 +28,23 @@ namespace Project1.States
             };
         }
 
+        // The bool only serves for calling
+        public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, bool sceneLoad) : this(game, graphicsDevice, content)
+        {
+            _background = content.Load<Texture2D>("level-sewer");
+            _mainFrame = new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
+            _player = new Player(game);
+            _scene = new Scene(game, _player, _mainFrame)
+            {
+                PunchSound = content.Load<SoundEffect>("punch"),
+                EndSound = content.Load<SoundEffect>("end"),
+                Font = content.Load<SpriteFont>("defaultFont"),
+            };
+
+            // TODO: Imporve this
+            _scene.Load();
+        }
+
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Background drawn here for some reason, TODO: Change it
