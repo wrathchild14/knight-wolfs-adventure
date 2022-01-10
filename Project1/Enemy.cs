@@ -22,7 +22,7 @@ namespace Project1
         public override void Update(GameTime gameTime)
         {
             if (!standing)
-            { 
+            {
                 // position.X -= speedX;
                 float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 

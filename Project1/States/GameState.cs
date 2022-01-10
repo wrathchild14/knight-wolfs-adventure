@@ -25,7 +25,7 @@ namespace Project1.States
                 PunchSound = content.Load<SoundEffect>("punch"),
                 EndSound = content.Load<SoundEffect>("end"),
                 Font = content.Load<SpriteFont>("defaultFont"),
-        };
+            };
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

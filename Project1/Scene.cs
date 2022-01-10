@@ -16,7 +16,7 @@ namespace Project1
         private int _destroyed = 0;
         private Rectangle _mainFrame;
         readonly Game1 _game;
-        
+
         // Content loaders
         public SoundEffect PunchSound;
         public SoundEffect EndSound;
@@ -56,12 +56,14 @@ namespace Project1
                     collisionRect.Height -= 50;
                     if (collisionRect.Intersects(_enemies[i].Rect))
                     {
-                        if (_player.punching) { 
+                        if (_player.punching)
+                        {
                             _enemies[i] = null;
                             _enemies.Remove(_enemies[i]);
                             _destroyed++;
                             PunchSound.Play();
-                        } else
+                        }
+                        else
                         {
                             EndGame();
                         }

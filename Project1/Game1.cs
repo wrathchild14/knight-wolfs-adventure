@@ -30,7 +30,7 @@ namespace Project1
             base.Initialize();
             // Main spritebatch that we will pass around later
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-         
+
             // Scene initialization is put in GameState for now
             _menuState = new MenuState(this, GraphicsDevice, Content);
             _currentState = _menuState;
@@ -57,14 +57,14 @@ namespace Project1
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.LightGray);
-            
+
             _spriteBatch.Begin();
             _currentState.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
-            
+
             base.Draw(gameTime);
         }
-        
+
         // State-change methods
         public void ChangeState(State state)
         {
