@@ -20,18 +20,20 @@ namespace Project1
         private Rectangle _mainFrame;
         readonly Game1 _game;
         private PlayerStats _pStats;
-
+        private Texture2D _background;
         private const string path = "stats.json";
 
         // Content loaders
         public SoundEffect PunchSound;
         public SoundEffect EndSound;
         public SpriteFont Font;
+        private ContentManager _content;
 
         public Rectangle MainFrame { get => _mainFrame; set => _mainFrame = value; }
 
-        public Scene(Game1 game, Player player, Rectangle mainFrame)
+        public Scene(Game1 game, Player player, Rectangle mainFrame, ContentManager content)
         {
+            _content = content;
             _player = player;
             _game = game;
             _mainFrame = mainFrame;
@@ -40,6 +42,8 @@ namespace Project1
                 Name = "Jovan",
                 Score = 0,
             };
+
+            _background = content.Load<Texture2D>("level-sewer");
         }
 
         public void Save(PlayerStats stats)
@@ -103,14 +107,31 @@ namespace Project1
                 }
             }
 
-            if (_enemies.Count < 10)
+            // Some end game mechanic
+            if (_destroyed < 20)
             {
-                _enemies.Add(new Enemy(_game, _random.Next(_mainFrame.Width - 50, _mainFrame.Width + 200), _random.Next(200, 400), _player));
+                if (_enemies.Count < 10)
+                {
+                    _enemies.Add(new Enemy(_game, _random.Next(_mainFrame.Width - 50, _mainFrame.Width + 200), _random.Next(200, 400), _player));
+                }
+            }
+
+            // TODO
+            if (_destroyed > 10)
+            {
+                _background = _content.Load<Texture2D>("level-cyberpunk");
+            }
+            
+            if (_enemies.Count == 0)
+            {
+                _game.ChangeStateEnd();
             }
         }
 
         internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            spriteBatch.Draw(_background, _mainFrame, Color.White);
+
             foreach (var enemy in _enemies)
                 enemy.Draw(spriteBatch);
 

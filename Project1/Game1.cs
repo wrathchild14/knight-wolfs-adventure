@@ -17,6 +17,7 @@ namespace Project1
 
         private State _currentState;
         private State _nextState;
+        private State _endState;
 
         public Game1()
         {
@@ -32,6 +33,7 @@ namespace Project1
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Scene initialization is put in GameState for now
+            _endState = new EndState(this, GraphicsDevice, Content);
             _menuState = new MenuState(this, GraphicsDevice, Content);
             _currentState = _menuState;
         }
@@ -74,6 +76,11 @@ namespace Project1
         public void ChangeStateMenu()
         {
             _nextState = _menuState;
+        }
+
+        public void ChangeStateEnd()
+        {
+            _nextState = _endState;
         }
     }
 }

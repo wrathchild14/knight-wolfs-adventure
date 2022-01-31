@@ -17,10 +17,10 @@ namespace Project1.States
 
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
-            _background = content.Load<Texture2D>("level-sewer");
+            //_background = content.Load<Texture2D>("level-sewer");
             _mainFrame = new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
             _player = new Player(game);
-            _scene = new Scene(game, _player, _mainFrame)
+            _scene = new Scene(game, _player, _mainFrame, content)
             {
                 PunchSound = content.Load<SoundEffect>("punch"),
                 EndSound = content.Load<SoundEffect>("end"),
@@ -31,10 +31,10 @@ namespace Project1.States
         // The bool only serves for calling
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, bool sceneLoad) : this(game, graphicsDevice, content)
         {
-            _background = content.Load<Texture2D>("level-sewer");
+            //_background = content.Load<Texture2D>("level-sewer");
             _mainFrame = new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height);
             _player = new Player(game);
-            _scene = new Scene(game, _player, _mainFrame)
+            _scene = new Scene(game, _player, _mainFrame, content)
             {
                 PunchSound = content.Load<SoundEffect>("punch"),
                 EndSound = content.Load<SoundEffect>("end"),
@@ -48,7 +48,7 @@ namespace Project1.States
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Background drawn here for some reason, TODO: Change it
-            spriteBatch.Draw(_background, _mainFrame, Color.White);
+            // spriteBatch.Draw(_background, _mainFrame, Color.White);
             _scene.Draw(gameTime, spriteBatch);
         }
 

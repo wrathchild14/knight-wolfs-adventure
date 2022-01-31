@@ -7,7 +7,7 @@ namespace Project1
 {
     class Enemy : Sprite
     {
-        private float _speed = new Random().Next(0, 100);
+        private float _speed = new Random().Next(20, 100);
         private Player _player;
 
         public Enemy(Game1 game, int x, int y, Player player) : base(new Vector2(x, y), 100, 100)
