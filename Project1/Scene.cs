@@ -43,7 +43,7 @@ namespace Project1
                 Score = 0,
             };
 
-            _background = content.Load<Texture2D>("level-sewer");
+            _background = content.Load<Texture2D>("Backgrounds/level-sewer");
         }
 
         public void Save(PlayerStats stats)
@@ -119,7 +119,7 @@ namespace Project1
             // TODO
             if (_destroyed > 10)
             {
-                _background = _content.Load<Texture2D>("level-cyberpunk");
+                _background = _content.Load<Texture2D>("Backgrounds/level-cyberpunk");
             }
             
             if (_enemies.Count == 0)

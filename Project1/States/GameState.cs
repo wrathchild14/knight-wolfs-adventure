@@ -22,8 +22,8 @@ namespace Project1.States
             _player = new Player(game);
             _scene = new Scene(game, _player, _mainFrame, content)
             {
-                PunchSound = content.Load<SoundEffect>("punch"),
-                EndSound = content.Load<SoundEffect>("end"),
+                PunchSound = content.Load<SoundEffect>("Sounds/punch"),
+                EndSound = content.Load<SoundEffect>("Sounds/end"),
                 Font = content.Load<SpriteFont>("defaultFont"),
             };
         }
@@ -36,8 +36,8 @@ namespace Project1.States
             _player = new Player(game);
             _scene = new Scene(game, _player, _mainFrame, content)
             {
-                PunchSound = content.Load<SoundEffect>("punch"),
-                EndSound = content.Load<SoundEffect>("end"),
+                PunchSound = content.Load<SoundEffect>("Sounds/punch"),
+                EndSound = content.Load<SoundEffect>("Sounds/end"),
                 Font = content.Load<SpriteFont>("defaultFont"),
             };
 

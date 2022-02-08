@@ -14,7 +14,7 @@ namespace Project1
 
         public Player(Game1 game) : base(new Vector2(0, 200), 100, 100)
         {
-            texture = game.Content.Load<Texture2D>("enemy-wolf");
+            texture = game.Content.Load<Texture2D>("Sprites/enemy-wolf");
         }
 
         public override void Update(GameTime gameTime)

@@ -10,10 +10,15 @@ namespace Project1
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private SpriteBatch _spriteBatch;
+        GraphicsDeviceManager graphics;
+        SpriteBatch spriteBatch;
+
+        public static int screen_width = 1280;
+        public static int screen_height = 720;
+
         private MenuState _menuState;
-        List<SoundEffect> _effects = new List<SoundEffect>();
+
+        // List<SoundEffect> _effects = new List<SoundEffect>();
 
         private State _currentState;
         private State _nextState;
@@ -21,27 +26,33 @@ namespace Project1
 
         public Game1()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            // IsMouseVisible = true;
         }
 
         protected override void Initialize()
         {
-            base.Initialize();
+            graphics.PreferredBackBufferWidth = screen_width;
+            graphics.PreferredBackBufferHeight = screen_height;
+            graphics.ApplyChanges();
+
+            IsMouseVisible = true;
+
             // Main spritebatch that we will pass around later
-            _spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Scene initialization is put in GameState for now
             _endState = new EndState(this, GraphicsDevice, Content);
             _menuState = new MenuState(this, GraphicsDevice, Content);
             _currentState = _menuState;
+            base.Initialize();
         }
 
         protected override void LoadContent()
         {
             // TODO: Effect start starts at "Play game", not before
-            Content.Load<SoundEffect>("start").Play();
+            Content.Load<SoundEffect>("Sounds/start").Play();
         }
 
         protected override void Update(GameTime gameTime)
@@ -51,18 +62,18 @@ namespace Project1
                 _currentState = _nextState;
                 _nextState = null;
             }
-            // Handles all the updates/draws 
+            // Handles all the updates 
             _currentState.Update(gameTime);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.LightGray);
+            GraphicsDevice.Clear(Color.Black);
 
-            _spriteBatch.Begin();
-            _currentState.Draw(gameTime, _spriteBatch);
-            _spriteBatch.End();
+            spriteBatch.Begin();
+            _currentState.Draw(gameTime, spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

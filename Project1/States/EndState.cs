@@ -11,17 +11,20 @@ namespace Project1.States
         private List<Component> _components;
         private SpriteFont _font;
 
+        private int _screen_center;
+
         public EndState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
-            var buttonTexture = _content.Load<Texture2D>("Button");
-            _font = _content.Load<SpriteFont>("defaultFont");
+            _screen_center = graphicsDevice.Viewport.Width / 2 - 100;
+
+            var buttonTexture = content.Load<Texture2D>("Button");
+            _font = content.Load<SpriteFont>("defaultFont");
 
             Button backButton = new Button(buttonTexture, _font)
             {
-                Position = new Vector2(300, 300),
+                Position = new Vector2(_screen_center, 300),
                 Text = "Main Menu",
             };
-
             backButton.Click += backButton_Click;
 
             _components = new List<Component>()
@@ -44,7 +47,7 @@ namespace Project1.States
         {
             foreach (var component in _components)
                 component.Draw(gameTime, spriteBatch);
-            spriteBatch.DrawString(_font, "You defeated all the enemies!", new Vector2(200, 200), Color.Red);
+            spriteBatch.DrawString(_font, "You defeated all the enemies!", new Vector2(_screen_center, 200), Color.Red);
         }
 
         public override void PostUpdate(GameTime gameTime)

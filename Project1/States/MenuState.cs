@@ -10,22 +10,25 @@ namespace Project1.States
     {
         private List<Component> _components;
 
+
         public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
-            var buttonTexture = _content.Load<Texture2D>("Button");
-            var buttonFont = _content.Load<SpriteFont>("defaultFont");
+            var buttonTexture = base.content.Load<Texture2D>("Button");
+            var buttonFont = base.content.Load<SpriteFont>("defaultFont");
+
+            // Used for centering the buttons
+            var button_width = graphicsDevice.Viewport.Width / 2 - 100;
 
             Button newGameButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2(300, 200),
+                Position = new Vector2(button_width, 200),
                 Text = "Play Game",
             };
-
             newGameButton.Click += NewGameButton_Click;
 
             var loadGameButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2(300, 250),
+                Position = new Vector2(button_width, 250),
                 Text = "Load Game",
             };
 
@@ -33,19 +36,16 @@ namespace Project1.States
 
             var optionsButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2(300, 300),
+                Position = new Vector2(button_width, 300),
                 Text = "Options",
             };
-
             optionsButton.Click += optionsButton_Click;
-
 
             var quitGameButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2(300, 350),
+                Position = new Vector2(button_width, 350),
                 Text = "Quit Game",
             };
-
             quitGameButton.Click += QuitGameButton_Click;
 
             _components = new List<Component>()
@@ -60,17 +60,17 @@ namespace Project1.States
         private void LoadGameButton_Click(object sender, EventArgs e)
         {
             // Last bool is if we are loading a game from stats.json
-            _game.ChangeState(new GameState(_game, _graphicsDevice, _content, true));
+            _game.ChangeState(new GameState(_game, _graphicsDevice, content, true));
         }
 
         private void NewGameButton_Click(object sender, EventArgs e)
         {
-            _game.ChangeState(new GameState(_game, _graphicsDevice, _content));
+            _game.ChangeState(new GameState(_game, _graphicsDevice, content));
         }
 
         private void optionsButton_Click(object sender, EventArgs e)
         {
-            _game.ChangeState(new OptionsState(_game, _graphicsDevice, _content));
+            _game.ChangeState(new OptionsState(_game, _graphicsDevice, content));
         }
 
         public override void PostUpdate(GameTime gameTime)

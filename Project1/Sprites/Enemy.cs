@@ -12,7 +12,7 @@ namespace Project1
 
         public Enemy(Game1 game, int x, int y, Player player) : base(new Vector2(x, y), 100, 100)
         {
-            texture = game.Content.Load<Texture2D>("p2");
+            texture = game.Content.Load<Texture2D>("Sprites/p2");
             _player = player;
         }
 

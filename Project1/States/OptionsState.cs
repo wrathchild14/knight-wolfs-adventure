@@ -9,17 +9,17 @@ namespace Project1.States
     internal class OptionsState : State
     {
         private List<Component> _components;
+
         public OptionsState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
-            var buttonTexture = _content.Load<Texture2D>("Button");
-            var buttonFont = _content.Load<SpriteFont>("defaultFont");
+            var buttonTexture = base.content.Load<Texture2D>("Button");
+            var buttonFont = base.content.Load<SpriteFont>("defaultFont");
 
             Button backButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2(0, 200),
                 Text = "Back",
             };
-
             backButton.Click += backButton_Click;
 
             Button optionsButton = new Button(buttonTexture, buttonFont)
@@ -27,7 +27,6 @@ namespace Project1.States
                 Position = new Vector2(300, 250),
                 Text = "Options (to do) ...",
             };
-
             optionsButton.Click += optionsButton_Click;
 
             _components = new List<Component>()
