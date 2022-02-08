@@ -12,47 +12,42 @@ namespace Project1
         private float originalX;
         public bool punching;
 
-        public Player(Game1 game) : base(new Vector2(0, 200), 100, 100)
+        public Player(Game1 game) : base(game.Content.Load<Texture2D>("Sprites/enemy-wolf"))
         {
-            texture = game.Content.Load<Texture2D>("Sprites/enemy-wolf");
         }
 
         public override void Update(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                position.Y -= speedY;
+                Y -= speedY;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                position.Y += speedY;
+                Y += speedY;
 
             }
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                position.X -= speedX;
+                X -= speedX;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                position.X += speedX;
+                X += speedX;
             }
             if (punching)
             {
-                position.X = originalX;
+                X = originalX;
                 punching = false;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
-                originalX = position.X;
+                originalX = X;
                 punching = true;
-                position.X += 50;
+                X += 50;
             }
 
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(texture, Rect, Color.White);
-        }
     }
 }

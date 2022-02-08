@@ -83,10 +83,10 @@ namespace Project1
                     _enemies[i].Update(gameTime);
 
                     // Making a rectangle to make collisions better
-                    Rectangle collisionRect = _player.Rect;
+                    Rectangle collisionRect = _player.Rectangle;
                     collisionRect.Width -= 50;
                     collisionRect.Height -= 50;
-                    if (collisionRect.Intersects(_enemies[i].Rect))
+                    if (collisionRect.Intersects(_enemies[i].Rectangle))
                     {
                         if (_player.punching)
                         {
@@ -133,9 +133,9 @@ namespace Project1
             spriteBatch.Draw(_background, _mainFrame, Color.White);
 
             foreach (var enemy in _enemies)
-                enemy.Draw(spriteBatch);
+                enemy.Draw(gameTime, spriteBatch);
 
-            _player.Draw(spriteBatch);
+            _player.Draw(gameTime, spriteBatch);
 
             // Scoreboard
             spriteBatch.DrawString(Font, _destroyed.ToString(), new Vector2(10, 10), Color.White);

@@ -10,24 +10,21 @@ namespace Project1
         private float _speed = new Random().Next(20, 100);
         private Player _player;
 
-        public Enemy(Game1 game, int x, int y, Player player) : base(new Vector2(x, y), 100, 100)
+        public Enemy(Game1 game, int x, int y, Player player) : base(game.Content.Load<Texture2D>("Sprites/p2"))
         {
-            texture = game.Content.Load<Texture2D>("Sprites/p2");
             _player = player;
+
+            X = x;
+            Y = y;
         }
 
         public override void Update(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             // Move enemy towards player
-            Vector2 moveDir = this._player.Position - position;
+            Vector2 moveDir = this._player.Position - Position;
             moveDir.Normalize();
-            position += moveDir * _speed * dt;
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(texture, Rect, Color.White);
+            Position += moveDir * _speed * dt;
         }
     }
 }
