@@ -17,18 +17,15 @@ namespace Project1
         public static int screen_height = 720;
 
         private MenuState _menuState;
-
-        // List<SoundEffect> _effects = new List<SoundEffect>();
-
         private State _currentState;
         private State _nextState;
         private State _endState;
 
         public Game1()
         {
+            // Setting up graphics and content
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            // IsMouseVisible = true;
         }
 
         protected override void Initialize()

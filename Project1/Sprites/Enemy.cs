@@ -10,7 +10,7 @@ namespace Project1
         private float _speed = new Random().Next(20, 100);
         private Player _player;
 
-        public Enemy(Game1 game, int x, int y, Player player) : base(game.Content.Load<Texture2D>("Sprites/p2"))
+        public Enemy(Game1 game, int x, int y, Player player) : base(game.Content.Load<Texture2D>("Sprites/enemy-fire"))
         {
             _player = player;
 
