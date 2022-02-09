@@ -5,9 +5,9 @@ namespace Project1
 {
     public abstract class Sprite : Component
     {
-        protected Texture2D _texture;
-        protected Vector2 _position;
-        protected float _layer { get; set; }
+        protected Texture2D m_Texture;
+        protected Vector2 m_Position;
+        protected float m_Layer { get; set; }
 
         public Color Colour { get; set; }
         public float Opacity { get; set; }
@@ -17,10 +17,10 @@ namespace Project1
 
         public Vector2 Position
         {
-            get { return _position; }
+            get { return m_Position; }
             set
             {
-                _position = value;
+                m_Position = value;
             }
         }
 
@@ -44,10 +44,10 @@ namespace Project1
 
         public float Layer
         {
-            get { return _layer; }
+            get { return m_Layer; }
             set
             {
-                _layer = value;
+                m_Layer = value;
             }
         }
 
@@ -60,10 +60,10 @@ namespace Project1
                 int width = 0;
                 int height = 0;
 
-                if (_texture != null)
+                if (m_Texture != null)
                 {
-                    width = _texture.Width;
-                    height = _texture.Height;
+                    width = m_Texture.Width;
+                    height = m_Texture.Height;
                 }
 
                 return new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), (int)(width * Scale), (int)(height * Scale));
@@ -74,7 +74,7 @@ namespace Project1
 
         public Sprite(Texture2D texture)
         {
-            _texture = texture;
+            m_Texture = texture;
             Opacity = 1f;
             Scale = 1f;
             Origin = new Vector2(0, 0);
@@ -88,8 +88,8 @@ namespace Project1
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (_texture != null)
-                spriteBatch.Draw(_texture, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
+            if (m_Texture != null)
+                spriteBatch.Draw(m_Texture, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
         }
 
         public virtual void OnCollide(Sprite sprite)

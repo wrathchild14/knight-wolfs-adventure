@@ -7,9 +7,9 @@ namespace Project1
 {
     class Player : Sprite
     {
-        private float speedX = 3.6f;
-        private float speedY = 2.5f;
-        private float originalX;
+        private float m_SpeedX = 3.6f;
+        private float m_SpeedY = 2.5f;
+        private float m_OriginalX;
         public bool punching;
 
         public Player(Game1 game) : base(game.Content.Load<Texture2D>("Sprites/enemy-wolf"))
@@ -20,29 +20,29 @@ namespace Project1
         {
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                Y -= speedY;
+                Y -= m_SpeedY;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                Y += speedY;
+                Y += m_SpeedY;
 
             }
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                X -= speedX;
+                X -= m_SpeedX;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                X += speedX;
+                X += m_SpeedX;
             }
             if (punching)
             {
-                X = originalX;
+                X = m_OriginalX;
                 punching = false;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
             {
-                originalX = X;
+                m_OriginalX = X;
                 punching = true;
                 X += 50;
             }

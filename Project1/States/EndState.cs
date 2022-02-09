@@ -8,8 +8,8 @@ namespace Project1.States
 {
     internal class EndState : State
     {
-        private List<Component> _components;
-        private SpriteFont _font;
+        private List<Component> m_Components;
+        private SpriteFont m_Font;
 
         private int _screen_center;
 
@@ -18,16 +18,16 @@ namespace Project1.States
             _screen_center = graphicsDevice.Viewport.Width / 2 - 100;
 
             var buttonTexture = content.Load<Texture2D>("Button");
-            _font = content.Load<SpriteFont>("defaultFont");
+            m_Font = content.Load<SpriteFont>("defaultFont");
 
-            Button backButton = new Button(buttonTexture, _font)
+            Button backButton = new Button(buttonTexture, m_Font)
             {
                 Position = new Vector2(_screen_center, 300),
                 Text = "Main Menu",
             };
             backButton.Click += backButton_Click;
 
-            _components = new List<Component>()
+            m_Components = new List<Component>()
             {
                 backButton,
             };
@@ -40,14 +40,14 @@ namespace Project1.States
 
         private void backButton_Click(object sender, EventArgs e)
         {
-            _game.ChangeStateMenu();
+            m_Game.ChangeStateMenu();
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            foreach (var component in _components)
+            foreach (var component in m_Components)
                 component.Draw(gameTime, spriteBatch);
-            spriteBatch.DrawString(_font, "You defeated all the enemies!", new Vector2(_screen_center, 200), Color.Red);
+            spriteBatch.DrawString(m_Font, "You defeated all the enemies!", new Vector2(_screen_center, 200), Color.Red);
         }
 
         public override void PostUpdate(GameTime gameTime)
@@ -56,7 +56,7 @@ namespace Project1.States
 
         public override void Update(GameTime gameTime)
         {
-            foreach (var component in _components)
+            foreach (var component in m_Components)
                 component.Update(gameTime);
         }
     }

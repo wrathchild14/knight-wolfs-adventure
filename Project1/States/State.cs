@@ -7,8 +7,8 @@ namespace Project1.States
     public abstract class State
     {
         protected ContentManager content;
-        protected GraphicsDevice _graphicsDevice;
-        protected Game1 _game;
+        protected GraphicsDevice m_GraphicsDevice;
+        protected Game1 m_Game;
 
         public abstract void Draw(GameTime gameTime, SpriteBatch spriteBatch);
 
@@ -16,8 +16,8 @@ namespace Project1.States
 
         public State(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
         {
-            _game = game;
-            _graphicsDevice = graphicsDevice;
+            m_Game = game;
+            m_GraphicsDevice = graphicsDevice;
             this.content = content;
         }
 

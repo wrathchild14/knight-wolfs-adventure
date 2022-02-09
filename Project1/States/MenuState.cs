@@ -8,7 +8,7 @@ namespace Project1.States
 {
     public class MenuState : State
     {
-        private List<Component> _components;
+        private List<Component> m_Components;
 
 
         public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
@@ -48,7 +48,7 @@ namespace Project1.States
             };
             quitGameButton.Click += QuitGameButton_Click;
 
-            _components = new List<Component>()
+            m_Components = new List<Component>()
             {
                 newGameButton,
                 loadGameButton,
@@ -60,17 +60,17 @@ namespace Project1.States
         private void LoadGameButton_Click(object sender, EventArgs e)
         {
             // Last bool is if we are loading a game from stats.json
-            _game.ChangeState(new GameState(_game, _graphicsDevice, content, true));
+            m_Game.ChangeState(new GameState(m_Game, m_GraphicsDevice, content, true));
         }
 
         private void NewGameButton_Click(object sender, EventArgs e)
         {
-            _game.ChangeState(new GameState(_game, _graphicsDevice, content));
+            m_Game.ChangeState(new GameState(m_Game, m_GraphicsDevice, content));
         }
 
         private void optionsButton_Click(object sender, EventArgs e)
         {
-            _game.ChangeState(new OptionsState(_game, _graphicsDevice, content));
+            m_Game.ChangeState(new OptionsState(m_Game, m_GraphicsDevice, content));
         }
 
         public override void PostUpdate(GameTime gameTime)
@@ -80,18 +80,18 @@ namespace Project1.States
 
         private void QuitGameButton_Click(object sender, EventArgs e)
         {
-            _game.Exit();
+            m_Game.Exit();
         }
 
         public override void Update(GameTime gameTime)
         {
-            foreach (var component in _components)
+            foreach (var component in m_Components)
                 component.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            foreach (var component in _components)
+            foreach (var component in m_Components)
                 component.Draw(gameTime, spriteBatch);
         }
     }

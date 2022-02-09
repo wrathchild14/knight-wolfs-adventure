@@ -10,51 +10,50 @@ using System.Text.Json;
 
 namespace Project1
 {
-    // Class serves to enemies, player and gameplay. Doesn't draw the background
     class Scene
     {
-        readonly Game1 _game;
+        private readonly Game1 m_Game;
 
-        private List<Enemy> _enemies = new List<Enemy>();
-        private readonly Player _player;
-        private Random _random = new Random();
-        private int _destroyed = 0;
-        private Rectangle _mainFrame;
-        private PlayerStats _player_stats;
-        private Texture2D _background_current;
-        private Texture2D _background_next;
-        private string _stats_path = "stats.json";
+        private List<Enemy> m_Enemies = new List<Enemy>();
+        private readonly Player m_Player;
+        private Random m_Random = new Random();
+        private int m_Destroyed = 0;
+        private Rectangle m_MainFrame;
+        private PlayerStats m_PlayerStats;
+        private Texture2D m_BackGroundCurrent;
+        private Texture2D m_BackgroundNext;
+        private string m_StatsPath = "Stats.json";
 
         // Content loaders
-        private SoundEffect _punch_sound;
-        private SoundEffect _end_sound;
-        private SpriteFont _font;
+        private SoundEffect m_PunchSound;
+        private SoundEffect m_EndSound;
+        private SpriteFont m_Font;
 
-        private Camera _camera;
-        private SpriteBatch _sprite_batch;
+        private Camera m_Camera;
+        private SpriteBatch m_SpriteBatch;
 
         public Scene(Game1 game, ContentManager content)
         {
-            _player = new Player(game);
-            _game = game;
-            _mainFrame = new Rectangle(0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
-            _player_stats = new PlayerStats()
+            m_Player = new Player(game);
+            m_Game = game;
+            m_MainFrame = new Rectangle(0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
+            m_PlayerStats = new PlayerStats()
             {
                 Name = "Jovan",
                 Score = 0,
             };
 
-            _background_current = content.Load<Texture2D>("Backgrounds/level-sewer");
-            _punch_sound = content.Load<SoundEffect>("Sounds/punch");
-            _end_sound = content.Load<SoundEffect>("Sounds/end");
-            _font = content.Load<SpriteFont>("defaultFont");
+            m_BackGroundCurrent = content.Load<Texture2D>("Backgrounds/level-sewer");
+            m_PunchSound = content.Load<SoundEffect>("Sounds/punch");
+            m_EndSound = content.Load<SoundEffect>("Sounds/end");
+            m_Font = content.Load<SpriteFont>("defaultFont");
             
             // TODO
-            _background_next = content.Load<Texture2D>("Backgrounds/level-cyberpunk");
+            m_BackgroundNext = content.Load<Texture2D>("Backgrounds/level-cyberpunk");
             
             // Solution for camera: add a custom spritebatch to the scene
-            _camera = new Camera();
-            _sprite_batch = new SpriteBatch(game.GraphicsDevice);
+            m_Camera = new Camera();
+            m_SpriteBatch = new SpriteBatch(game.GraphicsDevice);
         }
 
         public void Save(PlayerStats stats)
@@ -63,57 +62,57 @@ namespace Project1
             string serializedText = JsonSerializer.Serialize<PlayerStats>(stats);
 
             // This doesn't append (need to use "append" something)
-            File.WriteAllText(_stats_path, serializedText);
+            File.WriteAllText(m_StatsPath, serializedText);
         }
 
         // Called in create
         public void Load()
         {
-            var fileContent = File.ReadAllText(_stats_path);
-            _player_stats = JsonSerializer.Deserialize<PlayerStats>(fileContent);
-            _destroyed = _player_stats.Score;
+            var fileContent = File.ReadAllText(m_StatsPath);
+            m_PlayerStats = JsonSerializer.Deserialize<PlayerStats>(fileContent);
+            m_Destroyed = m_PlayerStats.Score;
         }
 
         void EndGame()
         {
-            _end_sound.Play();
+            m_EndSound.Play();
             System.Threading.Thread.Sleep(1000);
 
             // Exit to menu when game ends
-            _game.ChangeStateMenu();
+            m_Game.ChangeStateMenu();
         }
 
         internal void Update(GameTime gameTime)
         {
-            _player.Update(gameTime);
-            _camera.Follow(_player);
+            m_Player.Update(gameTime);
+            m_Camera.Follow(m_Player);
 
-            for (int i = 0; i < _enemies.Count; i++)
+            for (int i = 0; i < m_Enemies.Count; i++)
             {
-                if (_enemies[i] != null)
+                if (m_Enemies[i] != null)
                 {
-                    _enemies[i].Update(gameTime);
+                    m_Enemies[i].Update(gameTime);
 
                     // Making a rectangle to make collisions better
                     //Rectangle collisionRect = _player.Rectangle;
                     //collisionRect.Width -= 50;
                     //collisionRect.Height -= 50;
                     //if (collisionRect.Intersects(_enemies[i].Rectangle))
-                    if (_player.IsTouching(_enemies[i]))
+                    if (m_Player.IsTouching(m_Enemies[i]))
                     {
-                        if (_player.punching)
+                        if (m_Player.punching)
                         {
-                            _enemies[i] = null;
-                            _enemies.Remove(_enemies[i]);
-                            _destroyed++;
-                            _punch_sound.Play();
+                            m_Enemies[i] = null;
+                            m_Enemies.Remove(m_Enemies[i]);
+                            m_Destroyed++;
+                            m_PunchSound.Play();
 
                             // Maybe improve this
-                            _player_stats.Score = _destroyed;
+                            m_PlayerStats.Score = m_Destroyed;
                         }
                         else
                         {
-                            Save(_player_stats);
+                            Save(m_PlayerStats);
                             EndGame();
                         }
                     }
@@ -121,42 +120,42 @@ namespace Project1
             }
 
             // Some end game mechanic
-            if (_destroyed < 20)
+            if (m_Destroyed < 20)
             {
-                if (_enemies.Count < 10)
+                if (m_Enemies.Count < 10)
                 {
-                    _enemies.Add(new Enemy(_game, _random.Next(_mainFrame.Width - 50, _mainFrame.Width + 200), _random.Next(200, 400), _player));
+                    m_Enemies.Add(new Enemy(m_Game, m_Random.Next(m_MainFrame.Width - 50, m_MainFrame.Width + 200), m_Random.Next(200, 400), m_Player));
                 }
             }
 
             // TODO
-            if (_destroyed > 10)
+            if (m_Destroyed > 10)
             {
-                _background_current = _background_next;
+                m_BackGroundCurrent = m_BackgroundNext;
             }
 
-            if (_enemies.Count == 0)
+            if (m_Enemies.Count == 0)
             {
-                _game.ChangeStateEnd();
+                m_Game.ChangeStateEnd();
             }
         }
 
         internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            _sprite_batch.Begin(transformMatrix: _camera.Transform);
+            m_SpriteBatch.Begin(transformMatrix: m_Camera.Transform);
             // Background
-            _sprite_batch.Draw(_background_current, _mainFrame, Color.White);
+            m_SpriteBatch.Draw(m_BackGroundCurrent, m_MainFrame, Color.White);
 
             // Sprites
-            _player.Draw(gameTime, _sprite_batch);
-            foreach (var enemy in _enemies)
-                enemy.Draw(gameTime, _sprite_batch);
+            m_Player.Draw(gameTime, m_SpriteBatch);
+            foreach (var enemy in m_Enemies)
+                enemy.Draw(gameTime, m_SpriteBatch);
 
             // Scoreboard, make it stick to the camera
             float x = 10;
             float y = 10;
-            _sprite_batch.DrawString(_font, _destroyed.ToString(), new Vector2(x,y), Color.White);
-            _sprite_batch.End();
+            m_SpriteBatch.DrawString(m_Font, m_Destroyed.ToString(), new Vector2(x,y), Color.White);
+            m_SpriteBatch.End();
         }
     }
 }

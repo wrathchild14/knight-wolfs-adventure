@@ -13,48 +13,35 @@ namespace Project1
     public class Button : Component
     {
         #region Fields
-
-        private MouseState _currentMouse;
-
-        private SpriteFont _font;
-
-        private bool _isHovering;
-
-        private MouseState _previousMouse;
-
-        private Texture2D _texture;
-
+        private MouseState m_CurrentMouse;
+        private SpriteFont m_Font;
+        private bool m_IsHovering;
+        private MouseState m_PreviousMouse;
+        private Texture2D m_Texture;
         #endregion
 
         #region Properties
-
         public event EventHandler Click;
-
         public bool Clicked { get; private set; }
-
         public Color PenColour { get; set; }
-
         public Vector2 Position { get; set; }
-
         public Rectangle Rectangle
         {
             get
             {
-                return new Rectangle((int)Position.X, (int)Position.Y, _texture.Width, _texture.Height);
+                return new Rectangle((int)Position.X, (int)Position.Y, m_Texture.Width, m_Texture.Height);
             }
         }
 
         public string Text { get; set; }
-
         #endregion
 
         #region Methods
-
         public Button(Texture2D texture, SpriteFont font)
         {
-            _texture = texture;
+            m_Texture = texture;
 
-            _font = font;
+            m_Font = font;
 
             PenColour = Color.Black;
         }
@@ -63,40 +50,39 @@ namespace Project1
         {
             var colour = Color.White;
 
-            if (_isHovering)
+            if (m_IsHovering)
                 colour = Color.Gray;
 
-            spriteBatch.Draw(_texture, Rectangle, colour);
+            spriteBatch.Draw(m_Texture, Rectangle, colour);
 
             if (!string.IsNullOrEmpty(Text))
             {
-                var x = (Rectangle.X + (Rectangle.Width / 2)) - (_font.MeasureString(Text).X / 2);
-                var y = (Rectangle.Y + (Rectangle.Height / 2)) - (_font.MeasureString(Text).Y / 2);
+                var x = (Rectangle.X + (Rectangle.Width / 2)) - (m_Font.MeasureString(Text).X / 2);
+                var y = (Rectangle.Y + (Rectangle.Height / 2)) - (m_Font.MeasureString(Text).Y / 2);
 
-                spriteBatch.DrawString(_font, Text, new Vector2(x, y), PenColour);
+                spriteBatch.DrawString(m_Font, Text, new Vector2(x, y), PenColour);
             }
         }
 
         public override void Update(GameTime gameTime)
         {
-            _previousMouse = _currentMouse;
-            _currentMouse = Mouse.GetState();
+            m_PreviousMouse = m_CurrentMouse;
+            m_CurrentMouse = Mouse.GetState();
 
-            var mouseRectangle = new Rectangle(_currentMouse.X, _currentMouse.Y, 1, 1);
+            var mouseRectangle = new Rectangle(m_CurrentMouse.X, m_CurrentMouse.Y, 1, 1);
 
-            _isHovering = false;
+            m_IsHovering = false;
 
             if (mouseRectangle.Intersects(Rectangle))
             {
-                _isHovering = true;
+                m_IsHovering = true;
 
-                if (_currentMouse.LeftButton == ButtonState.Released && _previousMouse.LeftButton == ButtonState.Pressed)
+                if (m_CurrentMouse.LeftButton == ButtonState.Released && m_PreviousMouse.LeftButton == ButtonState.Pressed)
                 {
                     Click?.Invoke(this, new EventArgs());
                 }
             }
         }
-
         #endregion
     }
 }

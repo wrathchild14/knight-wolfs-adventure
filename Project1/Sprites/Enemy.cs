@@ -7,12 +7,12 @@ namespace Project1
 {
     class Enemy : Sprite
     {
-        private float _speed = new Random().Next(20, 100);
-        private Player _player;
+        private float m_Speed = new Random().Next(20, 100);
+        private Player m_Player;
 
         public Enemy(Game1 game, int x, int y, Player player) : base(game.Content.Load<Texture2D>("Sprites/enemy-fire"))
         {
-            _player = player;
+            m_Player = player;
 
             X = x;
             Y = y;
@@ -22,9 +22,9 @@ namespace Project1
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             // Move enemy towards player
-            Vector2 moveDir = this._player.Position - Position;
+            Vector2 moveDir = this.m_Player.Position - Position;
             moveDir.Normalize();
-            Position += moveDir * _speed * dt;
+            Position += moveDir * m_Speed * dt;
         }
     }
 }
