@@ -1,10 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Project1.Managers;
+using Project1.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Project1
 {
     public abstract class Sprite : Component
     {
+        protected AnimationManager m_AnimationManager;
+        protected Dictionary<string, Animation> m_Animations;
+
         protected Texture2D m_Texture;
         protected Vector2 m_Position;
         protected float m_Layer { get; set; }
@@ -21,6 +28,9 @@ namespace Project1
             set
             {
                 m_Position = value;
+
+                if (m_AnimationManager != null)
+                    m_AnimationManager.Position = m_Position;
             }
         }
 
@@ -48,6 +58,9 @@ namespace Project1
             set
             {
                 m_Layer = value;
+
+                if (m_AnimationManager != null)
+                    m_AnimationManager.Layer = m_Layer;
             }
         }
 
@@ -64,6 +77,10 @@ namespace Project1
                 {
                     width = m_Texture.Width;
                     height = m_Texture.Height;
+                } else if (m_AnimationManager != null)
+                {
+                    width = m_AnimationManager.FrameWidth;
+                    height = m_AnimationManager.FrameHeight;
                 }
 
                 return new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), (int)(width * Scale), (int)(height * Scale));
@@ -81,6 +98,15 @@ namespace Project1
             Colour = Color.White;
         }
 
+        public Sprite(Dictionary<string, Animation> animations)
+        {
+            m_Animations = animations;
+            m_AnimationManager = new AnimationManager(m_Animations.First().Value);
+            Opacity = 1f;
+            Scale = 1f;
+            Colour = Color.White;
+        }
+
         public override void Update(GameTime gameTime)
         {
 
@@ -90,6 +116,9 @@ namespace Project1
         {
             if (m_Texture != null)
                 spriteBatch.Draw(m_Texture, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
+
+            if (m_AnimationManager != null)
+                m_AnimationManager.Draw(spriteBatch);
         }
 
         public virtual void OnCollide(Sprite sprite)
@@ -126,7 +155,7 @@ namespace Project1
             return this.MemberwiseClone();
         }
 
-        #region
+        #region Positions
         public Vector2 TopLeft
         {
             get

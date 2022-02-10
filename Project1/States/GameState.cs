@@ -10,8 +10,6 @@ namespace Project1.States
 {
     public class GameState : State
     {
-        private Rectangle m_MainFrame;
-        private Player m_Player;
         private Scene m_Scene;
 
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
