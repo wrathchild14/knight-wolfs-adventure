@@ -31,6 +31,7 @@ namespace Project1
 
         private Camera m_Camera;
         private SpriteBatch m_SpriteBatch;
+        private SpriteBatch m_SpriteBatchText;
 
         public Scene(Game1 game, ContentManager content)
         {
@@ -53,7 +54,10 @@ namespace Project1
             
             // Solution for camera: add a custom spritebatch to the scene
             m_Camera = new Camera();
+            // Following camera
             m_SpriteBatch = new SpriteBatch(game.GraphicsDevice);
+            // For showing static text (Scoreboard)
+            m_SpriteBatchText = new SpriteBatch(game.GraphicsDevice);
         }
 
         public void Save(PlayerStats stats)
@@ -143,6 +147,7 @@ namespace Project1
         internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             m_SpriteBatch.Begin(transformMatrix: m_Camera.Transform);
+
             // Background
             m_SpriteBatch.Draw(m_BackGroundCurrent, m_MainFrame, Color.White);
 
@@ -151,11 +156,12 @@ namespace Project1
             foreach (var enemy in m_Enemies)
                 enemy.Draw(gameTime, m_SpriteBatch);
 
-            // Scoreboard, make it stick to the camera
-            float x = 10;
-            float y = 10;
-            m_SpriteBatch.DrawString(m_Font, m_Destroyed.ToString(), new Vector2(x,y), Color.White);
             m_SpriteBatch.End();
+
+            // Scoreboard
+            m_SpriteBatchText.Begin();
+            m_SpriteBatchText.DrawString(m_Font, m_Destroyed.ToString(), new Vector2(10, 10), Color.White);
+            m_SpriteBatchText.End();
         }
     }
 }
