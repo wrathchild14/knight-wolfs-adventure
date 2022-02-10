@@ -18,7 +18,8 @@ namespace Project1
 
         private List<Enemy> m_Enemies = new List<Enemy>();
 
-        private Wolf m_Player;
+        private Sprite m_Player;
+        private Sprite m_Wolf;
 
         private Random m_Random = new Random();
         private int m_Destroyed = 0;
@@ -39,13 +40,25 @@ namespace Project1
 
         public Scene(Game1 game, ContentManager content)
         {
-            //m_Player = new Player(game);
-
-            m_Player = new Wolf(new Dictionary<string, Animation>()
+            // Creating of our player which is a Knight + Wolf
+            // Idk how this should work, for now we just take the input for both
+            m_Player = new Knight(new Dictionary<string, Animation>()
             {
+                { "Idle", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightIdle"), 8) },
+                { "RunningLeft", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunningLeft"), 8) },
+                { "RunningRight", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunningRight"), 8) }
+            });
+
+            m_Wolf = new Wolf(new Dictionary<string, Animation>()
+            {
+                { "Idle", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfIdle"), 4) },
                 { "RunningLeft", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfRunningLeft"), 4) },
                 { "RunningRight", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfRunningRight"), 4) }
-            });
+            })
+            {
+                Position = new Vector2(m_Player.Position.X - 40, m_Player.Position.Y + 15)
+            };
+
 
             m_Game = game;
             m_MainFrame = new Rectangle(0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
@@ -100,6 +113,7 @@ namespace Project1
         internal void Update(GameTime gameTime)
         {
             m_Player.Update(gameTime);
+            m_Wolf.Update(gameTime);
             m_Camera.Follow(m_Player);
 
             //for (int i = 0; i < m_Enemies.Count; i++)
@@ -164,6 +178,7 @@ namespace Project1
 
             // Sprites
             m_Player.Draw(gameTime, m_SpriteBatch);
+            m_Wolf.Draw(gameTime, m_SpriteBatch);
             //foreach (var enemy in m_Enemies)
             //    enemy.Draw(gameTime, m_SpriteBatch);
 

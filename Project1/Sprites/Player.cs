@@ -11,7 +11,6 @@ namespace Project1
         private float m_SpeedY = 2.5f;
         private float m_OriginalX;
         public bool punching;
-
         public Player(Game1 game) : base(game.Content.Load<Texture2D>("Sprites/enemy-wolf"))
         {
         }
@@ -46,8 +45,6 @@ namespace Project1
                 punching = true;
                 X += 50;
             }
-
         }
-
     }
 }

@@ -8,14 +8,14 @@ using System.Text;
 
 namespace Project1.Sprites
 {
-    public class Wolf : Sprite
+    public class Knight : Sprite
     {
         public Vector2 Velocity;
 
         private float m_SpeedX = 3.6f;
         private float m_SpeedY = 2.5f;
 
-        public Wolf(Dictionary<string, Animation> animations) : base(animations)
+        public Knight(Dictionary<string, Animation> animations) : base(animations)
         {
         }
         
