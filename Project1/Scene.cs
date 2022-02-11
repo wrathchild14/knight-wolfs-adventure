@@ -16,7 +16,7 @@ namespace Project1
     {
         private readonly Game1 _Game;
 
-        private Sprite _Player;
+        private Knight _Player;
         private Sprite _Wolf;
         private Sprite _Skeleton;
 
@@ -58,7 +58,7 @@ namespace Project1
                 Position = new Vector2(_Player.Position.X - 40, _Player.Position.Y + 15)
             };
 
-            _Skeleton = new Skeleton(new Dictionary<string, Animation>()
+            _Skeleton = new Skeleton(_Player, new Dictionary<string, Animation>()
             {
                 //{ "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 4) },
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonIdle"), 4) },
