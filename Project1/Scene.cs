@@ -44,6 +44,7 @@ namespace Project1
             // Idk how this should work, for now we just take the input for both
             m_Player = new Knight(new Dictionary<string, Animation>()
             {
+                { "Pray", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightPray"), 12) },
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightIdle"), 8) },
                 { "Running", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunning"), 8) }
             });
@@ -52,7 +53,7 @@ namespace Project1
             {
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfIdle"), 4) },
                 { "Running", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfRunning"), 4) }
-            })
+            }, m_Player)
             {
                 Position = new Vector2(m_Player.Position.X - 40, m_Player.Position.Y + 15)
             };

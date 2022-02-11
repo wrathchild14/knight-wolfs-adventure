@@ -12,32 +12,26 @@ namespace Project1.Sprites
     {
         public Vector2 Velocity;
 
-        private float m_SpeedX = 3.6f;
-        private float m_SpeedY = 2.5f;
+        private float m_Speed = 200f;
+        private Sprite m_Player;
 
-        public Wolf(Dictionary<string, Animation> animations) : base(animations)
+        public Wolf(Dictionary<string, Animation> animations, Sprite player) : base(animations)
         {
+            m_Player = player;
         }
-        
+
         public override void Update(GameTime gameTime)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            // Follows the player
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (!Rectangle.Intersects(m_Player.Rectangle))
             {
-                Y -= m_SpeedY;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                Y += m_SpeedY;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                X -= m_SpeedX;
-                Velocity.X = -m_SpeedX;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                X += m_SpeedX;
-                Velocity.X = m_SpeedX;
+                Vector2 moveDir = m_Player.Position - Position;
+                moveDir.Normalize();
+                Position += moveDir * m_Speed * dt;
+
+                Velocity.X += moveDir.X;
             }
 
             SetAnimation();
@@ -50,12 +44,12 @@ namespace Project1.Sprites
         {
             if (Velocity.X < 0)
             {
-                m_AnimationManager.Right = true;
+                m_AnimationManager.Right = false;
                 m_AnimationManager.Play(m_Animations["Running"]);
             }
             else if (Velocity.X > 0)
             {
-                m_AnimationManager.Right = false;
+                m_AnimationManager.Right = true;
                 m_AnimationManager.Play(m_Animations["Running"]);
             }
             else if (Velocity.X == 0)

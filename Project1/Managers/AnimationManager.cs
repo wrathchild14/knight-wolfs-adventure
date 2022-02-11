@@ -47,7 +47,7 @@ namespace Project1.Managers
 
             m_Updated = false;
 
-            if (!Right)
+            if (Right)
                 spriteBatch.Draw(m_Animation.Texture,
                              Position,
                              new Rectangle(m_Animation.CurrentFrame * m_Animation.FrameWidth,
