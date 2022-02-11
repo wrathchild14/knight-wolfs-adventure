@@ -9,12 +9,12 @@ namespace Project1
 {
     public abstract class Sprite : Component
     {
-        protected AnimationManager m_AnimationManager;
-        protected Dictionary<string, Animation> m_Animations;
+        protected AnimationManager _AnimationManager;
+        protected Dictionary<string, Animation> _Animations;
 
-        protected Texture2D m_Texture;
-        protected Vector2 m_Position;
-        protected float m_Layer { get; set; }
+        protected Texture2D _Texture;
+        protected Vector2 _Position;
+        protected float _Layer { get; set; }
 
         public Color Colour { get; set; }
         public float Opacity { get; set; }
@@ -24,13 +24,13 @@ namespace Project1
 
         public Vector2 Position
         {
-            get { return m_Position; }
+            get { return _Position; }
             set
             {
-                m_Position = value;
+                _Position = value;
 
-                if (m_AnimationManager != null)
-                    m_AnimationManager.Position = m_Position;
+                if (_AnimationManager != null)
+                    _AnimationManager.Position = _Position;
             }
         }
 
@@ -54,13 +54,13 @@ namespace Project1
 
         public float Layer
         {
-            get { return m_Layer; }
+            get { return _Layer; }
             set
             {
-                m_Layer = value;
+                _Layer = value;
 
-                if (m_AnimationManager != null)
-                    m_AnimationManager.Layer = m_Layer;
+                if (_AnimationManager != null)
+                    _AnimationManager.Layer = _Layer;
             }
         }
 
@@ -73,14 +73,14 @@ namespace Project1
                 int width = 0;
                 int height = 0;
 
-                if (m_Texture != null)
+                if (_Texture != null)
                 {
-                    width = m_Texture.Width;
-                    height = m_Texture.Height;
-                } else if (m_AnimationManager != null)
+                    width = _Texture.Width;
+                    height = _Texture.Height;
+                } else if (_AnimationManager != null)
                 {
-                    width = m_AnimationManager.FrameWidth;
-                    height = m_AnimationManager.FrameHeight;
+                    width = _AnimationManager.FrameWidth;
+                    height = _AnimationManager.FrameHeight;
                 }
 
                 return new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), (int)(width * Scale), (int)(height * Scale));
@@ -91,7 +91,7 @@ namespace Project1
 
         public Sprite(Texture2D texture)
         {
-            m_Texture = texture;
+            _Texture = texture;
             Opacity = 1f;
             Scale = 1f;
             Origin = new Vector2(0, 0);
@@ -100,8 +100,8 @@ namespace Project1
 
         public Sprite(Dictionary<string, Animation> animations)
         {
-            m_Animations = animations;
-            m_AnimationManager = new AnimationManager(m_Animations.First().Value);
+            _Animations = animations;
+            _AnimationManager = new AnimationManager(_Animations.First().Value);
             Opacity = 1f;
             Scale = 1f;
             Colour = Color.White;
@@ -114,11 +114,11 @@ namespace Project1
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (m_Texture != null)
-                spriteBatch.Draw(m_Texture, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
+            if (_Texture != null)
+                spriteBatch.Draw(_Texture, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
 
-            if (m_AnimationManager != null)
-                m_AnimationManager.Draw(spriteBatch);
+            if (_AnimationManager != null)
+                _AnimationManager.Draw(spriteBatch);
         }
 
         public virtual void OnCollide(Sprite sprite)

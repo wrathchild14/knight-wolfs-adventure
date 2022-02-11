@@ -12,9 +12,13 @@ namespace Project1.Sprites
     {
         public Vector2 Velocity;
 
-        private float m_SpeedX = 3.6f;
-        private float m_SpeedY = 2.5f;
-        private bool m_Pray;
+        private float _SpeedX = 3.6f;
+        private float _SpeedY = 2.5f;
+        private bool _Pray;
+        private bool _Attack;
+
+        private double _ElapsedTime;
+        private double _AttackTimer = 0.65;
 
         public Knight(Dictionary<string, Animation> animations) : base(animations)
         {
@@ -22,57 +26,77 @@ namespace Project1.Sprites
 
         public override void Update(GameTime gameTime)
         {
+            // Attack
+            _ElapsedTime += gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+            {
+                _Attack = true;
+                _ElapsedTime = 0f;
+            }
+            if (_ElapsedTime >= _AttackTimer)
+                _Attack = false;
+
+
+            // Movement
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                Y -= m_SpeedY;
+                Y -= _SpeedY;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                Y += m_SpeedY;
+                Y += _SpeedY;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                X -= m_SpeedX;
-                Velocity.X = -m_SpeedX;
+                X -= _SpeedX;
+                Velocity.X -= _SpeedX;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                X += m_SpeedX;
-                Velocity.X = m_SpeedX;
+                X += _SpeedX;
+                Velocity.X += _SpeedX;
             }
 
+            // Sprint
             if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
-                m_SpeedX = 5f;
+                _SpeedX = 5f;
             else
-                m_SpeedX = 3.6f;
+                _SpeedX = 3.6f;
 
-                SetAnimation();
-            m_AnimationManager.Update(gameTime);
+            // Animations
+            SetAnimation();
+            _AnimationManager.Update(gameTime);
+
+            // Reset after animation
+            // Pray option, don't mind
+            if (Keyboard.GetState().IsKeyDown(Keys.P))
+                _Pray = true;
+            else
+                _Pray = false;
 
             Velocity.X = 0;
-
-            if (Keyboard.GetState().IsKeyDown(Keys.P))
-                m_Pray = true;
-            else
-                m_Pray = false;
         }
 
         private void SetAnimation()
         {
-            if (Velocity.X < 0)
+            if (_Attack) { 
+                _AnimationManager.Play(_Animations["Attack"]);
+            }
+            else if (Velocity.X < 0)
             {
-                m_AnimationManager.Right = false;
-                m_AnimationManager.Play(m_Animations["Running"]);
+                _AnimationManager.Right = false;
+                _AnimationManager.Play(_Animations["Running"]);
             }
             else if (Velocity.X > 0)
             {
-                m_AnimationManager.Right = true;
-                m_AnimationManager.Play(m_Animations["Running"]);
+                _AnimationManager.Right = true;
+                _AnimationManager.Play(_Animations["Running"]);
             }
-            else if (m_Pray)
-                m_AnimationManager.Play(m_Animations["Pray"]);
+            else if (_Pray)
+                _AnimationManager.Play(_Animations["Pray"]);
             else if (Velocity.X == 0)
-                m_AnimationManager.Play(m_Animations["Idle"]);
+                _AnimationManager.Play(_Animations["Idle"]);
         }
     }
 }

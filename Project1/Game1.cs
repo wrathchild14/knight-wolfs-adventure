@@ -16,10 +16,10 @@ namespace Project1
         public static int screen_width = 1280;
         public static int screen_height = 720;
 
-        private MenuState m_menuState;
-        private State m_currentState;
-        private State m_nextState;
-        private State m_endState;
+        private MenuState _menuState;
+        private State _currentState;
+        private State _nextState;
+        private State _endState;
 
         public Game1()
         {
@@ -40,9 +40,9 @@ namespace Project1
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Scene initialization is put in GameState for now
-            m_endState = new EndState(this, GraphicsDevice, Content);
-            m_menuState = new MenuState(this, GraphicsDevice, Content);
-            m_currentState = m_menuState;
+            _endState = new EndState(this, GraphicsDevice, Content);
+            _menuState = new MenuState(this, GraphicsDevice, Content);
+            _currentState = _menuState;
             base.Initialize();
         }
 
@@ -54,13 +54,13 @@ namespace Project1
 
         protected override void Update(GameTime gameTime)
         {
-            if (m_nextState != null)
+            if (_nextState != null)
             {
-                m_currentState = m_nextState;
-                m_nextState = null;
+                _currentState = _nextState;
+                _nextState = null;
             }
             // Handles all the updates 
-            m_currentState.Update(gameTime);
+            _currentState.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -69,26 +69,26 @@ namespace Project1
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            m_currentState.Draw(gameTime, spriteBatch);
+            _currentState.Draw(gameTime, spriteBatch);
             spriteBatch.End();
 
-            base.Draw(gameTime);
+            //base.Draw(gameTime);
         }
 
         // State-change methods
         public void ChangeState(State state)
         {
-            m_nextState = state;
+            _nextState = state;
         }
 
         public void ChangeStateMenu()
         {
-            m_nextState = m_menuState;
+            _nextState = _menuState;
         }
 
         public void ChangeStateEnd()
         {
-            m_nextState = m_endState;
+            _nextState = _endState;
         }
     }
 }

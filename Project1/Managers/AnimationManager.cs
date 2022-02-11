@@ -11,15 +11,15 @@ namespace Project1.Managers
     {
         public bool Right = false;
 
-        private Animation m_Animation;
-        private float m_Timer;
-        private bool m_Updated;
+        private Animation _Animation;
+        private float _Timer;
+        private bool _Updated;
 
         public int FrameWidth
         {
             get
             {
-                return m_Animation.FrameWidth;
+                return _Animation.FrameWidth;
             }
         }
 
@@ -27,7 +27,7 @@ namespace Project1.Managers
         {
             get
             {
-                return m_Animation.FrameHeight;
+                return _Animation.FrameHeight;
             }
         }
 
@@ -37,23 +37,23 @@ namespace Project1.Managers
 
         public AnimationManager(Animation animation)
         {
-            m_Animation = animation;
+            _Animation = animation;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (!m_Updated)
+            if (!_Updated)
                 throw new Exception("Need to call 'Update' first");
 
-            m_Updated = false;
+            _Updated = false;
 
             if (Right)
-                spriteBatch.Draw(m_Animation.Texture,
+                spriteBatch.Draw(_Animation.Texture,
                              Position,
-                             new Rectangle(m_Animation.CurrentFrame * m_Animation.FrameWidth,
+                             new Rectangle(_Animation.CurrentFrame * _Animation.FrameWidth,
                                            0,
-                                           m_Animation.FrameWidth,
-                                           m_Animation.FrameHeight),
+                                           _Animation.FrameWidth,
+                                           _Animation.FrameHeight),
                              Color.White,
                              0f,
                              new Vector2(0, 0),
@@ -61,12 +61,12 @@ namespace Project1.Managers
                              SpriteEffects.None,
                              Layer);
             else
-                spriteBatch.Draw(m_Animation.Texture,
+                spriteBatch.Draw(_Animation.Texture,
                             Position,
-                            new Rectangle(m_Animation.CurrentFrame * m_Animation.FrameWidth,
+                            new Rectangle(_Animation.CurrentFrame * _Animation.FrameWidth,
                                           0,
-                                          m_Animation.FrameWidth,
-                                          m_Animation.FrameHeight),
+                                          _Animation.FrameWidth,
+                                          _Animation.FrameHeight),
                             Color.White,
                             0f,
                             new Vector2(0, 0),
@@ -77,31 +77,31 @@ namespace Project1.Managers
 
         public void Play(Animation animation)
         {
-            if (m_Animation == animation)
+            if (_Animation == animation)
                 return;
 
-            m_Animation = animation;
-            m_Animation.CurrentFrame = 0;
-            m_Timer = 0;
+            _Animation = animation;
+            _Animation.CurrentFrame = 0;
+            _Timer = 0;
         }
 
         public void Stop()
         {
-            m_Timer = 0f;
-            m_Animation.CurrentFrame = 0;
+            _Timer = 0f;
+            _Animation.CurrentFrame = 0;
         }
 
         public void Update(GameTime gameTime)
         {
-            m_Updated = true;
+            _Updated = true;
             
-            m_Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            if (m_Timer > m_Animation.FrameSpeed)
+            _Timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (_Timer > _Animation.FrameSpeed)
             {
-                m_Timer = 0f;
-                m_Animation.CurrentFrame++;
-                if (m_Animation.CurrentFrame >= m_Animation.FrameCount)
-                    m_Animation.CurrentFrame = 0;
+                _Timer = 0f;
+                _Animation.CurrentFrame++;
+                if (_Animation.CurrentFrame >= _Animation.FrameCount)
+                    _Animation.CurrentFrame = 0;
             }
         }
     }
