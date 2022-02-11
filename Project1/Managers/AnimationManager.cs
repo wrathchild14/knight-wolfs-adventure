@@ -9,6 +9,8 @@ namespace Project1.Managers
 {
     public class AnimationManager
     {
+        public bool Right = false;
+
         private Animation m_Animation;
         private float m_Timer;
         private bool m_Updated;
@@ -45,7 +47,8 @@ namespace Project1.Managers
 
             m_Updated = false;
 
-            spriteBatch.Draw(m_Animation.Texture,
+            if (!Right)
+                spriteBatch.Draw(m_Animation.Texture,
                              Position,
                              new Rectangle(m_Animation.CurrentFrame * m_Animation.FrameWidth,
                                            0,
@@ -57,6 +60,19 @@ namespace Project1.Managers
                              1f,
                              SpriteEffects.None,
                              Layer);
+            else
+                spriteBatch.Draw(m_Animation.Texture,
+                            Position,
+                            new Rectangle(m_Animation.CurrentFrame * m_Animation.FrameWidth,
+                                          0,
+                                          m_Animation.FrameWidth,
+                                          m_Animation.FrameHeight),
+                            Color.White,
+                            0f,
+                            new Vector2(0, 0),
+                            1f,
+                            SpriteEffects.FlipHorizontally,
+                            Layer);
         }
 
         public void Play(Animation animation)

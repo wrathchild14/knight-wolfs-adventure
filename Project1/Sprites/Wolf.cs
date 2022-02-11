@@ -49,9 +49,15 @@ namespace Project1.Sprites
         private void SetAnimation()
         {
             if (Velocity.X < 0)
-                m_AnimationManager.Play(m_Animations["RunningLeft"]);
+            {
+                m_AnimationManager.Right = true;
+                m_AnimationManager.Play(m_Animations["Running"]);
+            }
             else if (Velocity.X > 0)
-                m_AnimationManager.Play(m_Animations["RunningRight"]);
+            {
+                m_AnimationManager.Right = false;
+                m_AnimationManager.Play(m_Animations["Running"]);
+            }
             else if (Velocity.X == 0)
                 m_AnimationManager.Play(m_Animations["Idle"]);
         }

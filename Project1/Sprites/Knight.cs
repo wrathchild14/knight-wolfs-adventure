@@ -18,7 +18,7 @@ namespace Project1.Sprites
         public Knight(Dictionary<string, Animation> animations) : base(animations)
         {
         }
-        
+
         public override void Update(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.W))
@@ -49,9 +49,15 @@ namespace Project1.Sprites
         private void SetAnimation()
         {
             if (Velocity.X < 0)
-                m_AnimationManager.Play(m_Animations["RunningLeft"]);
+            {
+                m_AnimationManager.Right = true;
+                m_AnimationManager.Play(m_Animations["Running"]);
+            }
             else if (Velocity.X > 0)
-                m_AnimationManager.Play(m_Animations["RunningRight"]);
+            {
+                m_AnimationManager.Right = false;
+                m_AnimationManager.Play(m_Animations["Running"]);
+            }
             else if (Velocity.X == 0)
                 m_AnimationManager.Play(m_Animations["Idle"]);
         }

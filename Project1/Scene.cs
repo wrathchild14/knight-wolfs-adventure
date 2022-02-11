@@ -34,9 +34,9 @@ namespace Project1
         private SoundEffect m_EndSound;
         private SpriteFont m_Font;
 
+        // Custom spritebatch for the scene
         private Camera m_Camera;
         private SpriteBatch m_SpriteBatch;
-        private SpriteBatch m_SpriteBatchText;
 
         public Scene(Game1 game, ContentManager content)
         {
@@ -45,15 +45,13 @@ namespace Project1
             m_Player = new Knight(new Dictionary<string, Animation>()
             {
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightIdle"), 8) },
-                { "RunningLeft", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunningLeft"), 8) },
-                { "RunningRight", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunningRight"), 8) }
+                { "Running", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunning"), 8) }
             });
 
             m_Wolf = new Wolf(new Dictionary<string, Animation>()
             {
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfIdle"), 4) },
-                { "RunningLeft", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfRunningLeft"), 4) },
-                { "RunningRight", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfRunningRight"), 4) }
+                { "Running", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfRunning"), 4) }
             })
             {
                 Position = new Vector2(m_Player.Position.X - 40, m_Player.Position.Y + 15)
@@ -78,10 +76,7 @@ namespace Project1
 
             // Solution for camera: add a custom spritebatch to the scene
             m_Camera = new Camera();
-            // Following camera
             m_SpriteBatch = new SpriteBatch(game.GraphicsDevice);
-            // For showing static text (Scoreboard)
-            m_SpriteBatchText = new SpriteBatch(game.GraphicsDevice);
         }
 
         public void Save(PlayerStats stats)
@@ -184,10 +179,8 @@ namespace Project1
 
             m_SpriteBatch.End();
 
-            // Scoreboard
-            m_SpriteBatchText.Begin();
-            m_SpriteBatchText.DrawString(m_Font, m_Destroyed.ToString(), new Vector2(10, 10), Color.White);
-            m_SpriteBatchText.End();
+            // Scoreboard (in the old spriteBatch)
+            spriteBatch.DrawString(m_Font, m_Destroyed.ToString(), new Vector2(10, 10), Color.White);
         }
     }
 }

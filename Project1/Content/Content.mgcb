@@ -110,7 +110,7 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Knight/KnightIdle.png
 
-#begin Sprites/Knight/KnightRunningLeft.png
+#begin Sprites/Knight/KnightRunning.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -120,19 +120,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Knight/KnightRunningLeft.png
-
-#begin Sprites/Knight/KnightRunningRight.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Knight/KnightRunningRight.png
+/build:Sprites/Knight/KnightRunning.png
 
 #begin Sprites/p2.png
 /importer:TextureImporter
@@ -158,7 +146,7 @@
 /processorParam:TextureFormat=Color
 /build:Sprites/Wolf/WolfIdle.png
 
-#begin Sprites/Wolf/WolfIdle.png
+#begin Sprites/Wolf/WolfRunning.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -168,29 +156,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Sprites/Wolf/WolfIdle.png
-
-#begin Sprites/Wolf/WolfRunningLeft.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Wolf/WolfRunningLeft.png
-
-#begin Sprites/Wolf/WolfRunningRight.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Sprites/Wolf/WolfRunningRight.png
+/build:Sprites/Wolf/WolfRunning.png
 
