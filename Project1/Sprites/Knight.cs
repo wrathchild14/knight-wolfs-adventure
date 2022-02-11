@@ -19,7 +19,7 @@ namespace Project1.Sprites
         private bool _pray;
 
         private double _elapsedAttackTime;
-        private double _attackTimer = 0.65;
+        private double _attackTimer = 0.6;
 
         public Knight(Dictionary<string, Animation> animations) : base(animations)
         {
@@ -82,12 +82,20 @@ namespace Project1.Sprites
         {
             // Working so so
             // Create a rectangle on the swipe of the sword
-            AttackRectangle = new Rectangle((int)(Position.X + 50), (int)(Position.Y + 10), 5, 5);
+            if (_AnimationManager.Right)
+            {
+                AttackRectangle = new Rectangle((int)(Position.X + 20 + Rectangle.Width), (int)(Position.Y + 10), 5, 5);
+            }
+            else if (!_AnimationManager.Right)
+            {
+                AttackRectangle = new Rectangle((int)(Position.X - 20), (int)(Position.Y + 10), 5, 5);
+            }
         }
 
         private void SetAnimation()
         {
-            if (Attacking) { 
+            if (Attacking)
+            {
                 _AnimationManager.Play(_Animations["Attack"]);
             }
             else if (Velocity.X < 0)
