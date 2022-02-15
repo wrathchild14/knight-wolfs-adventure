@@ -58,14 +58,14 @@ namespace Project1
                 Position = new Vector2(_Player.Position.X - 40, _Player.Position.Y + 15)
             };
 
-            _Skeleton = new Skeleton(_Player, new Dictionary<string, Animation>()
+            _Skeleton = new Skeleton(content.Load<Texture2D>("Sprites/Healthbar"), _Player, new Dictionary<string, Animation>()
             {
                 //{ "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 4) },
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonIdle"), 4) },
                 { "Running", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonRunning"), 4) }
             })
             {
-                Position = new Vector2(500, 500)
+                Position = new Vector2(200, 100)
             };
 
             _SpriteList = new List<Sprite>()
