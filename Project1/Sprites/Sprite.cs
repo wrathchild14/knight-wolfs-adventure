@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Project1.Managers;
 using Project1.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,6 +33,11 @@ namespace Project1
                 if (_AnimationManager != null)
                     _AnimationManager.Position = _Position;
             }
+        }
+
+        internal void Dead()
+        {
+            throw new NotImplementedException();
         }
 
         public float X

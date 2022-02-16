@@ -62,7 +62,8 @@ namespace Project1
             {
                 //{ "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 4) },
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonIdle"), 4) },
-                { "Running", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonRunning"), 4) }
+                { "Running", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonRunning"), 4)},
+                { "Attacked", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttacked"), 4) }
             })
             {
                 Position = new Vector2(200, 100)

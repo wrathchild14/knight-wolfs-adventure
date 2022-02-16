@@ -16,12 +16,14 @@ namespace Project1.Sprites
         private double _elapsedAttackedTime;
         private double _attackedTimer = 0.60;
 
-        private Healthbar _healthbar;
+        private bool _attacked = false;
+
+        private Health _health;
 
         public Skeleton(Texture2D healthbarTexture, Knight player, Dictionary<string, Animation> animations) : base(animations)
         {
             _player = player;
-            _healthbar = new Healthbar(healthbarTexture, this);
+            _health = new Health(healthbarTexture, this);
         }
 
         public override void Update(GameTime gameTime)
@@ -31,14 +33,19 @@ namespace Project1.Sprites
             if (_player.IsAttacking && Rectangle.Intersects(_player.AttackRectangle) && _elapsedAttackedTime >= _attackedTimer)
             {
                 _elapsedAttackedTime = 0;
-                _healthbar.TakeDamage(10);
+                _health.TakeDamage(10);
             }
+
+            if (_elapsedAttackedTime <= _attackedTimer)
+                _attacked = true;
+            else
+                _attacked = false;
 
             // Animations
             SetAnimation();
             _AnimationManager.Update(gameTime);
 
-            _healthbar.Update(gameTime);
+            _health.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -49,8 +56,8 @@ namespace Project1.Sprites
             if (_AnimationManager != null)
                 _AnimationManager.Draw(spriteBatch);
 
-            if (_healthbar != null)
-                _healthbar.Draw(gameTime, spriteBatch);
+            if (_health != null)
+                _health.Draw(gameTime, spriteBatch);
         }
 
 
@@ -66,6 +73,8 @@ namespace Project1.Sprites
                 _AnimationManager.Right = true;
                 _AnimationManager.Play(_Animations["Running"]);
             }
+            else if (_attacked)
+                _AnimationManager.Play(_Animations["Attacked"]);
             else if (Velocity.X == 0)
                 _AnimationManager.Play(_Animations["Idle"]);
         }

@@ -4,7 +4,7 @@ using System;
 
 namespace Project1
 {
-    public class Healthbar : Component
+    public class Health : Component
     {
         private int _health = 100;
         private Vector2 _healthPosition;
@@ -12,7 +12,7 @@ namespace Project1
         private Texture2D _healthTexture;
         private Sprite _sprite;
 
-        public Healthbar(Texture2D texture, Sprite sprite)
+        public Health(Texture2D texture, Sprite sprite)
         {
             _sprite = sprite;
             _healthTexture = texture;
@@ -25,6 +25,9 @@ namespace Project1
             _health -= damage;
             _healthRectangle.Width -= damage;
             Console.WriteLine("Current health: " + _health.ToString());
+
+            if (_health <= 0)
+                _sprite.Dead();
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
