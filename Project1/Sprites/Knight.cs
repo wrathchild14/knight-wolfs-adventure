@@ -11,15 +11,13 @@ namespace Project1.Sprites
     public class Knight : Sprite
     {
         public Vector2 Velocity;
-        public bool Attacking;
+
+        public bool IsAttacking;
         public Rectangle AttackRectangle;
 
         private float _speedX = 3.6f;
         private float _speedY = 2.5f;
         private bool _pray;
-
-        private double _elapsedAttackTime;
-        private double _attackTimer = 0.6;
 
         public Knight(Dictionary<string, Animation> animations) : base(animations)
         {
@@ -28,15 +26,14 @@ namespace Project1.Sprites
         public override void Update(GameTime gameTime)
         {
             // Attack
-            _elapsedAttackTime += gameTime.ElapsedGameTime.TotalSeconds;
+            //_elapsedAttackTime += gameTime.ElapsedGameTime.TotalSeconds;
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
-            {
                 Attack();
-                Attacking = true;
-                _elapsedAttackTime = 0f;
-            }
-            if (_elapsedAttackTime >= _attackTimer)
-                Attacking = false;
+            else
+                IsAttacking = false;
+            
+            //if (_elapsedAttackTime >= _attackTimer)
+            //    IsAttacking = false;
 
             // Movement
             if (Keyboard.GetState().IsKeyDown(Keys.W))
@@ -80,8 +77,9 @@ namespace Project1.Sprites
 
         private void Attack()
         {
-            // Working so so
-            // Create a rectangle on the swipe of the sword
+            IsAttacking = true;
+
+            // Rectangle for attack zone
             if (_AnimationManager.Right)
             {
                 AttackRectangle = new Rectangle((int)(Position.X + 20 + Rectangle.Width), (int)(Position.Y + 10), 5, 5);
@@ -94,7 +92,7 @@ namespace Project1.Sprites
 
         private void SetAnimation()
         {
-            if (Attacking)
+            if (IsAttacking)
             {
                 _AnimationManager.Play(_Animations["Attack"]);
             }
