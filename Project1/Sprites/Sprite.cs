@@ -13,9 +13,9 @@ namespace Project1
         protected AnimationManager _AnimationManager;
         protected Dictionary<string, Animation> _Animations;
 
-        protected Texture2D _Texture;
-        protected Vector2 _Position;
-        protected float _Layer { get; set; }
+        protected Texture2D texture_;
+        protected Vector2 position_;
+        protected float layer_ { get; set; }
 
         public Color Colour { get; set; }
         public float Opacity { get; set; }
@@ -25,13 +25,13 @@ namespace Project1
 
         public Vector2 Position
         {
-            get { return _Position; }
+            get { return position_; }
             set
             {
-                _Position = value;
+                position_ = value;
 
                 if (_AnimationManager != null)
-                    _AnimationManager.Position = _Position;
+                    _AnimationManager.Position = position_;
             }
         }
 
@@ -60,13 +60,13 @@ namespace Project1
 
         public float Layer
         {
-            get { return _Layer; }
+            get { return layer_; }
             set
             {
-                _Layer = value;
+                layer_ = value;
 
                 if (_AnimationManager != null)
-                    _AnimationManager.Layer = _Layer;
+                    _AnimationManager.Layer = layer_;
             }
         }
 
@@ -79,10 +79,10 @@ namespace Project1
                 int width = 0;
                 int height = 0;
 
-                if (_Texture != null)
+                if (texture_ != null)
                 {
-                    width = _Texture.Width;
-                    height = _Texture.Height;
+                    width = texture_.Width;
+                    height = texture_.Height;
                 } else if (_AnimationManager != null)
                 {
                     width = _AnimationManager.FrameWidth;
@@ -97,7 +97,7 @@ namespace Project1
 
         public Sprite(Texture2D texture)
         {
-            _Texture = texture;
+            texture_ = texture;
             Opacity = 1f;
             Scale = 1f;
             Origin = new Vector2(0, 0);
@@ -120,8 +120,8 @@ namespace Project1
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (_Texture != null)
-                spriteBatch.Draw(_Texture, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
+            if (texture_ != null)
+                spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
 
             if (_AnimationManager != null)
                 _AnimationManager.Draw(spriteBatch);

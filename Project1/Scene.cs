@@ -41,7 +41,7 @@ namespace Project1
         {
             // Creating of our player which is a Knight + Wolf
             // Idk how this should work, for now we just take the input for both
-            _Player = new Knight(new Dictionary<string, Animation>()
+            _Player = new Knight(content.Load<Texture2D>("DebugRectangle"), new Dictionary<string, Animation>()
             {
                 { "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 4) },
                 { "Pray", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightPray"), 12) },
@@ -189,7 +189,7 @@ namespace Project1
             // Sprites
             foreach (var sprite in _SpriteList)
                 sprite.Draw(gameTime, _SpriteBatch);
-            
+
             _SpriteBatch.End();
 
             // Scoreboard (in the old spriteBatch)

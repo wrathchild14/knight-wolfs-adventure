@@ -15,12 +15,15 @@ namespace Project1.Sprites
         public bool IsAttacking;
         public Rectangle AttackRectangle;
 
-        private float _speedX = 3.6f;
-        private float _speedY = 2.5f;
+        private float speed_x_ = 3.6f;
+        private float speed_y_ = 2.5f;
         private bool _pray;
 
-        public Knight(Dictionary<string, Animation> animations) : base(animations)
+        private Texture2D debug_rectangle_;
+
+        public Knight(Texture2D texture2D, Dictionary<string, Animation> animations) : base(animations)
         {
+            debug_rectangle_ = texture2D;
         }
 
         public override void Update(GameTime gameTime)
@@ -38,28 +41,28 @@ namespace Project1.Sprites
             // Movement
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
-                Y -= _speedY;
+                Y -= speed_y_;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
-                Y += _speedY;
+                Y += speed_y_;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
-                X -= _speedX;
-                Velocity.X -= _speedX;
+                X -= speed_x_;
+                Velocity.X -= speed_x_;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.D))
             {
-                X += _speedX;
-                Velocity.X += _speedX;
+                X += speed_x_;
+                Velocity.X += speed_x_;
             }
 
             // Sprint
             if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
-                _speedX = 5f;
+                speed_x_ = 5f;
             else
-                _speedX = 3.6f;
+                speed_x_ = 3.6f;
 
             // Animations
             SetAnimation();
@@ -88,6 +91,14 @@ namespace Project1.Sprites
             {
                 AttackRectangle = new Rectangle((int)(Position.X - 20), (int)(Position.Y + 10), 5, 5);
             }
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            if (IsAttacking)
+                spriteBatch.Draw(debug_rectangle_, AttackRectangle, Color.Red);
+
+            base.Draw(gameTime, spriteBatch);
         }
 
         private void SetAnimation()

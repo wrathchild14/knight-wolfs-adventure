@@ -50,8 +50,8 @@ namespace Project1.Sprites
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (_Texture != null)
-                spriteBatch.Draw(_Texture, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
+            if (texture_ != null)
+                spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
 
             if (_AnimationManager != null)
                 _AnimationManager.Draw(spriteBatch);

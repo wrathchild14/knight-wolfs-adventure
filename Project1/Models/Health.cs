@@ -6,38 +6,38 @@ namespace Project1
 {
     public class Health : Component
     {
-        private int _health = 100;
-        private Vector2 _healthPosition;
-        private Rectangle _healthRectangle;
-        private Texture2D _healthTexture;
-        private Sprite _sprite;
+        private int health_ = 100;
+        private Vector2 health_position_;
+        private Rectangle health_rectangle_;
+        private Texture2D health_texture_;
+        private Sprite sprite_;
 
         public Health(Texture2D texture, Sprite sprite)
         {
-            _sprite = sprite;
-            _healthTexture = texture;
-            _healthPosition = new Vector2(0,0);
-            _healthRectangle = new Rectangle(0, 0, _healthTexture.Width, _healthTexture.Height);
+            sprite_ = sprite;
+            health_texture_ = texture;
+            health_position_ = new Vector2(0, 0);
+            health_rectangle_ = new Rectangle(0, 0, health_texture_.Width, health_texture_.Height);
         }
 
         public void TakeDamage(int damage)
         {
-            _health -= damage;
-            _healthRectangle.Width -= damage;
-            Console.WriteLine("Current health: " + _health.ToString());
+            health_ -= damage;
+            health_rectangle_.Width -= damage;
+            Console.WriteLine("Current health: " + health_.ToString());
 
-            if (_health <= 0)
-                _sprite.Dead();
+            if (health_ <= 0)
+                sprite_.Dead();
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(_healthTexture, _healthPosition, _healthRectangle, Color.White);
+            spriteBatch.Draw(health_texture_, health_position_, health_rectangle_, Color.White);
         }
 
         public override void Update(GameTime gameTime)
         {
-            _healthPosition = new Vector2(_sprite.Position.X - 30, _sprite.Position.Y - 10);
+            health_position_ = new Vector2(sprite_.Position.X - 30, sprite_.Position.Y - 10);
         }
     }
 }
