@@ -10,8 +10,10 @@ namespace Project1
 {
     public abstract class Sprite : Component
     {
-        protected AnimationManager _AnimationManager;
-        protected Dictionary<string, Animation> _Animations;
+        public bool Dead = false;
+
+        protected AnimationManager animation_manager_;
+        protected Dictionary<string, Animation> animations_;
 
         protected Texture2D texture_;
         protected Vector2 position_;
@@ -30,14 +32,14 @@ namespace Project1
             {
                 position_ = value;
 
-                if (_AnimationManager != null)
-                    _AnimationManager.Position = position_;
+                if (animation_manager_ != null)
+                    animation_manager_.Position = position_;
             }
         }
 
-        internal void Dead()
+        internal void Die()
         {
-            throw new NotImplementedException();
+            Dead = true;
         }
 
         public float X
@@ -65,8 +67,8 @@ namespace Project1
             {
                 layer_ = value;
 
-                if (_AnimationManager != null)
-                    _AnimationManager.Layer = layer_;
+                if (animation_manager_ != null)
+                    animation_manager_.Layer = layer_;
             }
         }
 
@@ -83,10 +85,10 @@ namespace Project1
                 {
                     width = texture_.Width;
                     height = texture_.Height;
-                } else if (_AnimationManager != null)
+                } else if (animation_manager_ != null)
                 {
-                    width = _AnimationManager.FrameWidth;
-                    height = _AnimationManager.FrameHeight;
+                    width = animation_manager_.FrameWidth;
+                    height = animation_manager_.FrameHeight;
                 }
 
                 return new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), (int)(width * Scale), (int)(height * Scale));
@@ -106,8 +108,8 @@ namespace Project1
 
         public Sprite(Dictionary<string, Animation> animations)
         {
-            _Animations = animations;
-            _AnimationManager = new AnimationManager(_Animations.First().Value);
+            animations_ = animations;
+            animation_manager_ = new AnimationManager(animations_.First().Value);
             Opacity = 1f;
             Scale = 1f;
             Colour = Color.White;
@@ -123,8 +125,8 @@ namespace Project1
             if (texture_ != null)
                 spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
 
-            if (_AnimationManager != null)
-                _AnimationManager.Draw(spriteBatch);
+            if (animation_manager_ != null)
+                animation_manager_.Draw(spriteBatch);
         }
 
         public virtual void OnCollide(Sprite sprite)

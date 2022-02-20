@@ -27,7 +27,7 @@ namespace Project1
             Console.WriteLine("Current health: " + health_.ToString());
 
             if (health_ <= 0)
-                sprite_.Dead();
+                sprite_.Die();
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)

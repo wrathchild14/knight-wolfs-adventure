@@ -10,73 +10,75 @@ namespace Project1.Sprites
 {
     public class Skeleton : Sprite
     {
-        public Vector2 Velocity;
-        private Knight _player;
+        private Vector2 velocity_;
+        private Knight player_;
 
-        private double _elapsedAttackedTime;
-        private double _attackedTimer = 0.60;
+        private double elapsed_attacked_time_;
+        private double attacked_timer_ = 0.60;
 
-        private bool _attacked = false;
+        private bool attacked_ = false;
 
-        private Health _health;
+        private Health health_bar_;
 
         public Skeleton(Texture2D healthbarTexture, Knight player, Dictionary<string, Animation> animations) : base(animations)
         {
-            _player = player;
-            _health = new Health(healthbarTexture, this);
+            player_ = player;
+            health_bar_ = new Health(healthbarTexture, this);
         }
 
         public override void Update(GameTime gameTime)
         {
-            // He can get attacked once if the sword rectangle gets him
-            _elapsedAttackedTime += gameTime.ElapsedGameTime.TotalSeconds;
-            if (_player.IsAttacking && Rectangle.Intersects(_player.AttackRectangle) && _elapsedAttackedTime >= _attackedTimer)
+            if (!Dead)
             {
-                _elapsedAttackedTime = 0;
-                _health.TakeDamage(10);
+                elapsed_attacked_time_ += gameTime.ElapsedGameTime.TotalSeconds;
+                if (player_.IsAttacking && Rectangle.Intersects(player_.AttackRectangle) && elapsed_attacked_time_ >= attacked_timer_)
+                {
+                    elapsed_attacked_time_ = 0;
+                    health_bar_.TakeDamage(10);
+                }
+
+                if (elapsed_attacked_time_ <= attacked_timer_)
+                    attacked_ = true;
+                else
+                    attacked_ = false;
+
+                SetAnimation();
+                animation_manager_.Update(gameTime);
+                health_bar_.Update(gameTime);
             }
-
-            if (_elapsedAttackedTime <= _attackedTimer)
-                _attacked = true;
-            else
-                _attacked = false;
-
-            // Animations
-            SetAnimation();
-            _AnimationManager.Update(gameTime);
-
-            _health.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (texture_ != null)
-                spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
+            if (!Dead)
+            {
+                if (texture_ != null)
+                    spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
 
-            if (_AnimationManager != null)
-                _AnimationManager.Draw(spriteBatch);
+                if (animation_manager_ != null)
+                    animation_manager_.Draw(spriteBatch);
 
-            if (_health != null)
-                _health.Draw(gameTime, spriteBatch);
+                if (health_bar_ != null)
+                    health_bar_.Draw(gameTime, spriteBatch);
+            }
         }
-
 
         private void SetAnimation()
         {
-            if (Velocity.X < 0)
+            if (velocity_.X < 0)
             {
-                _AnimationManager.Right = false;
-                _AnimationManager.Play(_Animations["Running"]);
+                animation_manager_.Right = false;
+                animation_manager_.Play(animations_["Running"]);
             }
-            else if (Velocity.X > 0)
+            else if (velocity_.X > 0)
             {
-                _AnimationManager.Right = true;
-                _AnimationManager.Play(_Animations["Running"]);
+                animation_manager_.Right = true;
+                animation_manager_.Play(animations_["Running"]);
             }
-            else if (_attacked)
-                _AnimationManager.Play(_Animations["Attacked"]);
-            else if (Velocity.X == 0)
-                _AnimationManager.Play(_Animations["Idle"]);
+            else if (attacked_)
+                animation_manager_.Play(animations_["Attacked"]);
+            else if (velocity_.X == 0)
+                animation_manager_.Play(animations_["Idle"]);
         }
     }
 }

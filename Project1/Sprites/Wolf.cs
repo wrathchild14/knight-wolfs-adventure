@@ -35,7 +35,7 @@ namespace Project1.Sprites
             }
 
             SetAnimation();
-            _AnimationManager.Update(gameTime);
+            animation_manager_.Update(gameTime);
 
             Velocity.X = 0;
         }
@@ -44,16 +44,16 @@ namespace Project1.Sprites
         {
             if (Velocity.X < 0)
             {
-                _AnimationManager.Right = false;
-                _AnimationManager.Play(_Animations["Running"]);
+                animation_manager_.Right = false;
+                animation_manager_.Play(animations_["Running"]);
             }
             else if (Velocity.X > 0)
             {
-                _AnimationManager.Right = true;
-                _AnimationManager.Play(_Animations["Running"]);
+                animation_manager_.Right = true;
+                animation_manager_.Play(animations_["Running"]);
             }
             else if (Velocity.X == 0)
-                _AnimationManager.Play(_Animations["Idle"]);
+                animation_manager_.Play(animations_["Idle"]);
         }
     }
 }
