@@ -12,7 +12,7 @@ namespace Project1.Sprites
     {
         public bool IsAttacking;
         public Rectangle AttackRectangle;
-        
+
         private Vector2 velocity_;
 
         private float speed_x_ = 3.6f;
@@ -26,7 +26,7 @@ namespace Project1.Sprites
             debug_rectangle_ = texture2D;
         }
 
-        public override void Update(GameTime gameTime)
+        public override void Update(GameTime game_time)
         {
             // Attack
             //_elapsedAttackTime += gameTime.ElapsedGameTime.TotalSeconds;
@@ -34,7 +34,7 @@ namespace Project1.Sprites
                 Attack();
             else
                 IsAttacking = false;
-            
+
             //if (_elapsedAttackTime >= _attackTimer)
             //    IsAttacking = false;
 
@@ -66,7 +66,7 @@ namespace Project1.Sprites
 
             // Animations
             SetAnimation();
-            animation_manager_.Update(gameTime);
+            animation_manager_.Update(game_time);
 
             // Reset after animation
             // Pray option, don't mind

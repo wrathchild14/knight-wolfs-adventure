@@ -1,10 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Project1.Models;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Project1.Sprites
 {
@@ -34,7 +31,7 @@ namespace Project1.Sprites
                 if (player_.IsAttacking && Rectangle.Intersects(player_.AttackRectangle) && elapsed_attacked_time_ >= attacked_timer_)
                 {
                     elapsed_attacked_time_ = 0;
-                    health_bar_.TakeDamage(10);
+                    health_bar_.TakeDamage(25);
                 }
 
                 if (elapsed_attacked_time_ <= attacked_timer_)
@@ -42,43 +39,49 @@ namespace Project1.Sprites
                 else
                     attacked_ = false;
 
-                SetAnimation();
                 animation_manager_.Update(gameTime);
                 health_bar_.Update(gameTime);
             }
+            if (Dead)
+            {
+                animation_manager_.UpdateTillEnd(gameTime);
+            }
+            SetAnimation();
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (!Dead)
-            {
-                if (texture_ != null)
-                    spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
+            if (texture_ != null)
+                spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
 
-                if (animation_manager_ != null)
-                    animation_manager_.Draw(spriteBatch);
+            if (animation_manager_ != null)
+                animation_manager_.Draw(spriteBatch);
 
-                if (health_bar_ != null)
-                    health_bar_.Draw(gameTime, spriteBatch);
-            }
+            if (health_bar_ != null)
+                health_bar_.Draw(gameTime, spriteBatch);
         }
 
         private void SetAnimation()
         {
-            if (velocity_.X < 0)
+            if (Dead)
+                animation_manager_.Play(animations_["Dead"]);
+            else
             {
-                animation_manager_.Right = false;
-                animation_manager_.Play(animations_["Running"]);
+                if (velocity_.X < 0)
+                {
+                    animation_manager_.Right = false;
+                    animation_manager_.Play(animations_["Running"]);
+                }
+                else if (velocity_.X > 0)
+                {
+                    animation_manager_.Right = true;
+                    animation_manager_.Play(animations_["Running"]);
+                }
+                else if (attacked_)
+                    animation_manager_.Play(animations_["Attacked"]);
+                else if (velocity_.X == 0)
+                    animation_manager_.Play(animations_["Idle"]);
             }
-            else if (velocity_.X > 0)
-            {
-                animation_manager_.Right = true;
-                animation_manager_.Play(animations_["Running"]);
-            }
-            else if (attacked_)
-                animation_manager_.Play(animations_["Attacked"]);
-            else if (velocity_.X == 0)
-                animation_manager_.Play(animations_["Idle"]);
         }
     }
 }

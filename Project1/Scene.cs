@@ -12,36 +12,37 @@ using System.Text.Json;
 
 namespace Project1
 {
-    class Scene
+    internal class Scene
     {
         private readonly Game1 _Game;
 
-        private Knight _Player;
-        private Sprite _Wolf;
-        private Sprite _Skeleton;
+        private Knight player_knight_;
+        private Sprite wolf_dog_;
 
-        private int _Destroyed = 0;
-        private PlayerStats _PlayerStats;
-        private Texture2D _BackGroundCurrent;
+        private int destroyed_ = 0;
+        private PlayerStats player_stats_;
+        private Texture2D background_current_;
         private Texture2D _BackgroundNext;
-        private string _StatsPath = "Stats.json";
+        private string stats_path_ = "Stats.json";
 
         // Content loaders
-        private SoundEffect _PunchSound;
-        private SoundEffect _EndSound;
-        private SpriteFont _Font;
+        private SoundEffect punch_sound_;
+
+        private SoundEffect end_sound_;
+        private SpriteFont Font;
 
         // Custom spritebatch for the scene
-        private Camera _Camera;
-        private SpriteBatch _SpriteBatch;
+        private Camera camera_;
 
-        private List<Sprite> _SpriteList;
+        private SpriteBatch sprite_batch_;
+
+        private List<Sprite> sprite_list_;
 
         public Scene(Game1 game, ContentManager content)
         {
             // Creating of our player which is a Knight + Wolf
             // Idk how this should work, for now we just take the input for both
-            _Player = new Knight(content.Load<Texture2D>("DebugRectangle"), new Dictionary<string, Animation>()
+            player_knight_ = new Knight(content.Load<Texture2D>("DebugRectangle"), new Dictionary<string, Animation>()
             {
                 { "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 4) },
                 { "Pray", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightPray"), 12) },
@@ -49,50 +50,61 @@ namespace Project1
                 { "Running", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunning"), 8) }
             });
 
-            _Wolf = new Wolf(new Dictionary<string, Animation>()
+            wolf_dog_ = new Wolf(new Dictionary<string, Animation>()
             {
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfIdle"), 4) },
                 { "Running", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfRunning"), 4) }
-            }, _Player)
+            }, player_knight_)
             {
-                Position = new Vector2(_Player.Position.X - 40, _Player.Position.Y + 15)
+                Position = new Vector2(player_knight_.Position.X - 40, player_knight_.Position.Y + 15)
             };
 
-            _Skeleton = new Skeleton(content.Load<Texture2D>("Sprites/Healthbar"), _Player, new Dictionary<string, Animation>()
+            sprite_list_ = new List<Sprite>()
             {
-                //{ "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 4) },
-                { "Idle", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonIdle"), 4) },
-                { "Running", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonRunning"), 4)},
-                { "Attacked", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttacked"), 4) }
-            })
-            {
-                Position = new Vector2(200, 100)
-            };
-
-            _SpriteList = new List<Sprite>()
-            {
-                _Wolf, _Skeleton, _Player
+                wolf_dog_, player_knight_,
+                new Skeleton(content.Load<Texture2D>("Sprites/Healthbar"), player_knight_, new Dictionary<string, Animation>()
+                {
+                    //{ "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 4) },
+                    { "Dead", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonDeath"), 4)},
+                    { "Idle", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonIdle"), 4)},
+                    { "Running", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonRunning"), 4)},
+                    { "Attacked", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttacked"), 4)}
+                })
+                {
+                    Position = new Vector2(200, 100)
+                },
+                new Skeleton(content.Load<Texture2D>("Sprites/Healthbar"), player_knight_, new Dictionary<string, Animation>()
+                {
+                    //{ "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 4) },
+                    { "Dead", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonDeath"), 4)},
+                    { "Idle", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonIdle"), 4)},
+                    { "Running", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonRunning"), 4)},
+                    { "Attacked", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttacked"), 4)},
+                })
+                {
+                    Position = new Vector2(300, 200)
+                }
             };
 
             _Game = game;
             //m_MainFrame = new Rectangle(0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
-            _PlayerStats = new PlayerStats()
+            player_stats_ = new PlayerStats()
             {
                 Name = "Jovan",
                 Score = 0,
             };
 
-            _BackGroundCurrent = content.Load<Texture2D>("Backgrounds/level-sewer");
-            _PunchSound = content.Load<SoundEffect>("Sounds/punch");
-            _EndSound = content.Load<SoundEffect>("Sounds/end");
-            _Font = content.Load<SpriteFont>("defaultFont");
+            background_current_ = content.Load<Texture2D>("Backgrounds/level-sewer");
+            punch_sound_ = content.Load<SoundEffect>("Sounds/punch");
+            end_sound_ = content.Load<SoundEffect>("Sounds/end");
+            Font = content.Load<SpriteFont>("defaultFont");
 
             // TODO
             _BackgroundNext = content.Load<Texture2D>("Backgrounds/level-cyberpunk");
 
             // Solution for camera: add a custom spritebatch to the scene
-            _Camera = new Camera();
-            _SpriteBatch = new SpriteBatch(game.GraphicsDevice);
+            camera_ = new Camera();
+            sprite_batch_ = new SpriteBatch(game.GraphicsDevice);
         }
 
         public void Save(PlayerStats stats)
@@ -101,20 +113,20 @@ namespace Project1
             string serializedText = JsonSerializer.Serialize<PlayerStats>(stats);
 
             // This doesn't append (need to use "append" something)
-            File.WriteAllText(_StatsPath, serializedText);
+            File.WriteAllText(stats_path_, serializedText);
         }
 
         // Called in create
         public void Load()
         {
-            var fileContent = File.ReadAllText(_StatsPath);
-            _PlayerStats = JsonSerializer.Deserialize<PlayerStats>(fileContent);
-            _Destroyed = _PlayerStats.Score;
+            var fileContent = File.ReadAllText(stats_path_);
+            player_stats_ = JsonSerializer.Deserialize<PlayerStats>(fileContent);
+            destroyed_ = player_stats_.Score;
         }
 
-        void EndGame()
+        private void EndGame()
         {
-            _EndSound.Play();
+            end_sound_.Play();
             System.Threading.Thread.Sleep(1000);
 
             // Exit to menu when game ends
@@ -123,10 +135,10 @@ namespace Project1
 
         internal void Update(GameTime gameTime)
         {
-            foreach (var sprite in _SpriteList)
+            foreach (var sprite in sprite_list_)
                 sprite.Update(gameTime);
 
-            _Camera.Follow(_Player);
+            camera_.Follow(player_knight_);
             //for (int i = 0; i < m_Enemies.Count; i++)
             //{
             //    if (m_Enemies[i] != null)
@@ -182,18 +194,18 @@ namespace Project1
 
         internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            _SpriteBatch.Begin(transformMatrix: _Camera.Transform);
+            sprite_batch_.Begin(transformMatrix: camera_.Transform);
             // Background
-            _SpriteBatch.Draw(_BackGroundCurrent, _BackGroundCurrent.Bounds, Color.White);
+            sprite_batch_.Draw(background_current_, background_current_.Bounds, Color.White);
 
             // Sprites
-            foreach (var sprite in _SpriteList)
-                sprite.Draw(gameTime, _SpriteBatch);
+            foreach (var sprite in sprite_list_)
+                sprite.Draw(gameTime, sprite_batch_);
 
-            _SpriteBatch.End();
+            sprite_batch_.End();
 
             // Scoreboard (in the old spriteBatch)
-            spriteBatch.DrawString(_Font, _Destroyed.ToString(), new Vector2(10, 10), Color.White);
+            spriteBatch.DrawString(Font, destroyed_.ToString(), new Vector2(10, 10), Color.White);
         }
     }
 }
