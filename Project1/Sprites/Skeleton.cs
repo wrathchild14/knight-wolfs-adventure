@@ -12,6 +12,7 @@ namespace Project1.Sprites
 
         private double elapsed_attacked_time_;
         private double attacked_timer_ = 0.60;
+        private float speed_ = 50f;
 
         private bool attacked_ = false;
 
@@ -27,6 +28,7 @@ namespace Project1.Sprites
         {
             if (!Dead)
             {
+                // Taking damage
                 elapsed_attacked_time_ += gameTime.ElapsedGameTime.TotalSeconds;
                 if (player_.IsAttacking && Rectangle.Intersects(player_.AttackRectangle) && elapsed_attacked_time_ >= attacked_timer_)
                 {
@@ -39,14 +41,26 @@ namespace Project1.Sprites
                 else
                     attacked_ = false;
 
+                // Follows the player (Reused code from dog)
+                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (!Rectangle.Intersects(player_.Rectangle))
+                {
+                    Vector2 moveDir = player_.Position - Position;
+                    moveDir.Normalize();
+                    Position += moveDir * speed_ * dt;
+
+                    velocity_.X += moveDir.X;
+                }
+
+                // Updates
                 animation_manager_.Update(gameTime);
                 health_bar_.Update(gameTime);
             }
             if (Dead)
-            {
                 animation_manager_.UpdateTillEnd(gameTime);
-            }
+
             SetAnimation();
+            velocity_.X = 0;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
