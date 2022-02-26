@@ -20,10 +20,13 @@ namespace Project1.Sprites
         private bool _pray;
 
         private Texture2D debug_rectangle_;
+        private bool debug_rectangle_bool_ = false;
 
         public Knight(Texture2D texture2D, Dictionary<string, Animation> animations) : base(animations)
         {
             debug_rectangle_ = texture2D;
+            animations_["Attack"].FrameSpeed = 0.1f;
+            animations_["Running"].FrameSpeed = 0.1f;
         }
 
         public override void Update(GameTime game_time)
@@ -60,9 +63,15 @@ namespace Project1.Sprites
 
             // Sprint
             if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
+            {
                 speed_x_ = 5f;
+                animations_["Running"].FrameSpeed = 0.075f;
+            }
             else
+            {
                 speed_x_ = 3.6f;
+                animations_["Running"].FrameSpeed = 0.1f;
+            }
 
             // Animations
             SetAnimation();
@@ -85,17 +94,17 @@ namespace Project1.Sprites
             // Rectangle for attack zone
             if (animation_manager_.Right)
             {
-                AttackRectangle = new Rectangle((int)(Position.X + 20 + Rectangle.Width), (int)(Position.Y + 10), 5, 5);
+                AttackRectangle = new Rectangle((int)(Position.X + Rectangle.Width), (int)(Position.Y + 10), 5, 5);
             }
             else if (!animation_manager_.Right)
             {
-                AttackRectangle = new Rectangle((int)(Position.X - 20), (int)(Position.Y + 10), 5, 5);
+                AttackRectangle = new Rectangle((int)(Position.X), (int)(Position.Y + 10), 5, 5);
             }
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (IsAttacking)
+            if (IsAttacking && debug_rectangle_bool_)
                 spriteBatch.Draw(debug_rectangle_, AttackRectangle, Color.Red);
 
             base.Draw(gameTime, spriteBatch);

@@ -11,17 +11,19 @@ namespace Project1.Sprites
         private Knight player_;
 
         private double elapsed_attacked_time_;
-        private double attacked_timer_ = 0.60;
+        private double attacked_timer_ = 0.2;
+
         private float speed_ = 50f;
 
         private bool attacked_ = false;
 
-        private Health health_bar_;
+        private Healthbar health_bar_;
 
         public Skeleton(Texture2D healthbarTexture, Knight player, Dictionary<string, Animation> animations) : base(animations)
         {
             player_ = player;
-            health_bar_ = new Health(healthbarTexture, this);
+            health_bar_ = new Healthbar(healthbarTexture, this);
+            animations_["Attacked"].FrameSpeed = 0.1f;
         }
 
         public override void Update(GameTime gameTime)
@@ -33,7 +35,7 @@ namespace Project1.Sprites
                 if (player_.IsAttacking && Rectangle.Intersects(player_.AttackRectangle) && elapsed_attacked_time_ >= attacked_timer_)
                 {
                     elapsed_attacked_time_ = 0;
-                    health_bar_.TakeDamage(25);
+                    health_bar_.TakeDamage(10);
                 }
 
                 if (elapsed_attacked_time_ <= attacked_timer_)

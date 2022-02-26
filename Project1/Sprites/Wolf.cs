@@ -12,12 +12,13 @@ namespace Project1.Sprites
     {
         public Vector2 Velocity;
 
-        private float _Speed = 200f;
-        private Sprite _Player;
+        private float speed_ = 200f;
+        private Sprite player_;
 
         public Wolf(Dictionary<string, Animation> animations, Sprite player) : base(animations)
         {
-            _Player = player;
+            player_ = player;
+            animations_["Running"].FrameSpeed = 0.1f;
         }
 
         public override void Update(GameTime gameTime)
@@ -25,11 +26,11 @@ namespace Project1.Sprites
             // Follows the player
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (!Rectangle.Intersects(_Player.Rectangle))
+            if (!Rectangle.Intersects(player_.Rectangle))
             {
-                Vector2 moveDir = _Player.Position - Position;
+                Vector2 moveDir = player_.Position - Position;
                 moveDir.Normalize();
-                Position += moveDir * _Speed * dt;
+                Position += moveDir * speed_ * dt;
 
                 Velocity.X += moveDir.X;
             }
