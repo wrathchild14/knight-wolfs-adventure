@@ -36,6 +36,11 @@ namespace Project1.Sprites
                 {
                     elapsed_attacked_time_ = 0;
                     health_bar_.TakeDamage(10);
+
+                    if (animation_manager_.Right)
+                        X -= 2;
+                    else
+                        X += 2;
                 }
 
                 if (elapsed_attacked_time_ <= attacked_timer_)

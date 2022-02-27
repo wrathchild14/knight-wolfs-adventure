@@ -19,12 +19,12 @@ namespace Project1.Sprites
         private float speed_y_ = 2.5f;
         private bool _pray;
 
-        private Texture2D debug_rectangle_;
-        private bool debug_rectangle_bool_ = false;
+        private Texture2D debug_attack_rectangle_;
+        private bool debug_attack_rectangle_bool_ = false;
 
         public Knight(Texture2D texture2D, Dictionary<string, Animation> animations) : base(animations)
         {
-            debug_rectangle_ = texture2D;
+            debug_attack_rectangle_ = texture2D;
             animations_["Attack"].FrameSpeed = 0.1f;
             animations_["Running"].FrameSpeed = 0.1f;
         }
@@ -104,8 +104,8 @@ namespace Project1.Sprites
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (IsAttacking && debug_rectangle_bool_)
-                spriteBatch.Draw(debug_rectangle_, AttackRectangle, Color.Red);
+            if (IsAttacking && debug_attack_rectangle_bool_)
+                spriteBatch.Draw(debug_attack_rectangle_, AttackRectangle, Color.Red);
 
             base.Draw(gameTime, spriteBatch);
         }

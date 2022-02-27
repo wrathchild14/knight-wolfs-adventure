@@ -10,8 +10,8 @@ namespace Project1
 {
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        private GraphicsDeviceManager graphics;
+        private SpriteBatch spriteBatch;
 
         public static int screen_width = 1280;
         public static int screen_height = 720;
@@ -59,7 +59,7 @@ namespace Project1
                 _currentState = _nextState;
                 _nextState = null;
             }
-            // Handles all the updates 
+            // Handles all the updates
             _currentState.Update(gameTime);
             base.Update(gameTime);
         }

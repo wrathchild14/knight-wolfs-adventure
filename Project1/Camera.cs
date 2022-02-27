@@ -15,9 +15,18 @@ namespace Project1
         public Texture2D current_background_;
         public Texture2D next_background_ = null;
 
-        public Camera(Texture2D texture2D)
+        private int width_;
+        private int height_;
+
+        //public Camera(Texture2D texture2D)
+        //{
+        //    current_background_ = texture2D;
+        //}
+
+        public Camera(int width, int height)
         {
-            current_background_ = texture2D;
+            width_ = width;
+            height_ = height;
         }
 
         public Matrix ViewMatrix
@@ -48,20 +57,25 @@ namespace Project1
             if (position_.Y < 0)
                 position_.Y = 0;
 
-            if (position_.X > current_background_.Width - ScreenWidth)
-                position_.X = current_background_.Width - ScreenWidth;
-            if (position_.Y > current_background_.Height - ScreenHight)
-                position_.Y = current_background_.Height - ScreenHight;
+            //if (position_.X > current_background_.Width - ScreenWidth)
+            //    position_.X = current_background_.Width - ScreenWidth;
+            //if (position_.Y > current_background_.Height - ScreenHight)
+            //    position_.Y = current_background_.Height - ScreenHight;
+
+            if (position_.X > width_ - ScreenWidth)
+                position_.X = width_ - ScreenWidth;
+            if (position_.Y > height_ - ScreenHight)
+                position_.Y = height_ - ScreenHight;
 
             // Going to next level
-            if (player.Position.X > current_background_.Width && next_background_ != null)
-            {
-                Console.WriteLine("Switching to next background");
-                current_background_ = next_background_;
-                next_background_ = null;
-                player.Position = new Vector2(0, player.Position.Y);
-                Console.WriteLine(current_background_.ToString());
-            }
+            //if (player.Position.X > current_background_.Width && next_background_ != null)
+            //{
+            //    Console.WriteLine("Switching to next background");
+            //    current_background_ = next_background_;
+            //    next_background_ = null;
+            //    player.Position = new Vector2(0, player.Position.Y);
+            //    Console.WriteLine(current_background_.ToString());
+            //}
 
             view_matrix_ = Matrix.CreateTranslation(new Vector3(-position_, 0));
         }
