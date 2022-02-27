@@ -14,7 +14,7 @@ namespace Project1
 {
     internal class Scene
     {
-        private readonly Game1 _Game;
+        private Game1 game_;
 
         private Knight player_knight_;
         private Sprite wolf_dog_;
@@ -25,17 +25,12 @@ namespace Project1
         private Texture2D _BackgroundNext;
         private string stats_path_ = "Stats.json";
 
-        // Content loaders
         private SoundEffect punch_sound_;
-
         private SoundEffect end_sound_;
         private SpriteFont Font;
 
-        // Custom spritebatch for the scene
         private Camera camera_;
-
         private SpriteBatch sprite_batch_;
-
         private List<Sprite> sprite_list_;
 
         public Scene(Game1 game, ContentManager content)
@@ -86,7 +81,7 @@ namespace Project1
                 }
             };
 
-            _Game = game;
+            game_ = game;
             //m_MainFrame = new Rectangle(0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
             player_stats_ = new PlayerStats()
             {
@@ -100,11 +95,15 @@ namespace Project1
             Font = content.Load<SpriteFont>("defaultFont");
 
             // TODO
-            _BackgroundNext = content.Load<Texture2D>("Backgrounds/level-cyberpunk");
+            //_BackgroundNext = content.Load<Texture2D>("Backgrounds/level-cyberpunk");
 
             // Solution for camera: add a custom spritebatch to the scene
             camera_ = new Camera();
-            sprite_batch_ = new SpriteBatch(game.GraphicsDevice);
+            camera_.SetBounds(background_current_.Width, background_current_.Height);
+
+            sprite_batch_ = new SpriteBatch(game_.GraphicsDevice);
+
+            //Console.WriteLine(Game1.screen_width + "- screen width, background width - " + background_current_.Width.ToString());
         }
 
         public void Save(PlayerStats stats)
@@ -130,7 +129,7 @@ namespace Project1
             System.Threading.Thread.Sleep(1000);
 
             // Exit to menu when game ends
-            _Game.ChangeStateMenu();
+            game_.ChangeStateMenu();
         }
 
         internal void Update(GameTime gameTime)
@@ -138,63 +137,13 @@ namespace Project1
             foreach (var sprite in sprite_list_)
                 sprite.Update(gameTime);
 
-            camera_.Follow(player_knight_);
-            //for (int i = 0; i < m_Enemies.Count; i++)
-            //{
-            //    if (m_Enemies[i] != null)
-            //    {
-            //        m_Enemies[i].Update(gameTime);
-
-            //        // Making a rectangle to make collisions better
-            //        //Rectangle collisionRect = _player.Rectangle;
-            //        //collisionRect.Width -= 50;
-            //        //collisionRect.Height -= 50;
-            //        //if (collisionRect.Intersects(_enemies[i].Rectangle))
-            //        if (m_Player.IsTouching(m_Enemies[i]))
-            //        {
-            //            if (m_Player.punching)
-            //            {
-            //                m_Enemies[i] = null;
-            //                m_Enemies.Remove(m_Enemies[i]);
-            //                m_Destroyed++;
-            //                m_PunchSound.Play();
-
-            //                // Maybe improve this
-            //                m_PlayerStats.Score = m_Destroyed;
-            //            }
-            //            else
-            //            {
-            //                Save(m_PlayerStats);
-            //                EndGame();
-            //            }
-            //        }
-            //    }
-            //}
-
-            //// Some end game mechanic
-            //if (m_Destroyed < 20)
-            //{
-            //    if (m_Enemies.Count < 10)
-            //    {
-            //        m_Enemies.Add(new Enemy(m_Game, m_Random.Next(m_MainFrame.Width - 50, m_MainFrame.Width + 200), m_Random.Next(200, 400), m_Player));
-            //    }
-            //}
-
-            //// TODO
-            //if (m_Destroyed > 10)
-            //{
-            //    m_BackGroundCurrent = m_BackgroundNext;
-            //}
-
-            //if (m_Enemies.Count == 0)
-            //{
-            //    m_Game.ChangeStateEnd();
-            //}
+            camera_.Update(player_knight_.Position);
         }
 
         internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            sprite_batch_.Begin(transformMatrix: camera_.Transform);
+            //sprite_batch_.Begin(transformMatrix: camera_.Transform);
+            sprite_batch_.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera_.ViewMatrix);
             // Background
             sprite_batch_.Draw(background_current_, background_current_.Bounds, Color.White);
 
