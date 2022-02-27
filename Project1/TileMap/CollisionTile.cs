@@ -7,12 +7,12 @@ using System.Text;
 
 namespace Project1.TileMap
 {
-    class CollisionTiles : Tiles
+    class CollisionTile : Tile
     {
-        public CollisionTiles(int i, Rectangle new_rectangle)
+        public CollisionTile(int i, Rectangle new_rectangle)
         {
             texture = Content.Load<Texture2D>("Tiles/Tile" + i);
-            this.Rectangle = new_rectangle;
+            Rectangle = new_rectangle;
         }
     }
 }

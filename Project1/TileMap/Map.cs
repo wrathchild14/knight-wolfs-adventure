@@ -9,9 +9,9 @@ namespace Project1.TileMap
 {
     class Map
     {
-        private List<CollisionTiles> collison_tiles_ = new List<CollisionTiles>();
+        private List<CollisionTile> collison_tiles_ = new List<CollisionTile>();
 
-        public List<CollisionTiles> CollisionTiles
+        public List<CollisionTile> CollisionTiles
         {
             get { return collison_tiles_; }
         }
@@ -40,7 +40,7 @@ namespace Project1.TileMap
                     int number = map[y, x];
 
                     if (number > 0)
-                        collison_tiles_.Add(new CollisionTiles(number, new Rectangle(x * size, y * size, size, size)));
+                        collison_tiles_.Add(new CollisionTile(number, new Rectangle(x * size, y * size, size, size)));
 
                     width_ = (x + 1) * size;
                     height_ = (y + 1) * size;
@@ -49,7 +49,7 @@ namespace Project1.TileMap
 
         public void Draw(SpriteBatch sprite_batch)
         {
-            foreach (CollisionTiles tile in collison_tiles_)
+            foreach (CollisionTile tile in collison_tiles_)
                 tile.Draw(sprite_batch);
         }
     }

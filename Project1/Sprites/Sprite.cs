@@ -91,7 +91,8 @@ namespace Project1
                     height = animation_manager_.FrameHeight;
                 }
 
-                return new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), (int)(width * Scale), (int)(height * Scale));
+                //return new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), (int)(width * Scale), (int)(height * Scale));
+                return new Rectangle((int)(Position.X), (int)(Position.Y), (int)(width * Scale), (int)(height * Scale));
             }
         }
 

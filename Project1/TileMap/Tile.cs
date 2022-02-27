@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Project1.TileMap
 {
-    class Tiles
+    class Tile
     {
         protected Texture2D texture;
 
