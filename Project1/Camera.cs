@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Project1.Sprites;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,7 +12,13 @@ namespace Project1
         private Vector2 position_;
         private Matrix view_matrix_;
 
-        private int level_width_, level_height_;
+        public Texture2D current_background_;
+        public Texture2D next_background_ = null;
+
+        public Camera(Texture2D texture2D)
+        {
+            current_background_ = texture2D;
+        }
 
         public Matrix ViewMatrix
         {
@@ -29,10 +37,10 @@ namespace Project1
 
         public Matrix Transform { get; private set; }
 
-        internal void Update(Vector2 player_position)
+        internal void Update(Knight player)
         {
-            position_.X = player_position.X - (ScreenWidth / 2);
-            position_.Y = player_position.Y - (ScreenHight / 2);
+            position_.X = player.Position.X - (ScreenWidth / 2);
+            position_.Y = player.Position.Y - (ScreenHight / 2);
 
             // Contain camera in screen
             if (position_.X < 0)
@@ -40,18 +48,22 @@ namespace Project1
             if (position_.Y < 0)
                 position_.Y = 0;
 
-            if (position_.X > level_width_ - ScreenWidth)
-                position_.X = level_width_ - ScreenWidth;
-            if (position_.Y > level_height_ - ScreenHight)
-                position_.Y = level_height_ - ScreenHight;
+            if (position_.X > current_background_.Width - ScreenWidth)
+                position_.X = current_background_.Width - ScreenWidth;
+            if (position_.Y > current_background_.Height - ScreenHight)
+                position_.Y = current_background_.Height - ScreenHight;
+
+            // Going to next level
+            if (player.Position.X > current_background_.Width && next_background_ != null)
+            {
+                Console.WriteLine("Switching to next background");
+                current_background_ = next_background_;
+                next_background_ = null;
+                player.Position = new Vector2(0, player.Position.Y);
+                Console.WriteLine(current_background_.ToString());
+            }
 
             view_matrix_ = Matrix.CreateTranslation(new Vector3(-position_, 0));
-        }
-
-        internal void SetBounds(int width, int height)
-        {
-            level_width_ = width;
-            level_height_ = height;
         }
     }
 }

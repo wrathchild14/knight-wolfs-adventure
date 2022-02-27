@@ -22,7 +22,7 @@ namespace Project1
         private int destroyed_ = 0;
         private PlayerStats player_stats_;
         private Texture2D background_current_;
-        private Texture2D _BackgroundNext;
+        private Texture2D next_background_scene_;
         private string stats_path_ = "Stats.json";
 
         private SoundEffect punch_sound_;
@@ -43,7 +43,8 @@ namespace Project1
                 { "Pray", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightPray"), 12) },
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightIdle"), 8) },
                 { "Running", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunning"), 8) }
-            });
+            })
+            { Position = new Vector2(50, 400) };
 
             wolf_dog_ = new Wolf(new Dictionary<string, Animation>()
             {
@@ -54,7 +55,7 @@ namespace Project1
                 Position = new Vector2(player_knight_.Position.X - 40, player_knight_.Position.Y + 15)
             };
 
-            sprite_list_ = new List<Sprite>()
+            sprite_list_ = new List<Sprite>() // ?
             {
                 wolf_dog_, player_knight_,
                 new Skeleton(content.Load<Texture2D>("Sprites/Healthbar"), player_knight_, new Dictionary<string, Animation>()
@@ -66,7 +67,7 @@ namespace Project1
                     { "Attacked", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttacked"), 4)}
                 })
                 {
-                    Position = new Vector2(200, 100)
+                    Position = new Vector2(200, 400)
                 },
                 new Skeleton(content.Load<Texture2D>("Sprites/Healthbar"), player_knight_, new Dictionary<string, Animation>()
                 {
@@ -77,32 +78,27 @@ namespace Project1
                     { "Attacked", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttacked"), 4)},
                 })
                 {
-                    Position = new Vector2(300, 200)
+                    Position = new Vector2(400, 450)
                 }
             };
 
-            game_ = game;
-            //m_MainFrame = new Rectangle(0, 0, game.GraphicsDevice.Viewport.Width, game.GraphicsDevice.Viewport.Height);
+            game_ = game; // ?
             player_stats_ = new PlayerStats()
             {
                 Name = "Jovan",
                 Score = 0,
             };
 
-            background_current_ = content.Load<Texture2D>("Backgrounds/level-sewer");
             punch_sound_ = content.Load<SoundEffect>("Sounds/punch");
             end_sound_ = content.Load<SoundEffect>("Sounds/end");
             Font = content.Load<SpriteFont>("defaultFont");
 
-            // TODO
-            //_BackgroundNext = content.Load<Texture2D>("Backgrounds/level-cyberpunk");
+            //next_background_scene_ = content.Load<Texture2D>("Backgrounds/level-cyberpunk");
 
-            // Solution for camera: add a custom spritebatch to the scene
-            camera_ = new Camera();
-            camera_.SetBounds(background_current_.Width, background_current_.Height);
+            camera_ = new Camera(content.Load<Texture2D>("Backgrounds/level-sewer"));
+            camera_.next_background_ = content.Load<Texture2D>("Backgrounds/level-cyberpunk");
 
             sprite_batch_ = new SpriteBatch(game_.GraphicsDevice);
-
             //Console.WriteLine(Game1.screen_width + "- screen width, background width - " + background_current_.Width.ToString());
         }
 
@@ -136,8 +132,7 @@ namespace Project1
         {
             foreach (var sprite in sprite_list_)
                 sprite.Update(gameTime);
-
-            camera_.Update(player_knight_.Position);
+            camera_.Update(player_knight_);
         }
 
         internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -145,7 +140,7 @@ namespace Project1
             //sprite_batch_.Begin(transformMatrix: camera_.Transform);
             sprite_batch_.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera_.ViewMatrix);
             // Background
-            sprite_batch_.Draw(background_current_, background_current_.Bounds, Color.White);
+            sprite_batch_.Draw(camera_.current_background_, camera_.current_background_.Bounds, Color.White);
 
             // Sprites
             foreach (var sprite in sprite_list_)
