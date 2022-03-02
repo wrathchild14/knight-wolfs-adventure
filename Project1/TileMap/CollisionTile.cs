@@ -9,10 +9,18 @@ namespace Project1.TileMap
 {
     class CollisionTile : Tile
     {
-        public CollisionTile(int i, Rectangle new_rectangle)
+        private int id_;
+
+        public int Id
         {
-            texture = Content.Load<Texture2D>("Tiles/Tile" + i);
+            get { return id_; }
+        }
+
+        public CollisionTile(int i, Rectangle new_rectangle, String path)
+        {
+            texture = Content.Load<Texture2D>(path + "/Tile" + i);
             Rectangle = new_rectangle;
+            id_ = i;
         }
     }
 }

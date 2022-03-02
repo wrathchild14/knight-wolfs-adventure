@@ -32,7 +32,7 @@ namespace Project1.TileMap
         {
         }
 
-        public void Generate(int[,] map, int size)
+        public void Generate(int[,] map, int size, String path)
         {
             for (int x = 0; x < map.GetLength(1); x++)
                 for (int y = 0; y < map.GetLength(0); y++)
@@ -40,7 +40,7 @@ namespace Project1.TileMap
                     int number = map[y, x];
 
                     if (number > 0)
-                        collison_tiles_.Add(new CollisionTile(number, new Rectangle(x * size, y * size, size, size)));
+                        collison_tiles_.Add(new CollisionTile(number, new Rectangle(x * size, y * size, size, size), path));
 
                     width_ = (x + 1) * size;
                     height_ = (y + 1) * size;
