@@ -37,8 +37,9 @@ namespace Project1
         public Scene(Game1 game, ContentManager content)
         {
             // Manual initialization, can't look at this shit. Put it in file
-            player_knight_ = new Knight(content.Load<Texture2D>("DebugRectangle"), new Dictionary<string, Animation>()
+            player_knight_ = new Knight(content.Load<Texture2D>("DebugRectangle"), content.Load<Texture2D>("Sprites/Healthbar"), new Dictionary<string, Animation>()
             {
+                { "Dead", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightDeath"), 4) },
                 { "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 15) },
                 { "Pray", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightPray"), 12) },
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightIdle"), 8) },
@@ -66,7 +67,7 @@ namespace Project1
             {
                 sprite_list_.Add(new Skeleton(content.Load<Texture2D>("Sprites/Healthbar"), player_knight_, new Dictionary<string, Animation>()
                 {
-                    //{ "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 4) },
+                    { "Attack", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttack"), 8) },
                     { "Dead", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonDeath"), 4)},
                     { "Idle", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonIdle"), 4)},
                     { "Running", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonRunning"), 4)},
@@ -147,7 +148,7 @@ namespace Project1
             // Sprites
             foreach (var sprite in sprite_list_)
                 sprite.Update(gameTime);
-            
+
             // Camera
             camera_.Update(player_knight_);
 

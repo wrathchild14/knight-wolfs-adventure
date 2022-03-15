@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project1.Models;
+using System;
 using System.Collections.Generic;
 
 namespace Project1.Sprites
@@ -10,12 +11,16 @@ namespace Project1.Sprites
         private Vector2 velocity_;
         private Knight player_;
 
-        private double elapsed_attacked_time_;
         private double attacked_timer_ = 0.2;
+        private double elapsed_attacked_time_;
+
+        private double attack_timer_ = 1.6;
+        private double elapsed_attack_time_;
 
         private float speed_ = 50f;
 
         private bool attacked_ = false;
+        private bool attacking_ = true;
 
         private Healthbar health_bar_;
 
@@ -28,13 +33,16 @@ namespace Project1.Sprites
 
         public override void Update(GameTime gameTime)
         {
-            if (!Dead)
+            if (Dead)
+                animation_manager_.UpdateTillEnd(gameTime);
+            else
             {
                 // Taking damage
                 elapsed_attacked_time_ += gameTime.ElapsedGameTime.TotalSeconds;
-                if (player_.IsAttacking && Rectangle.Intersects(player_.AttackRectangle) && elapsed_attacked_time_ >= attacked_timer_)
+                if (player_.Attacking && Rectangle.Intersects(player_.AttackRectangle) && elapsed_attacked_time_ >= attacked_timer_)
                 {
                     elapsed_attacked_time_ = 0;
+                    elapsed_attack_time_ = 0;
                     health_bar_.TakeDamage(10);
 
                     if (animation_manager_.Right)
@@ -52,19 +60,31 @@ namespace Project1.Sprites
                 float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (!Rectangle.Intersects(player_.Rectangle))
                 {
+                    attacking_ = false;
                     Vector2 moveDir = player_.Position - Position;
                     moveDir.Normalize();
                     Position += moveDir * speed_ * dt;
 
                     velocity_.X += moveDir.X;
                 }
+                else
+                {
+                    // Attack
+                    attacking_ = true;
+                    elapsed_attack_time_ += gameTime.ElapsedGameTime.TotalSeconds;
+                    if (elapsed_attack_time_ >= attack_timer_)
+                    {
+                        Console.WriteLine("Attacked player");
+                        // player_.TakeDamage(10);
+                        player_.TakeDamage(10);
+                        elapsed_attack_time_ = 0;
+                    }
+                }
 
                 // Updates
                 animation_manager_.Update(gameTime);
                 health_bar_.Update(gameTime);
             }
-            if (Dead)
-                animation_manager_.UpdateTillEnd(gameTime);
 
             SetAnimation();
             velocity_.X = 0;
@@ -88,7 +108,9 @@ namespace Project1.Sprites
                 animation_manager_.Play(animations_["Dead"]);
             else
             {
-                if (velocity_.X < 0)
+                if (attacked_)
+                    animation_manager_.Play(animations_["Attacked"]);
+                else if (velocity_.X < 0)
                 {
                     animation_manager_.Right = false;
                     animation_manager_.Play(animations_["Running"]);
@@ -98,8 +120,8 @@ namespace Project1.Sprites
                     animation_manager_.Right = true;
                     animation_manager_.Play(animations_["Running"]);
                 }
-                else if (attacked_)
-                    animation_manager_.Play(animations_["Attacked"]);
+                else if (attacking_)
+                    animation_manager_.Play(animations_["Attack"]);
                 else if (velocity_.X == 0)
                     animation_manager_.Play(animations_["Idle"]);
             }
