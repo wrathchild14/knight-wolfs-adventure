@@ -47,26 +47,7 @@ namespace Project1.Sprites
             velocity_.X = 0;
         }
 
-        internal void Collision(CollisionTile tile, int x_offset, int y_offset)
-        {
-            Rectangle tile_rectangle = tile.Rectangle;
-            if (Rectangle.TouchTopOf(tile_rectangle))
-                Y = tile_rectangle.Y - Rectangle.Height;
-            
-            if (Rectangle.TouchLeftOf(tile_rectangle))
-                X = tile_rectangle.X - Rectangle.Width - 2;
-
-            if (Rectangle.TouchRightOf(tile_rectangle))
-                X = tile_rectangle.X + tile_rectangle.Width + 4;
-
-            if (Rectangle.TouchBottomOf(tile_rectangle))
-                Y = tile_rectangle.Y + tile_rectangle.Height + 14;
-
-            if (X < 0) X = 0;
-            if (X > x_offset - Rectangle.Width) X = x_offset - Rectangle.Width;
-            if (Y < 0) Y = 0;
-            if (Y > y_offset - Rectangle.Height) Y = y_offset - Rectangle.Height;
-        }
+        
 
         private void Attack()
         {

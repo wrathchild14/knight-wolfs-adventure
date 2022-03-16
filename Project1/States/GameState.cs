@@ -10,25 +10,25 @@ namespace Project1.States
 {
     public class GameState : State
     {
-        private Scene _Scene;
+        private Level1 scene_;
 
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
-            _Scene = new Scene(game, content);
+            scene_ = new Level1(game, content);
         }
 
         // GameState for loading games from the json save file
         public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, bool sceneLoad) : this(game, graphicsDevice, content)
         {
-            _Scene = new Scene(game, content);
+            scene_ = new Level1(game, content);
 
             // TODO: Imporve this
-            _Scene.Load();
+            scene_.Load();
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            _Scene.Draw(gameTime, spriteBatch);
+            scene_.Draw(gameTime, spriteBatch);
         }
 
         public override void PostUpdate(GameTime gameTime)
@@ -38,7 +38,7 @@ namespace Project1.States
 
         public override void Update(GameTime gameTime)
         {
-            _Scene.Update(gameTime);
+            scene_.Update(gameTime);
         }
     }
 }

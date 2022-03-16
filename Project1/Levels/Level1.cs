@@ -13,7 +13,7 @@ using Project1.TileMap;
 
 namespace Project1
 {
-    internal class Scene
+    internal class Level1
     {
         private Game1 game_;
 
@@ -30,14 +30,27 @@ namespace Project1
 
         private Camera camera_;
         private SpriteBatch sprite_batch_;
-        private List<Sprite> sprite_list_;
+        private List<Sprite> player_sprite_list_;
+        private List<Skeleton> enemies_ = new List<Skeleton>();
 
         private Map map_;
 
-        public Scene(Game1 game, ContentManager content)
+        public Level1(Game1 game, ContentManager content)
         {
-            // Manual initialization, can't look at this shit. Put it in file
-            player_knight_ = new Knight(content.Load<Texture2D>("DebugRectangle"), content.Load<Texture2D>("Sprites/Healthbar"), new Dictionary<string, Animation>()
+            sprite_batch_ = new SpriteBatch(game.GraphicsDevice);
+            // Content loaders
+            Texture2D healthbar_texture = content.Load<Texture2D>("Sprites/Healthbar");
+            // Enemy (which is generated in Map.cs)
+            Dictionary<string, Texture2D> skeleton_textures_for_animations = new Dictionary<string, Texture2D>()
+            {
+                { "Attack", content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttack") },
+                { "Dead", content.Load<Texture2D>("Sprites/Skeleton/SkeletonDeath")},
+                { "Idle", content.Load<Texture2D>("Sprites/Skeleton/SkeletonIdle")},
+                { "Running", content.Load<Texture2D>("Sprites/Skeleton/SkeletonRunning")},
+                { "Attacked", content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttacked")}
+            };
+            // Player
+            player_knight_ = new Knight(content.Load<Texture2D>("DebugRectangle"), healthbar_texture, new Dictionary<string, Animation>()
             {
                 { "Dead", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightDeath"), 4) },
                 { "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 15) },
@@ -46,7 +59,7 @@ namespace Project1
                 { "Running", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunning"), 8) }
             })
             { Position = new Vector2(50, 400) };
-
+            // Dog
             wolf_dog_ = new Wolf(new Dictionary<string, Animation>()
             {
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfIdle"), 4) },
@@ -55,30 +68,11 @@ namespace Project1
             {
                 Position = new Vector2(player_knight_.Position.X - 40, player_knight_.Position.Y + 15)
             };
-
-            sprite_list_ = new List<Sprite>() // ?
+            player_sprite_list_ = new List<Sprite>()
             {
                 wolf_dog_, player_knight_
             };
 
-            Random rand = new Random();
-
-            for (int i = 0; i < 6; i++)
-            {
-                sprite_list_.Add(new Skeleton(content.Load<Texture2D>("Sprites/Healthbar"), player_knight_, new Dictionary<string, Animation>()
-                {
-                    { "Attack", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttack"), 8) },
-                    { "Dead", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonDeath"), 4)},
-                    { "Idle", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonIdle"), 4)},
-                    { "Running", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonRunning"), 4)},
-                    { "Attacked", new Animation(content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttacked"), 4)}
-                })
-                {
-                    Position = new Vector2(i * 800 * ((float)rand.NextDouble()) + 200, (i * 600 * ((float)rand.NextDouble())) + 100)
-                });
-            }
-
-            game_ = game; // ?
             player_stats_ = new PlayerStats()
             {
                 Name = "Jovan",
@@ -89,10 +83,9 @@ namespace Project1
             end_sound_ = content.Load<SoundEffect>("Sounds/end");
             Font = content.Load<SpriteFont>("defaultFont");
 
-            sprite_batch_ = new SpriteBatch(game_.GraphicsDevice);
-
             Tile.Content = content;
-            map_ = new Map();
+
+            map_ = new Map(skeleton_textures_for_animations, healthbar_texture, player_knight_);
             map_.Generate(new int[,]
             {
                 { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6},
@@ -100,9 +93,9 @@ namespace Project1
                 { 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5},
                 { 1, 1, 1, 1, 1, 1, 1, 7, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
                 { 1, 1, 1, 1, 2, 2, 3, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                { 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1},
-                { 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1},
+                { 1, 1, 4, 1, 1, 99, 99, 1, 1, 1, 1, 1, 1, 7, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1},
+                { 1, 1, 1, 1, 1, 99, 99, 3, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+                { 1, 1, 1, 1, 1, 99, 99, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1, 1},
                 { 1, 1, 1, 2, 1, 1, 1, 2, 2, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
                 { 1, 1, 1, 2, 2, 1, 1, 4, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 7, 1, 1, 1, 1, 1, 1, 1},
                 { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 8, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -114,6 +107,8 @@ namespace Project1
                 { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 
             }, 64, "Tiles/Forest");
+            // Get generated enemies from map
+            enemies_ = map_.GetEnemies();
             camera_ = new Camera(map_.Width, map_.Height);
         }
 
@@ -146,8 +141,11 @@ namespace Project1
         internal void Update(GameTime gameTime)
         {
             // Sprites
-            foreach (var sprite in sprite_list_)
+            foreach (var sprite in player_sprite_list_)
                 sprite.Update(gameTime);
+
+            foreach (Skeleton enemy in enemies_)
+                enemy.Update(gameTime);
 
             // Camera
             camera_.Update(player_knight_);
@@ -167,8 +165,11 @@ namespace Project1
             map_.Draw(sprite_batch_);
 
             // Sprites
-            foreach (var sprite in sprite_list_)
+            foreach (var sprite in player_sprite_list_)
                 sprite.Draw(gameTime, sprite_batch_);
+
+            foreach (var enemy in enemies_)
+                enemy.Draw(gameTime, sprite_batch_);
 
             sprite_batch_.End();
 

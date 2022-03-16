@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Project1.Managers;
 using Project1.Models;
+using Project1.TileMap;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,6 +129,27 @@ namespace Project1
 
             if (animation_manager_ != null)
                 animation_manager_.Draw(spriteBatch);
+        }
+
+        internal void Collision(CollisionTile tile, int x_offset, int y_offset)
+        {
+            Rectangle tile_rectangle = tile.Rectangle;
+            if (Rectangle.TouchTopOf(tile_rectangle))
+                Y = tile_rectangle.Y - Rectangle.Height;
+
+            if (Rectangle.TouchLeftOf(tile_rectangle))
+                X = tile_rectangle.X - Rectangle.Width - 2;
+
+            if (Rectangle.TouchRightOf(tile_rectangle))
+                X = tile_rectangle.X + tile_rectangle.Width + 4;
+
+            if (Rectangle.TouchBottomOf(tile_rectangle))
+                Y = tile_rectangle.Y + tile_rectangle.Height + 14;
+
+            if (X < 0) X = 0;
+            if (X > x_offset - Rectangle.Width) X = x_offset - Rectangle.Width;
+            if (Y < 0) Y = 0;
+            if (Y > y_offset - Rectangle.Height) Y = y_offset - Rectangle.Height;
         }
 
         public virtual void OnCollide(Sprite sprite)

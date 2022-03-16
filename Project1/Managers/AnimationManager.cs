@@ -15,8 +15,6 @@ namespace Project1.Managers
         private float timer_;
         private bool updated_;
 
-        private bool till_end_;
-
         public int FrameWidth
         {
             get
@@ -44,8 +42,8 @@ namespace Project1.Managers
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (!updated_)
-                throw new Exception("Need to call 'Update' first");
+            if (!updated_) 
+                Console.WriteLine("AnimationManager.cs - Need to call Update frist");
 
             updated_ = false;
 
@@ -93,14 +91,10 @@ namespace Project1.Managers
             animation_.CurrentFrame = 0;
         }
 
-        public void PlayTillEnd()
-        {
-            till_end_ = true;
-        }
-
         public void UpdateTillEnd(GameTime game_time)
         {
             updated_ = true;
+
             timer_ += (float)game_time.ElapsedGameTime.TotalSeconds;
             if (timer_ > animation_.FrameSpeed)
             {

@@ -96,7 +96,7 @@ namespace Project1.Sprites
                 spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
 
             if (animation_manager_ != null)
-                animation_manager_.Draw(spriteBatch);
+                 animation_manager_.Draw(spriteBatch);
 
             if (health_bar_ != null)
                 health_bar_.Draw(gameTime, spriteBatch);
