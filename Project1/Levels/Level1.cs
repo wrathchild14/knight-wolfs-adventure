@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using Project1.TileMap;
+using Project1.Components;
+using Microsoft.Xna.Framework.Input;
 
 namespace Project1
 {
@@ -29,6 +31,7 @@ namespace Project1
         private SpriteFont Font;
 
         private Camera camera_;
+        private DialogBox dialog_box_;
         private SpriteBatch sprite_batch_;
         private List<Sprite> player_sprite_list_;
         private List<Skeleton> enemies_ = new List<Skeleton>();
@@ -37,6 +40,9 @@ namespace Project1
 
         public Level1(Game1 game, ContentManager content)
         {
+            // Can get rid of this private
+            game_ = game;
+
             Texture2D debug = content.Load<Texture2D>("DebugRectangle");
             sprite_batch_ = new SpriteBatch(game.GraphicsDevice);
             // Content loaders
@@ -109,6 +115,16 @@ namespace Project1
             // Get generated enemies from map
             enemies_ = map_.GetEnemies();
             camera_ = new Camera(map_.Width, map_.Height);
+
+            dialog_box_ = new DialogBox(game_, Font)
+            {
+                Text = "Hello World! Press Enter or Button A to proceed.\n" +
+                       "I will be on the next pane! " +
+                       "And wordwrap will occur, especially if there are some longer words!\n" +
+                       "Monospace fonts work best but you might not want Courier New.\n" +
+                       "In this code sample, after this dialog box finishes, you can press the O key to open a new one."
+            };
+            dialog_box_.Initialize();
         }
 
         public void Save(PlayerStats stats)
@@ -139,6 +155,18 @@ namespace Project1
 
         internal void Update(GameTime gameTime)
         {
+            dialog_box_.Update();
+
+            // Debug dialog box
+            if (Keyboard.GetState().IsKeyDown(Keys.O))
+            {
+                if (!dialog_box_.Active)
+                {
+                    dialog_box_ = new DialogBox(game_, Font) { Text = "New dialog box!" };
+                    dialog_box_.Initialize();
+                }
+            }
+
             // Sprites
             foreach (var sprite in player_sprite_list_)
                 sprite.Update(gameTime);
@@ -174,6 +202,7 @@ namespace Project1
 
             // Scoreboard (in the old spriteBatch)
             spriteBatch.DrawString(Font, destroyed_.ToString(), new Vector2(10, 10), Color.White);
+            dialog_box_.Draw(spriteBatch);
         }
     }
 }

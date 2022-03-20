@@ -15,6 +15,8 @@ namespace Project1
 
         public static int screen_width = 1280;
         public static int screen_height = 720;
+        public Vector2 CenterScreen
+            => new Vector2(graphics.GraphicsDevice.Viewport.Width / 2f, graphics.GraphicsDevice.Viewport.Height / 2f);
 
         private MenuState _menuState;
         private State _currentState;
