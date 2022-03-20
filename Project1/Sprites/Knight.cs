@@ -21,7 +21,7 @@ namespace Project1.Sprites
         private bool _pray;
 
         private Texture2D debug_attack_rectangle_;
-        private bool debug_attack_rectangle_bool_ = false;
+        private bool debug_attack_rectangle_bool_ = true;
 
         private Healthbar health_bar_;
 
@@ -73,6 +73,9 @@ namespace Project1.Sprites
         {
             if (Attacking && debug_attack_rectangle_bool_)
                 spriteBatch.Draw(debug_attack_rectangle_, AttackRectangle, Color.Red);
+
+            if (debug_attack_rectangle_bool_)
+                spriteBatch.Draw(debug_attack_rectangle_, Rectangle, Color.Red);
 
             if (health_bar_ != null)
                 health_bar_.Draw(gameTime, spriteBatch);

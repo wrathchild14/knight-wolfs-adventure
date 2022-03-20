@@ -20,15 +20,18 @@ namespace Project1.Sprites
         private float speed_ = 50f;
 
         private bool attacked_ = false;
-        private bool attacking_ = true;
+        private bool attacking_ = false;
 
         private Healthbar health_bar_;
+        private Texture2D debug_rect_;
+        private bool debug_rect_bool_ = true;
 
-        public Skeleton(Texture2D healthbarTexture, Knight player, Dictionary<string, Animation> animations) : base(animations)
+        public Skeleton(Texture2D debug_rect, Texture2D healthbarTexture, Knight player, Dictionary<string, Animation> animations) : base(animations)
         {
             player_ = player;
             health_bar_ = new Healthbar(healthbarTexture, this);
             animations_["Attacked"].FrameSpeed = 0.1f;
+            debug_rect_ = debug_rect;
         }
 
         public override void Update(GameTime gameTime)
@@ -56,28 +59,32 @@ namespace Project1.Sprites
                 else
                     attacked_ = false;
 
-                // Follows the player (Reused code from dog)
-                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (!Rectangle.Intersects(player_.Rectangle))
+                float distance = Vector2.Distance(Position, player_.Position);
+                if (distance < 500)
                 {
-                    attacking_ = false;
-                    Vector2 moveDir = player_.Position - Position;
-                    moveDir.Normalize();
-                    Position += moveDir * speed_ * dt;
-
-                    velocity_.X += moveDir.X;
-                }
-                else
-                {
-                    // Attack
-                    attacking_ = true;
-                    elapsed_attack_time_ += gameTime.ElapsedGameTime.TotalSeconds;
-                    if (elapsed_attack_time_ >= attack_timer_)
+                    // Follows the player (Reused code from dog)
+                    float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (!Rectangle.Intersects(player_.Rectangle))
                     {
-                        Console.WriteLine("Attacked player");
-                        // player_.TakeDamage(10);
-                        player_.TakeDamage(10);
-                        elapsed_attack_time_ = 0;
+                        attacking_ = false;
+                        Vector2 moveDir = player_.Position - Position;
+                        moveDir.Normalize();
+                        Position += moveDir * speed_ * dt;
+
+                        velocity_.X += moveDir.X;
+                    }
+                    else
+                    {
+                        // Attack
+                        attacking_ = true;
+                        elapsed_attack_time_ += gameTime.ElapsedGameTime.TotalSeconds;
+                        if (elapsed_attack_time_ >= attack_timer_)
+                        {
+                            Console.WriteLine("Attacked player");
+                            // player_.TakeDamage(10);
+                            player_.TakeDamage(10);
+                            elapsed_attack_time_ = 0;
+                        }
                     }
                 }
 
@@ -92,6 +99,9 @@ namespace Project1.Sprites
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (debug_rect_bool_)
+                spriteBatch.Draw(debug_rect_, Rectangle, Color.Red);
+
             if (texture_ != null)
                 spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
 

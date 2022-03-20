@@ -23,6 +23,7 @@ namespace Project1.TileMap
         private Dictionary<string, Texture2D> skeleton_textures_for_animation_;
         private Texture2D healthbar_texture_;
         private Knight player_knight_;
+        private Texture2D debug_;
 
         public List<Skeleton> GetEnemies()
         {
@@ -39,11 +40,12 @@ namespace Project1.TileMap
             get { return height_; }
         }
 
-        public Map(Dictionary<string, Texture2D> skeleton_textures_for_animation, Texture2D healthbar_texture, Knight player_knight)
+        public Map(Texture2D debug, Dictionary<string, Texture2D> skeleton_textures_for_animation, Texture2D healthbar_texture, Knight player_knight)
         {
             skeleton_textures_for_animation_ = skeleton_textures_for_animation;
             healthbar_texture_ = healthbar_texture;
             player_knight_ = player_knight;
+            debug_ = debug;
         }
 
         public void Generate(int[,] map, int size, String path)
@@ -58,7 +60,7 @@ namespace Project1.TileMap
                         // Basic block behind enemy
                         collison_tiles_.Add(new CollisionTile(1, new Rectangle(x * size, y * size, size, size), path));
 
-                        Skeleton temp = new Skeleton(healthbar_texture_, player_knight_, new Dictionary<string, Animation>()
+                        Skeleton temp = new Skeleton(debug_, healthbar_texture_, player_knight_, new Dictionary<string, Animation>()
                             {
                                 { "Attack", new Animation(skeleton_textures_for_animation_["Attack"], 8) },
                                 { "Dead", new Animation(skeleton_textures_for_animation_["Dead"], 4)},
