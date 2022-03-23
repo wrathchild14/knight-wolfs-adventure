@@ -18,10 +18,10 @@ namespace Project1.Sprites
 
         private float speed_x_ = 3.6f;
         private float speed_y_ = 2.5f;
-        private bool _pray;
+        private bool pray_;
 
         private Texture2D debug_attack_rectangle_;
-        private bool debug_attack_rectangle_bool_ = true;
+        private bool debug_attack_rectangle_bool_ = false;
 
         private Healthbar health_bar_;
 
@@ -45,9 +45,8 @@ namespace Project1.Sprites
             }
             SetAnimation();
             velocity_.X = 0;
+            velocity_.Y = 0;
         }
-
-        
 
         private void Attack()
         {
@@ -77,8 +76,7 @@ namespace Project1.Sprites
             if (debug_attack_rectangle_bool_)
                 spriteBatch.Draw(debug_attack_rectangle_, Rectangle, Color.Red);
 
-            if (health_bar_ != null)
-                health_bar_.Draw(gameTime, spriteBatch);
+            health_bar_?.Draw(gameTime, spriteBatch);
 
             base.Draw(gameTime, spriteBatch);
         }
@@ -101,7 +99,9 @@ namespace Project1.Sprites
                     animation_manager_.Right = true;
                     animation_manager_.Play(animations_["Running"]);
                 }
-                else if (_pray)
+                else if (velocity_.Y > 0)
+                    animation_manager_.Play(animations_["Running"]);
+                else if (pray_)
                     animation_manager_.Play(animations_["Pray"]);
                 else if (velocity_.X == 0)
                     animation_manager_.Play(animations_["Idle"]);
@@ -120,10 +120,12 @@ namespace Project1.Sprites
             if (Keyboard.GetState().IsKeyDown(Keys.W))
             {
                 Y -= speed_y_;
+                velocity_.Y += speed_y_;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.S))
             {
                 Y += speed_y_;
+                velocity_.Y += speed_y_;
             }
             if (Keyboard.GetState().IsKeyDown(Keys.A))
             {
@@ -150,9 +152,18 @@ namespace Project1.Sprites
 
             // Pray
             if (Keyboard.GetState().IsKeyDown(Keys.P))
-                _pray = true;
+                pray_ = true;
             else
-                _pray = false;
+                pray_ = false;
+        }
+
+        // meh, dont look at this
+        internal bool IsTouching(Rectangle rectangle)
+        {
+            return Rectangle.Right >= rectangle.Left &&
+               Rectangle.Left <= rectangle.Right &&
+               Rectangle.Bottom >= rectangle.Top &&
+               Rectangle.Top <= rectangle.Bottom;
         }
     }
 }

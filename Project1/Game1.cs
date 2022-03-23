@@ -23,6 +23,8 @@ namespace Project1
         private State _nextState;
         private State _endState;
 
+        private int level_ = 1;
+
         public Game1()
         {
             // Setting up graphics and content
@@ -86,6 +88,12 @@ namespace Project1
         public void ChangeStateMenu()
         {
             _nextState = _menuState;
+        }
+
+        public void NextLevelState()
+        {
+            level_++;
+            _nextState = new GameState(this, GraphicsDevice, Content, level_);
         }
 
         public void ChangeStateEnd()

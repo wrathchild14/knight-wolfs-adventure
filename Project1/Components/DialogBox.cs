@@ -11,105 +11,67 @@ namespace Project1.Components
 {
     class DialogBox
     {
-        /// <summary>
-        /// All text contained in this dialog box
-        /// </summary>
-        public string Text { get; set; }
-
-        /// <summary>
-        /// Bool that determines active state of this dialog box
-        /// </summary>
-        public bool Active { get; private set; }
-
-        /// <summary>
-        /// X,Y coordinates of this dialog box
-        /// </summary>
-        public Vector2 Position { get; set; }
-
-        /// <summary>
-        /// Width and Height of this dialog box
-        /// </summary>
-        public Vector2 Size { get; set; }
-
-        /// <summary>
-        /// Color used to fill dialog box background
-        /// </summary>
-        public Color FillColor { get; set; }
-
-        /// <summary>
-        /// Color used for border around dialog box
-        /// </summary>
-        public Color BorderColor { get; set; }
-
-        /// <summary>
-        /// Color used for text in dialog box
-        /// </summary>
-        public Color DialogColor { get; set; }
-
         private Game1 game_;
         private SpriteFont font_;
 
-        /// <summary>
-        /// Thickness of border
-        /// </summary>
+        // All text contained in this dialog box
+        public string Text { get; set; }
+
+        // Bool that determines active state of this dialog box
+        public bool Active { get; private set; }
+
+        // X,Y coordinates of this dialog box
+        public Vector2 Position { get; set; }
+
+        // Width and Height of this dialog box
+        public Vector2 Size { get; set; }
+
+        // Color used to fill dialog box background
+        public Color FillColor { get; set; }
+
+        // Color used for border around dialog box
+        public Color BorderColor { get; set; }
+
+        // Color used for text in dialog box
+        public Color DialogColor { get; set; }
+
+        // Thickness of border
         public int BorderWidth { get; set; }
 
-        /// <summary>
-        /// Background fill texture (built from FillColor)
-        /// </summary>
+        // Background fill texture (built from FillColor)
         private readonly Texture2D fill_texture_;
 
-        /// <summary>
-        /// Border fill texture (built from BorderColor)
-        /// </summary>
+        // Border fill texture (built from BorderColor)
         private readonly Texture2D border_texture_;
 
-        /// <summary>
-        /// Collection of pages contained in this dialog box
-        /// </summary>
+        // Collection of pages contained in this dialog box
         private List<string> pages_;
 
-        /// <summary>
-        /// Margin surrounding the text inside the dialog box
-        /// </summary>
+        // Margin surrounding the text inside the dialog box
         private const float DialogBoxMargin = 24f;
 
-        /// <summary>
-        /// Size (in pixels) of a wide alphabet letter (W is the widest letter in almost every font) 
-        /// </summary>
+        // Size (in pixels) of a wide alphabet letter (W is the widest letter in almost every font) 
         private Vector2 character_size_;
-        private KeyboardManager keyboard_;
 
-        /// <summary>
-        /// The amount of characters allowed on a given line
-        /// NOTE: If you want to use a font that is not monospaced, this will need to be reevaluated
-        /// </summary>
-        private int MaxCharsPerLine => (int)Math.Floor((Size.X - DialogBoxMargin) / character_size_.X);
+        // The amount of characters allowed on a given line
+        // NOTE: If you want to use a font that is not monospaced, this will need to be reevaluated
+        //private int MaxCharsPerLine => (int)Math.Floor((Size.X - DialogBoxMargin) / character_size_.X);
+        private int MaxCharsPerLine => 49; // fixed number
 
-        /// <summary>
-        /// Determine the maximum amount of lines allowed per page
-        /// NOTE: This will change automatically with font size
-        /// </summary>
+        // Determine the maximum amount of lines allowed per page
+        // NOTE: This will change automatically with font size
         private int MaxLines => (int)Math.Floor((Size.Y - DialogBoxMargin) / character_size_.Y) - 1;
 
-        /// <summary>
-        /// The index of the current page
-        /// </summary>
+        // The index of the current page
         private int current_page_;
 
-        /// <summary>
-        /// The stopwatch interval (used for blinking indicator)
-        /// </summary>
+        // The stopwatch interval (used for blinking indicator)
         private int interval_;
 
-        /// <summary>
-        /// The position and size of the dialog box fill rectangle
-        /// </summary>
+        // The position and size of the dialog box fill rectangle
         private Rectangle TextRectangle => new Rectangle(Position.ToPoint(), Size.ToPoint());
 
-        /// <summary>
-        /// The position and size of the bordering sides on the edges of the dialog box
-        /// </summary>
+        // The position and size of the bordering sides on the edges of the dialog box
         private List<Rectangle> BorderRectangles => new List<Rectangle>
         {
             // Top (contains top-left & top-right corners)
@@ -127,19 +89,13 @@ namespace Project1.Components
             new Rectangle(TextRectangle.X - BorderWidth, TextRectangle.Y, BorderWidth, TextRectangle.Height)
         };
 
-        /// <summary>
-        /// The starting position of the text inside the dialog box
-        /// </summary>
+        // The starting position of the text inside the dialog box
         private Vector2 TextPosition => new Vector2(Position.X + DialogBoxMargin / 2, Position.Y + DialogBoxMargin / 2);
 
-        /// <summary>
-        /// Stopwatch used for the blinking (next page) indicator
-        /// </summary>
+        // Stopwatch used for the blinking (next page) indicator
         private Stopwatch stopwatch_;
 
-        /// <summary>
-        /// Default constructor
-        /// </summary>
+        // Default constructor
         public DialogBox(Game1 game, SpriteFont font)
         {
             game_ = game;
@@ -172,55 +128,37 @@ namespace Project1.Components
 
             font_ = font;
             character_size_ = font_.MeasureString(new StringBuilder("W", 1));
-
-            keyboard_ = new KeyboardManager();
         }
 
-        /// <summary>
-        /// Initialize a dialog box
-        /// - can be used to reset the current dialog box in case of "I didn't quite get that..."
-        /// </summary>
-        /// <param name="text"></param>
+        // Initialize a dialog box
+        // - can be used to reset the current dialog box in case of "I didn't quite get that..."
         public void Initialize(string text = null)
         {
             Text = text ?? Text;
-
             current_page_ = 0;
-
             Show();
         }
 
-        /// <summary>
-        /// Show the dialog box on screen
-        /// - invoke this method manually if Text changes
-        /// </summary>
+        // Show the dialog box on screen
+        // - invoke this method manually if Text changes
         public void Show()
         {
             Active = true;
-
             // use stopwatch to manage blinking indicator
             stopwatch_ = new Stopwatch();
-
             stopwatch_.Start();
-
             pages_ = WordWrap(Text);
         }
 
-        /// <summary>
-        /// Manually hide the dialog box
-        /// </summary>
+        // Manually hide the dialog box
         public void Hide()
         {
             Active = false;
-
             stopwatch_.Stop();
-
             stopwatch_ = null;
         }
 
-        /// <summary>
-        /// Process input for dialog box
-        /// </summary>
+        // Process input for dialog box
         public void Update()
         {
             if (Active)
@@ -248,10 +186,7 @@ namespace Project1.Components
             }
         }
 
-        /// <summary>
-        /// Draw the dialog box on screen if it's currently active
-        /// </summary>
-        /// <param name="spriteBatch"></param>
+        // Draw the dialog box on screen if it's currently active
         public void Draw(SpriteBatch spriteBatch)
         {
             if (Active)
@@ -281,22 +216,14 @@ namespace Project1.Components
             }
         }
 
-        /// <summary>
-        /// Whether the indicator should be visible or not
-        /// </summary>
-        /// <returns></returns>
+        // Whether the indicator should be visible or not
         private bool BlinkIndicator()
         {
             interval_ = (int)Math.Floor((double)(stopwatch_.ElapsedMilliseconds % 1000));
-
             return interval_ < 500;
         }
 
-        /// <summary>
-        /// Wrap words to the next line where applicable
-        /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
+        // Wrap words to the next line where applicable
         private List<string> WordWrap(string text)
         {
             var pages = new List<string>();
@@ -316,11 +243,9 @@ namespace Project1.Components
                 var isLastChar = i == text.Length - 1;
 
                 currentWord.Append(currentChar);
-
                 if (char.IsWhiteSpace(currentChar) || isLastChar)
                 {
                     var potentialLength = currentLine.Length + currentWord.Length;
-
                     if (potentialLength > MaxCharsPerLine)
                     {
                         result.AppendLine(currentLine.ToString());
@@ -329,24 +254,17 @@ namespace Project1.Components
 
                         resultLines++;
                     }
-
                     currentLine.Append(currentWord);
-
                     currentWord.Clear();
-
                     if (isLastChar || isNewLine)
                     {
                         result.AppendLine(currentLine.ToString());
                     }
-
                     if (resultLines > MaxLines || isLastChar || isNewLine)
                     {
                         pages.Add(result.ToString());
-
                         result.Clear();
-
                         resultLines = 0;
-
                         if (isNewLine)
                         {
                             currentLine.Clear();
@@ -354,7 +272,6 @@ namespace Project1.Components
                     }
                 }
             }
-
             return pages;
         }
     }

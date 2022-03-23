@@ -24,7 +24,7 @@ namespace Project1.Sprites
 
         private Healthbar health_bar_;
         private Texture2D debug_rect_;
-        private bool debug_rect_bool_ = true;
+        private bool debug_rect_bool_ = false;
 
         public Skeleton(Texture2D debug_rect, Texture2D healthbarTexture, Knight player, Dictionary<string, Animation> animations) : base(animations)
         {
@@ -105,11 +105,9 @@ namespace Project1.Sprites
             if (texture_ != null)
                 spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
 
-            if (animation_manager_ != null)
-                 animation_manager_.Draw(spriteBatch);
+            animation_manager_?.Draw(spriteBatch);
 
-            if (health_bar_ != null)
-                health_bar_.Draw(gameTime, spriteBatch);
+            health_bar_?.Draw(gameTime, spriteBatch);
         }
 
         private void SetAnimation()

@@ -10,10 +10,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Text.Json;
 using Project1.TileMap;
+using Project1.Levels;
 
 namespace Project1
 {
-    internal class Level2
+    internal class Level2 : Level
     {
         private Game1 game_;
 
@@ -104,7 +105,7 @@ namespace Project1
                 { 1,  1,  7,  1,  4,  1,  1,  9,  9,  3,  1,  1,  2,  1,  1,  4,  7,  1, 10,  1,  1,  1,  1,  1  },
                 { 1,  8,  7,  1,  1,  1, 10,  4,  5,  1,  2,  1,  1, 10,  1,  4,  7,  4,  1,  1,  8,  1,  1,  1  },
                 { 1,  1,  7,  1,  5,  1,  1,  1,  2,  1,  1,  3,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1  },
-            }, 64, "Tiles/Town");
+            }, 128, "Tiles/Town");
             // Get generated enemies from map
             enemies_ = map_.GetEnemies();
             camera_ = new Camera(map_.Width, map_.Height);
@@ -120,7 +121,7 @@ namespace Project1
         }
 
         // Called in create
-        public void Load()
+        public override void Load()
         {
             var fileContent = File.ReadAllText(stats_path_);
             player_stats_ = JsonSerializer.Deserialize<PlayerStats>(fileContent);
@@ -136,7 +137,7 @@ namespace Project1
             game_.ChangeStateMenu();
         }
 
-        internal void Update(GameTime gameTime)
+        public override void Update(GameTime gameTime)
         {
             // Sprites
             foreach (var sprite in player_sprite_list_)
@@ -154,7 +155,7 @@ namespace Project1
                     player_knight_.Collision(tile, map_.Width, map_.Height);
         }
 
-        internal void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Camera
             sprite_batch_.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera_.ViewMatrix);

@@ -127,8 +127,7 @@ namespace Project1
             if (texture_ != null)
                 spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
 
-            if (animation_manager_ != null)
-                animation_manager_.Draw(spriteBatch);
+            animation_manager_?.Draw(spriteBatch);
         }
 
         internal void Collision(CollisionTile tile, int x_offset, int y_offset)
@@ -144,7 +143,7 @@ namespace Project1
                 X = tile_rectangle.X + tile_rectangle.Width + 4;
 
             if (Rectangle.TouchBottomOf(tile_rectangle))
-                Y = tile_rectangle.Y + tile_rectangle.Height + 14;
+                Y = tile_rectangle.Y + tile_rectangle.Height + Rectangle.Height / 2;
 
             if (X < 0) X = 0;
             if (X > x_offset - Rectangle.Width) X = x_offset - Rectangle.Width;
