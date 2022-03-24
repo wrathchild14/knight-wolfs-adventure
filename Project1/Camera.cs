@@ -46,7 +46,7 @@ namespace Project1
 
         public Matrix Transform { get; private set; }
 
-        internal void Update(Knight player)
+        public void Update(Knight player)
         {
             position_.X = player.Position.X - (ScreenWidth / 2);
             position_.Y = player.Position.Y - (ScreenHight / 2);

@@ -35,6 +35,7 @@ namespace Project1.Sprites
 
         public override void Update(GameTime gameTime)
         {
+            //Console.W rite(position_);
             if (Dead)
                 animation_manager_.UpdateTillEnd(gameTime);
             else
@@ -63,7 +64,7 @@ namespace Project1.Sprites
             }
         }
 
-        internal void TakeDamage(int damage)
+        public void TakeDamage(int damage)
         {
             health_bar_.TakeDamage(damage);
         }
@@ -158,7 +159,7 @@ namespace Project1.Sprites
         }
 
         // meh, dont look at this
-        internal bool IsTouching(Rectangle rectangle)
+        public bool IsTouching(Rectangle rectangle)
         {
             return Rectangle.Right >= rectangle.Left &&
                Rectangle.Left <= rectangle.Right &&

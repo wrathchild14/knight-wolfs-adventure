@@ -48,7 +48,7 @@ namespace Project1.TileMap
             debug_ = debug;
         }
 
-        public void Generate(int[,] map, int size, String path)
+        public void Generate(int[,] map, int size, String path, int skeleton_follow_distance)
         {
             for (int x = 0; x < map.GetLength(1); x++)
                 for (int y = 0; y < map.GetLength(0); y++)
@@ -60,7 +60,7 @@ namespace Project1.TileMap
                         // Basic block behind enemy
                         collison_tiles_.Add(new CollisionTile(1, new Rectangle(x * size, y * size, size, size), path));
 
-                        Skeleton temp = new Skeleton(debug_, healthbar_texture_, player_knight_, new Dictionary<string, Animation>()
+                        Skeleton temp = new Skeleton(debug_, healthbar_texture_, player_knight_, skeleton_follow_distance, new Dictionary<string, Animation>()
                             {
                                 { "Attack", new Animation(skeleton_textures_for_animation_["Attack"], 8) },
                                 { "Dead", new Animation(skeleton_textures_for_animation_["Dead"], 4)},

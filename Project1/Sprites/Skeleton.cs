@@ -8,6 +8,8 @@ namespace Project1.Sprites
 {
     public class Skeleton : Sprite
     {
+        private int follow_distance_ = 500;
+
         private Vector2 velocity_;
         private Knight player_;
 
@@ -26,12 +28,13 @@ namespace Project1.Sprites
         private Texture2D debug_rect_;
         private bool debug_rect_bool_ = false;
 
-        public Skeleton(Texture2D debug_rect, Texture2D healthbarTexture, Knight player, Dictionary<string, Animation> animations) : base(animations)
+        public Skeleton(Texture2D debug_rect, Texture2D healthbarTexture, Knight player, int follow_distance, Dictionary<string, Animation> animations) : base(animations)
         {
             player_ = player;
             health_bar_ = new Healthbar(healthbarTexture, this);
             animations_["Attacked"].FrameSpeed = 0.1f;
             debug_rect_ = debug_rect;
+            follow_distance_ = follow_distance;
         }
 
         public override void Update(GameTime gameTime)
@@ -60,7 +63,7 @@ namespace Project1.Sprites
                     attacked_ = false;
 
                 float distance = Vector2.Distance(Position, player_.Position);
-                if (distance < 500)
+                if (distance < follow_distance_)
                 {
                     // Follows the player (Reused code from dog)
                     float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -82,7 +85,7 @@ namespace Project1.Sprites
                         {
                             Console.WriteLine("Attacked player");
                             // player_.TakeDamage(10);
-                            player_.TakeDamage(10);
+                            player_.TakeDamage(25);
                             elapsed_attack_time_ = 0;
                         }
                     }

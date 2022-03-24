@@ -38,7 +38,7 @@ namespace Project1
             }
         }
 
-        internal void Die()
+        public void Die()
         {
             Dead = true;
         }

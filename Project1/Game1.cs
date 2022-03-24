@@ -23,7 +23,7 @@ namespace Project1
         private State _nextState;
         private State _endState;
 
-        private int level_ = 1;
+        private int level_ = 0;
 
         public Game1()
         {

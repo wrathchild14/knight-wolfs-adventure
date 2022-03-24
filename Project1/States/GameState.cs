@@ -24,6 +24,7 @@ namespace Project1.States
                     level_ = new Level2(game, content);
                     break;
                 case 3:
+                    level_ = new Level3(game, content);
                     break;
                 default:
                     break;

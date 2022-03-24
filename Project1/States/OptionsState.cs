@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Project1.States
 {
-    internal class OptionsState : State
+    public class OptionsState : State
     {
         private List<Component> _Components;
 

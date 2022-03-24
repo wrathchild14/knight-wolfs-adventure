@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Project1.States
 {
-    internal class EndState : State
+    public class EndState : State
     {
         private List<Component> _Components;
         private SpriteFont _Font;

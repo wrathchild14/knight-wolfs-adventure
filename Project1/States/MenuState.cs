@@ -65,7 +65,8 @@ namespace Project1.States
 
         private void NewGameButton_Click(object sender, EventArgs e)
         {
-            _Game.ChangeState(new GameState(_Game, _GraphicsDevice, content, 1));
+            //_Game.ChangeState(new GameState(_Game, _GraphicsDevice, content, 2));
+            _Game.NextLevelState();
         }
 
         private void optionsButton_Click(object sender, EventArgs e)

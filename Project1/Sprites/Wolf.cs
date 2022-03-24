@@ -12,6 +12,8 @@ namespace Project1.Sprites
     {
         public Vector2 Velocity;
 
+        public bool Stay = false;
+
         private float speed_ = 200f;
         private Sprite player_;
         private bool state_follow_player_ = true;
@@ -25,28 +27,31 @@ namespace Project1.Sprites
 
         public override void Update(GameTime gameTime)
         {
-            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (state_follow_player_)
+            if (!Stay)
             {
-                if (!Rectangle.Intersects(player_.Rectangle))
-                {
-                    Vector2 moveDir = player_.Position - Position;
-                    moveDir.Normalize();
-                    Position += moveDir * speed_ * dt;
+                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                    Velocity.X += moveDir.X;
+                if (state_follow_player_)
+                {
+                    if (!Rectangle.Intersects(player_.Rectangle))
+                    {
+                        Vector2 moveDir = player_.Position - Position;
+                        moveDir.Normalize();
+                        Position += moveDir * speed_ * dt;
+
+                        Velocity.X += moveDir.X;
+                    }
                 }
-            }
-            else
-            {
-                if (target_position_ != Position) // idk how much does, but it must be something
+                else
                 {
-                    Vector2 moveDir = target_position_ - Position;
-                    moveDir.Normalize();
-                    Position += moveDir * speed_ * dt;
+                    if (target_position_ != Position) // idk how much does, but it must be something
+                    {
+                        Vector2 moveDir = target_position_ - Position;
+                        moveDir.Normalize();
+                        Position += moveDir * speed_ * dt;
 
-                    Velocity.X += moveDir.X;
+                        Velocity.X += moveDir.X;
+                    }
                 }
             }
 

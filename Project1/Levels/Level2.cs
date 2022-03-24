@@ -11,15 +11,16 @@ using System.IO;
 using System.Text.Json;
 using Project1.TileMap;
 using Project1.Levels;
+using Project1.Components;
 
 namespace Project1
 {
-    internal class Level2 : Level
+    public class Level2 : Level
     {
         private Game1 game_;
 
         private Knight player_knight_;
-        private Sprite wolf_dog_;
+        private Wolf wolf_dog_;
 
         private int destroyed_ = 0;
         private PlayerStats player_stats_;
@@ -30,14 +31,19 @@ namespace Project1
         private SpriteFont Font;
 
         private Camera camera_;
+        private DialogBox dialog_box_;
         private SpriteBatch sprite_batch_;
         private List<Sprite> player_sprite_list_;
         private List<Skeleton> enemies_ = new List<Skeleton>();
 
         private Map map_;
 
+        private bool first_dialog_box_opened_ = false;
+
         public Level2(Game1 game, ContentManager content)
         {
+            game_ = game;
+
             Texture2D debug = content.Load<Texture2D>("DebugRectangle");
             sprite_batch_ = new SpriteBatch(game.GraphicsDevice);
             // Content loaders
@@ -61,6 +67,7 @@ namespace Project1
                 { "Running", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunning"), 8) }
             })
             { Position = new Vector2(50, 400) };
+
             // Dog
             wolf_dog_ = new Wolf(new Dictionary<string, Animation>()
             {
@@ -68,12 +75,14 @@ namespace Project1
                 { "Running", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfRunning"), 4) }
             }, player_knight_)
             {
-                Position = new Vector2(player_knight_.Position.X - 40, player_knight_.Position.Y + 15)
+                Position = new Vector2(2100, 160)
             };
             player_sprite_list_ = new List<Sprite>()
             {
-                wolf_dog_, player_knight_
+                wolf_dog_,
+                player_knight_
             };
+            wolf_dog_.Stay = true;
 
             player_stats_ = new PlayerStats()
             {
@@ -90,25 +99,25 @@ namespace Project1
             map_ = new Map(debug, skeleton_textures_for_animations, healthbar_texture, player_knight_);
             map_.Generate(new int[,]
             {
-                { 1,  1,  4,  1,  1,  5,  1,  1,  4,  1,  5,  1,  2,  9,  1,  1,  2,  1,  1,  4,  1,  1,  1,  1  },
-                { 1,  3,  1,  2,  2,  1,  3,  1,  2,  1,  1,  3,  1,  2,  1,  1,  3,  1,  5,  1,  1,  1,  1,  1  },
-                { 11,11, 11, 11, 14, 13, 13, 13, 13, 13, 13, 12, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11 },
-                { 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  9,  1,  1,  1,  1,  1,  1,  1,  1  },
-                { 1,  1,  1,  1,  2,  1,  1,  5,  1,  1,  2,  1,  1,  1,  1,  1,  1,  1,  4,  1,  1,  1,  1,  1  },
-                { 2,  1,  6,  1,  1,  1,  1,  1,  1,  1,  1,  4,  1,  1,  1,  8,  1,  1,  1,  1,  1,  1,  1,  1  },
-                { 1,  1,  7,  1,  1,  1,  1,  5,  1,  1, 19, 20, 19, 20,  1,  1, 10,  1,  6, 99,  3,  1,  1,  1  },
-                { 1,  1,  7,  1,  3,  1,  1,  1,  1,  1, 17, 18, 17, 18,  1,  1,  1,  1,  7, 99,  1,  2,  1,  1  },
-                { 1,  1,  7,  1,  1,  1,  3,  3,  1,  1, 15, 16, 15, 16,  1,  1,  1,  1,  7,  1,  1,  5,  1,  1  },
-                { 1,  1,  7,  1, 10,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 10,  1,  1,  7,  1,  1,  1,  1,  1  },
-                { 1,  1,  7,  1,  1,  1,  1,  1,  1,  2,  1,  5,  1,  1,  1,  1,  6,  1, 99,  1,  1,  1,  1,  1  },
-                { 1,  1,  7,  1,  1,  1,  1,  9,  1,  1,  4,  1,  1,  3,  1,  2,  7,  2,  9,  1,  1,  1,  1,  1  },
-                { 1,  1,  7,  1,  4,  1,  1,  9,  9,  3,  1,  1,  2,  1,  1,  4,  7,  1, 10,  1,  1,  1,  1,  1  },
-                { 1,  8,  7,  1,  1,  1, 10,  4,  5,  1,  2,  1,  1, 10,  1,  4,  7,  4,  1,  1,  8,  1,  1,  1  },
-                { 1,  1,  7,  1,  5,  1,  1,  1,  2,  1,  1,  3,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1  },
-            }, 128, "Tiles/Town");
+                { 9, 9, 9,99,99,99, 9, 9, 9, 9, 4, 1, 9, 9,11,13,10,13 },
+                { 2, 2, 2, 1, 1, 1, 9, 9, 9, 9, 4, 1, 2, 2,99,99, 1, 7 },
+                {13,10,13, 1, 1, 5,12,12,12, 6, 1, 1, 1, 8, 9, 9, 9, 9 },
+                { 1, 1, 1, 1, 1, 3,14,14,14, 4, 1,13,10,13, 9, 9, 9, 9 },
+                { 9, 9, 4, 7, 7, 3,14,14,14, 4, 1,99, 7, 1,13,10,13,15 },
+                {13,13, 4, 1, 1, 3,14,14,14, 4,99, 1, 1, 1, 1,99, 1, 1 },
+                { 8, 1, 1,99,99, 1, 1, 1, 1, 1, 1, 1, 1, 1,99,99, 1, 1 },
+            }, 128, "Tiles/Dungeon", 200);
             // Get generated enemies from map
             enemies_ = map_.GetEnemies();
             camera_ = new Camera(map_.Width, map_.Height);
+
+            dialog_box_ = new DialogBox(game_, Font)
+            {
+                Text = "This is a dungeon, you need to be quick and find your dog.\n" +
+                        "Hope he isn't a goner, search around!\n" +
+                        "The dungeon is swarmed with enemies, so you gotta be careful!"
+            };
+            dialog_box_.Initialize();
         }
 
         public void Save(PlayerStats stats)
@@ -139,6 +148,8 @@ namespace Project1
 
         public override void Update(GameTime gameTime)
         {
+            dialog_box_.Update();
+
             // Sprites
             foreach (var sprite in player_sprite_list_)
                 sprite.Update(gameTime);
@@ -150,9 +161,26 @@ namespace Project1
             camera_.Update(player_knight_);
 
             // Physics
-            foreach (CollisionTile tile in map_.CollisionTiles)
-                if (tile.Id >= 8) // Temp
+            foreach (CollisionTile tile in map_.CollisionTiles) { 
+                if (tile.Id > 6 && tile.Id != 15) // Temp
                     player_knight_.Collision(tile, map_.Width, map_.Height);
+
+                if (tile.Id == 15 && player_knight_.IsTouching(tile.Rectangle))
+                    game_.NextLevelState();
+                //foreach (var enemy in enemies_)
+                //    enemy.Collision(tile, map_.Width, map_.Height);
+            }
+
+            if (player_knight_.Rectangle.Intersects(wolf_dog_.Rectangle))
+            {
+                wolf_dog_.Stay = false;
+                if (!dialog_box_.Active && !first_dialog_box_opened_)
+                {
+                    first_dialog_box_opened_ = true;
+                    dialog_box_ = new DialogBox(game_, Font) { Text = "You got your dog! Now get outta here!" };
+                    dialog_box_.Initialize();
+                }
+            }
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -174,6 +202,7 @@ namespace Project1
 
             // Scoreboard (in the old spriteBatch)
             spriteBatch.DrawString(Font, destroyed_.ToString(), new Vector2(10, 10), Color.White);
+            dialog_box_.Draw(spriteBatch);
         }
     }
 }
