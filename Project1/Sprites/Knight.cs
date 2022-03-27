@@ -115,47 +115,49 @@ namespace Project1.Sprites
             if (Mouse.GetState().LeftButton == ButtonState.Pressed)
                 Attack();
             else
+            {
                 Attacking = false;
 
-            // Movement
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
-            {
-                Y -= speed_y_;
-                velocity_.Y += speed_y_;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
-            {
-                Y += speed_y_;
-                velocity_.Y += speed_y_;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
-            {
-                X -= speed_x_;
-                velocity_.X -= speed_x_;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                X += speed_x_;
-                velocity_.X += speed_x_;
-            }
+                // Movement
+                if (Keyboard.GetState().IsKeyDown(Keys.W))
+                {
+                    Y -= speed_y_;
+                    velocity_.Y += speed_y_;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.S))
+                {
+                    Y += speed_y_;
+                    velocity_.Y += speed_y_;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.A))
+                {
+                    X -= speed_x_;
+                    velocity_.X -= speed_x_;
+                }
+                if (Keyboard.GetState().IsKeyDown(Keys.D))
+                {
+                    X += speed_x_;
+                    velocity_.X += speed_x_;
+                }
 
-            // Sprint
-            if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
-            {
-                speed_x_ = 5f;
-                animations_["Running"].FrameSpeed = 0.075f;
-            }
-            else
-            {
-                speed_x_ = 3.6f;
-                animations_["Running"].FrameSpeed = 0.1f;
-            }
+                // Sprint
+                if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
+                {
+                    speed_x_ = 5f;
+                    animations_["Running"].FrameSpeed = 0.075f;
+                }
+                else
+                {
+                    speed_x_ = 3.6f;
+                    animations_["Running"].FrameSpeed = 0.1f;
+                }
 
-            // Pray
-            if (Keyboard.GetState().IsKeyDown(Keys.P))
-                pray_ = true;
-            else
-                pray_ = false;
+                // Pray
+                if (Keyboard.GetState().IsKeyDown(Keys.P))
+                    pray_ = true;
+                else
+                    pray_ = false;
+            }
         }
 
         // meh, dont look at this

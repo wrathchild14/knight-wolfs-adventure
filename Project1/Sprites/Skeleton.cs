@@ -27,6 +27,7 @@ namespace Project1.Sprites
         private Healthbar health_bar_;
         private Texture2D debug_rect_;
         private bool debug_rect_bool_ = false;
+        private bool state_seen_player_ = false;
 
         public Skeleton(Texture2D debug_rect, Texture2D healthbarTexture, Knight player, int follow_distance, Dictionary<string, Animation> animations) : base(animations)
         {
@@ -63,8 +64,9 @@ namespace Project1.Sprites
                     attacked_ = false;
 
                 float distance = Vector2.Distance(Position, player_.Position);
-                if (distance < follow_distance_)
+                if (distance < follow_distance_ || state_seen_player_)
                 {
+                    state_seen_player_ = true;
                     // Follows the player (Reused code from dog)
                     float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
                     if (!Rectangle.Intersects(player_.Rectangle))

@@ -92,8 +92,9 @@ namespace Project1
 
         public void NextLevelState()
         {
+            System.Threading.Thread.Sleep(1000);
             level_++;
-            _nextState = new GameState(this, GraphicsDevice, Content, level_);
+            _nextState = new GameState(this, GraphicsDevice, Content, 2);
         }
 
         public void ChangeStateEnd()
