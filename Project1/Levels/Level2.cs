@@ -12,6 +12,7 @@ using System.Text.Json;
 using Project1.TileMap;
 using Project1.Levels;
 using Project1.Components;
+using Microsoft.Xna.Framework.Input;
 
 namespace Project1
 {
@@ -161,16 +162,26 @@ namespace Project1
 
         public override void Update(GameTime gameTime)
         {
-            Console.WriteLine(player_knight_.Position);
-
             dialog_box_.Update();
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                game_.ChangeStateMenu();
+
+            if (player_knight_.Dead)
+                game_.ChangeStateEnd();
 
             // Sprites
             foreach (var sprite in player_sprite_list_)
                 sprite.Update(gameTime);
 
+            int enemies_dead = 0;
             foreach (Skeleton enemy in enemies_)
+            {
                 enemy.Update(gameTime);
+                if (enemy.Dead)
+                    enemies_dead++;
+            }
+            destroyed_ = enemies_dead;
 
             // Camera
             camera_.Update(player_knight_);
@@ -193,13 +204,16 @@ namespace Project1
                         }
                     }
                 }
-                //foreach (var enemy in enemies_)
-                //    enemy.Collision(tile, map_.Width, map_.Height);
+                
+                foreach (var enemy in enemies_)
+                    if (tile.Id > 6 && tile.Id != 15) // Temp
+                        enemy.Collision(tile, map_.Width, map_.Height);
             }
 
             if (player_knight_.Rectangle.Intersects(wolf_dog_.Rectangle))
             {
                 wolf_dog_.Stay = false;
+                dog_found_ = true;
                 if (!dialog_box_.Active && !first_dialog_box_opened_)
                 {
                     first_dialog_box_opened_ = true;
@@ -215,7 +229,7 @@ namespace Project1
             game_.GraphicsDevice.SetRenderTarget(lights_target_);
             game_.GraphicsDevice.Clear(Color.Black);
             sprite_batch_.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, camera_.ViewMatrix);
-            sprite_batch_.Draw(light_mask_, new Vector2(player_knight_.X - 200, player_knight_.Y - 200), Color.White);
+            sprite_batch_.Draw(light_mask_, new Vector2(player_knight_.X - light_mask_.Width / 2, player_knight_.Y - light_mask_.Height / 2), Color.White);
             sprite_batch_.End();
 
             // Draw the main scene to the Render Target

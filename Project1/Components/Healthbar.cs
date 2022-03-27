@@ -24,7 +24,7 @@ namespace Project1
         {
             health_ -= damage;
             health_rectangle_.Width -= damage;
-            Console.WriteLine("Current health: " + health_.ToString());
+            //Console.WriteLine("Current health: " + health_.ToString());
 
             if (health_ <= 0)
                 sprite_.Die();

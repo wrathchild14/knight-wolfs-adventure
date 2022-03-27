@@ -47,7 +47,7 @@ namespace Project1.States
         {
             foreach (var component in _Components)
                 component.Draw(gameTime, spriteBatch);
-            spriteBatch.DrawString(_Font, "You defeated all the enemies!", new Vector2(_screen_center, 200), Color.Red);
+            spriteBatch.DrawString(_Font, "You died!", new Vector2(Game1.screen_width / 2, 200), Color.Red);
         }
 
         public override void PostUpdate(GameTime gameTime)

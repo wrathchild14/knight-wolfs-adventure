@@ -26,6 +26,9 @@ namespace Project1.States
                 case 3:
                     level_ = new Level3(game, content);
                     break;
+                case 69:
+                    level_ = new Survival(game, content);
+                    break;
                 default:
                     break;
             }

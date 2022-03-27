@@ -36,5 +36,6 @@
   <ItemGroup>
     <Folder Include="Content\Tiles\" />
     <Folder Include="Content\Tiles\Forest\" />
+    <Folder Include="Content\Tiles\Town\" />
   </ItemGroup>
 </Project>

@@ -112,7 +112,7 @@ namespace Project1.Sprites
         private void TakeInput()
         {
             // Attack
-            if (Mouse.GetState().LeftButton == ButtonState.Pressed)
+            if (Keyboard.GetState().IsKeyDown(Keys.J))
                 Attack();
             else
             {
@@ -144,11 +144,13 @@ namespace Project1.Sprites
                 if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
                 {
                     speed_x_ = 5f;
+                    speed_y_ = 3.9f;
                     animations_["Running"].FrameSpeed = 0.075f;
                 }
                 else
                 {
                     speed_x_ = 3.6f;
+                    speed_y_ = 2.5f;
                     animations_["Running"].FrameSpeed = 0.1f;
                 }
 

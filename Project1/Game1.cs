@@ -94,11 +94,12 @@ namespace Project1
         {
             System.Threading.Thread.Sleep(1000);
             level_++;
-            _nextState = new GameState(this, GraphicsDevice, Content, 2);
+            _nextState = new GameState(this, GraphicsDevice, Content, level_);
         }
 
         public void ChangeStateEnd()
         {
+            System.Threading.Thread.Sleep(1000);
             _nextState = _endState;
         }
     }

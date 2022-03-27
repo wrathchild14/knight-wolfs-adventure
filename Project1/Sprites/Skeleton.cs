@@ -85,7 +85,7 @@ namespace Project1.Sprites
                         elapsed_attack_time_ += gameTime.ElapsedGameTime.TotalSeconds;
                         if (elapsed_attack_time_ >= attack_timer_)
                         {
-                            Console.WriteLine("Attacked player");
+                            //Console.WriteLine("Attacked player");
                             // player_.TakeDamage(10);
                             player_.TakeDamage(25);
                             elapsed_attack_time_ = 0;

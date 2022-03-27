@@ -8,8 +8,7 @@ namespace Project1.States
 {
     public class MenuState : State
     {
-        private List<Component> _Components;
-
+        private List<Component> components_;
 
         public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
@@ -19,19 +18,25 @@ namespace Project1.States
             // Used for centering the buttons
             var button_width = graphicsDevice.Viewport.Width / 2 - 100;
 
-            Button newGameButton = new Button(buttonTexture, buttonFont)
+            Button start_game_button = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2(button_width, 200),
-                Text = "Play Game",
+                Text = "Play",
             };
-            newGameButton.Click += NewGameButton_Click;
+            start_game_button.Click += NewGameButton_Click;
+
+            Button survival_button = new Button(buttonTexture, buttonFont)
+            {
+                Position = new Vector2(button_width, 250),
+                Text = "Survival",
+            };
+            survival_button.Click += SurvivalButtonClick;
 
             var loadGameButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2(button_width, 250),
                 Text = "Load Game",
             };
-
             loadGameButton.Click += LoadGameButton_Click;
 
             var optionsButton = new Button(buttonTexture, buttonFont)
@@ -48,13 +53,19 @@ namespace Project1.States
             };
             quitGameButton.Click += QuitGameButton_Click;
 
-            _Components = new List<Component>()
+            components_ = new List<Component>()
             {
-                newGameButton,
-                loadGameButton,
+                start_game_button,
+                //loadGameButton,
                 quitGameButton,
                 optionsButton,
+                survival_button
             };
+        }
+
+        private void SurvivalButtonClick(object sender, EventArgs e)
+        {
+            _Game.ChangeState(new GameState(_Game, _GraphicsDevice, content, 69));
         }
 
         private void LoadGameButton_Click(object sender, EventArgs e)
@@ -86,13 +97,13 @@ namespace Project1.States
 
         public override void Update(GameTime gameTime)
         {
-            foreach (var component in _Components)
+            foreach (var component in components_)
                 component.Update(gameTime);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            foreach (var component in _Components)
+            foreach (var component in components_)
                 component.Draw(gameTime, spriteBatch);
         }
     }

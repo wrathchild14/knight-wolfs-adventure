@@ -2,22 +2,20 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Project1.Components;
 using Project1.Models;
 using Project1.Sprites;
+using Project1.TileMap;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Text.Json;
-using Project1.TileMap;
-using Project1.Components;
-using Microsoft.Xna.Framework.Input;
-using Project1.Levels;
-using Project1.Managers;
 
-namespace Project1
+namespace Project1.Levels
 {
-    internal class Level3 : Level
+    class Survival : Level
     {
         private Game1 game_;
 
@@ -48,8 +46,10 @@ namespace Project1
         RenderTarget2D main_target_;
 
         Effect lighting_effect_;
+        private Random random = new Random();
+        private int max_enemies_ = 20;
 
-        public Level3(Game1 game, ContentManager content)
+        public Survival(Game1 game, ContentManager content)
         {
             // Can get rid of this private
             game_ = game;
@@ -76,7 +76,7 @@ namespace Project1
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightIdle"), 8) },
                 { "Running", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunning"), 8) }
             })
-            { Position = new Vector2(50, 600) };
+            { Position = new Vector2(1540, 970) };
             // Dog
             wolf_dog_ = new Wolf(new Dictionary<string, Animation>()
             {
@@ -106,32 +106,36 @@ namespace Project1
             map_ = new Map(debug, skeleton_textures_for_animations, healthbar_texture, player_knight_);
             map_.Generate(new int[,]
             {
-                {14,14,14,12,11,13,14,14,14,14,14,14,12,99, 2,99  },
-                {14,14,14,12,19,99,11,11,11,11,11,11, 1,19,99, 3 } ,
-                {11,11,11, 2, 2, 1, 1,10,10,10,10,10,10, 6, 1, 5 },
-                {16,16,16,15,18,26, 1, 6,19,23,24,23,24, 8,23,24 },
-                { 5, 4, 2, 1, 2, 2, 4, 8, 5,21,22,21,22,99,21,22 },
-                { 3, 2, 4,26, 5,99, 2, 8,26,20,25,20,25,99,20,25 },
-                {26, 2, 4, 1, 1,99, 4, 9,10,10,10,10,10, 6, 3, 1 },
-                { 1, 3, 1, 2, 3, 2,26, 5, 3,23,24,23,24, 8,26,99 },
-                { 1, 5,19, 3, 1, 4, 1, 1,99,21,22,21,22, 8, 5,99 },
-                {16,16,16,16,15,18,17,19, 4,20,25,20,25, 8, 4,19},
+                { 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 8,  7, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
+                { 10, 10, 10, 10, 10, 10, 10, 9,  9,  10, 10, 8,  7, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
+                { 10, 10, 10, 10, 10, 10, 10, 8,  7,  10, 10, 8,  7, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10 },
+                { 9,  9,  9,  9,  9,  9,  9,  1,  1,  9,  9,  4,  2,  9,  9,  9,  9,  9,  9,  9,  9,  9,  9,  9  },
+                { 1,  1,  1, 13,  1,  3,  1,  4,  1,  1,  1, 13,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1  },
+                { 2,  3,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 12,  1,  1,  1,  1,  1, 4  },
+                { 1,  1,  5,  1,  3,  1,  4,  1,  1,  1,  4,  1,  1,  1,  1,  1,  1,  1,  1,  4,  1,  1,  1,  1  },
+                { 1,  1,  1,  3,  1,  1,  1,  1,  1,  1,  1,  3,  1,  3, 13,  1,  1,  4,  1,  1,  5,  1,  1,  1  },
+                { 1,  12, 1,  4,  6,  1,  2,  1,  5,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  2,  1,  6,  1,  1  },
+                { 1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1, 14,  1,  1, 14,  1,  1,  1,  1,  1  },
+                { 1,  1,  1,  1,  1,  1,  1,  1, 11, 11, 11,  4,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1  },
+                { 11, 11, 11, 11, 11, 1,  1,  7, 10, 10, 10,  8,  1,  1,  1,  1,  1,  3,  1,  1, 99,  4,  1,  1  },
+                { 10, 10, 10, 10, 10, 8, 11, 7, 10, 10, 10,  11, 1,  1, 13,  1,  1,  1,  4,  6,  1,  1, 99,  1  },
+                { 10, 10, 10, 10, 10,10, 10, 10, 10, 10, 10,  10, 8,  11,  11, 11, 11, 11,  11,  11, 11, 11, 11, 11  },
+                { 10, 10, 10, 10, 10,10, 10, 10, 10, 10, 10,  10, 10, 10,  10, 10, 10,  10, 10, 10,  10, 10, 10,  10  },
+                { 10, 10, 10, 10, 10,10, 10, 10, 10, 10, 10,  10, 10, 10,  10, 10, 10,  10, 10, 10,  10, 10, 10,  10  },
 
-
-            }, 128, "Tiles/Town", 400);
+            }, 128, "Tiles/Forest", 1200);
             // Get generated enemies from map
             enemies_ = map_.GetEnemies();
             camera_ = new Camera(map_.Width, map_.Height);
 
             dialog_box_ = new DialogBox(game_, Font)
             {
-                Text = "Yo made it up! Congratulations, but it seems like some enemies came up with you as well\n" +
-                       "You will need to save and clear your hometown from the enemies"
+                Text = "This is survival mode, fight as many enemies as you can, they won't stop coming"
             };
             dialog_box_.Initialize();
 
             // Load the lighting effect
-            light_mask = content.Load<Texture2D>("lightmask-3");
+            light_mask = content.Load<Texture2D>("lightmask-1");
             lighting_effect_ = content.Load<Effect>("Effect1");
 
             lights_target_ = new RenderTarget2D(
@@ -142,7 +146,12 @@ namespace Project1
 
         public override void Update(GameTime gameTime)
         {
-            dialog_box_.Update();
+            if (destroyed_ > 10)
+                max_enemies_ = 30;
+            else if (destroyed_ > 30)
+                max_enemies_ = 50;
+            else if (destroyed_ > 50)
+                max_enemies_ = 100;
 
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 game_.ChangeStateMenu();
@@ -150,42 +159,54 @@ namespace Project1
             if (player_knight_.Dead)
                 game_.ChangeStateEnd();
 
+            if (enemies_.Count < max_enemies_)
+                enemies_.Add(new Skeleton(game_.Content.Load<Texture2D>("DebugRectangle"),
+                    game_.Content.Load<Texture2D>("Sprites/Healthbar"),
+                    player_knight_,
+                    1200,
+                    new Dictionary<string, Animation>()
+                            {
+                                { "Attack", new Animation(game_.Content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttack"), 8) },
+                                { "Dead", new Animation(game_.Content.Load<Texture2D>("Sprites/Skeleton/SkeletonDeath"), 4)},
+                                { "Idle", new Animation(game_.Content.Load<Texture2D>("Sprites/Skeleton/SkeletonIdle"), 4)},
+                                { "Running", new Animation(game_.Content.Load<Texture2D>("Sprites/Skeleton/SkeletonRunning"), 4)},
+                                { "Attacked", new Animation(game_.Content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttacked"), 4)}
+                            })
+                {
+                    Position = new Vector2(random.Next(120, 3000), random.Next(450, 1500))
+                });
+            
+            
+            dialog_box_.Update();
+
+            if (player_knight_.Dead)
+                game_.ChangeStateEnd();
+
+            // Sprites
             foreach (var sprite in player_sprite_list_)
                 sprite.Update(gameTime);
 
-            int enemies_dead = 0;
-            foreach (Skeleton enemy in enemies_) { 
-                enemy.Update(gameTime);
-                if (enemy.Dead)
-                    enemies_dead++;
-            }
-            destroyed_ = enemies_dead;
-            if (destroyed_ == enemies_.Count)
+
+            for(int i = 0; i < enemies_.Count; i++)
             {
-                if (!dialog_box_.Active && !second_dialog_box_opened_)
-                {
-                    second_dialog_box_opened_ = true;
-                    dialog_box_ = new DialogBox(game_, Font)
-                    {
-                        Text = "Congratulations, you saved your village \n" + 
-                        "Esc to end the game and get to main menu (you can explore a little bit)"
-                    };
-                    dialog_box_.Initialize();
+                enemies_[i].Update(gameTime);
+                if (enemies_[i].Dead) {
+                    destroyed_++;
+                    enemies_.RemoveAt(i);
                 }
             }
 
+            // Camera
             camera_.Update(player_knight_);
 
             // Physics
             foreach (CollisionTile tile in map_.CollisionTiles)
             {
-                if (tile.Id >= 14) // Temp
+                if (tile.Id >= 10 && tile.Id != 15) // Temp
                     player_knight_.Collision(tile, map_.Width, map_.Height);
-                //if (tile.Id == 15 && player_knight_.IsTouching(tile.Rectangle) && enemies_dead == enemies_.Count)
-                //game_.NextLevelState();
 
                 foreach (var enemy in enemies_)
-                    if (tile.Id >= 14) // Temp
+                    if (tile.Id >= 10 && tile.Id != 15) // Temp
                         enemy.Collision(tile, map_.Width, map_.Height);
             }
         }
@@ -196,7 +217,7 @@ namespace Project1
             game_.GraphicsDevice.SetRenderTarget(lights_target_);
             game_.GraphicsDevice.Clear(Color.Black);
             sprite_batch_.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, camera_.ViewMatrix);
-            sprite_batch_.Draw(light_mask, new Vector2(player_knight_.X - light_mask.Width / 2, player_knight_.Y - light_mask.Height / 2), Color.White);
+            sprite_batch_.Draw(light_mask, new Vector2(player_knight_.X - 750, player_knight_.Y - 750), Color.White);
             sprite_batch_.End();
 
             // Draw the main scene to the Render Target
