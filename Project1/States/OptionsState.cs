@@ -17,14 +17,14 @@ namespace Project1.States
 
             Button backButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2(Game1.screen_width/2, 250),
+                Position = new Vector2(Game1.screen_width / 2 - 100, 250),
                 Text = "Back",
             };
             backButton.Click += backButton_Click;
 
             Button optionsButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2(Game1.screen_width / 2, 200),
+                Position = new Vector2(Game1.screen_width / 2 - 100, 200),
                 Text = "Options (to do) ...",
             };
             optionsButton.Click += optionsButton_Click;

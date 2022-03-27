@@ -106,7 +106,7 @@ namespace Project1
             map_ = new Map(debug, skeleton_textures_for_animations, healthbar_texture, player_knight_);
             map_.Generate(new int[,]
             {
-                {14,14,14,12,11,13,14,14,14,14,14,14,12,99, 2,99  },
+                {14,14,14,12,11,13,14,14,14,14,14,14,12,99, 2,99 },
                 {14,14,14,12,19,99,11,11,11,11,11,11, 1,19,99, 3 } ,
                 {11,11,11, 2, 2, 1, 1,10,10,10,10,10,10, 6, 1, 5 },
                 {16,16,16,15,18,26, 1, 6,19,23,24,23,24, 8,23,24 },
@@ -115,9 +115,7 @@ namespace Project1
                 {26, 2, 4, 1, 1,99, 4, 9,10,10,10,10,10, 6, 3, 1 },
                 { 1, 3, 1, 2, 3, 2,26, 5, 3,23,24,23,24, 8,26,99 },
                 { 1, 5,19, 3, 1, 4, 1, 1,99,21,22,21,22, 8, 5,99 },
-                {16,16,16,16,15,18,17,19, 4,20,25,20,25, 8, 4,19},
-
-
+                {16,16,16,16,15,18,17,19, 4,20,25,20,25, 8, 4,19 },
             }, 128, "Tiles/Town", 400);
             // Get generated enemies from map
             enemies_ = map_.GetEnemies();
@@ -165,6 +163,10 @@ namespace Project1
                 if (!dialog_box_.Active && !second_dialog_box_opened_)
                 {
                     second_dialog_box_opened_ = true;
+
+                    game_.instance?.Stop(); // shut down the music
+                    game_.Content.Load<SoundEffect>("Sounds/Win");
+
                     dialog_box_ = new DialogBox(game_, Font)
                     {
                         Text = "Congratulations, you saved your village \n" + 

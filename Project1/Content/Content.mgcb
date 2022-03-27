@@ -86,11 +86,23 @@
 /processorParam:TextureFormat=Color
 /build:lightmask-3.png
 
+#begin Sounds/Dungeon.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Dungeon.wav
+
 #begin Sounds/end.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/end.wav
+
+#begin Sounds/Forest.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Forest.wav
 
 #begin Sounds/punch.wav
 /importer:WavImporter
@@ -103,6 +115,18 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/start.wav
+
+#begin Sounds/Town.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Town.wav
+
+#begin Sounds/Win.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:Sounds/Win.wav
 
 #begin Sprites/Healthbar.png
 /importer:TextureImporter

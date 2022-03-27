@@ -16,7 +16,7 @@ namespace Project1.States
             var buttonFont = base.content.Load<SpriteFont>("defaultFont");
 
             // Used for centering the buttons
-            var button_width = graphicsDevice.Viewport.Width / 2 - 100;
+            var button_width = Game1.screen_width / 2 - 100;
 
             Button start_game_button = new Button(buttonTexture, buttonFont)
             {

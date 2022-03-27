@@ -25,6 +25,9 @@ namespace Project1
 
         private int level_ = 0;
 
+        public List<SoundEffect> songs;
+        public SoundEffectInstance instance;
+
         public Game1()
         {
             // Setting up graphics and content
@@ -53,7 +56,12 @@ namespace Project1
         protected override void LoadContent()
         {
             // TODO: Effect start starts at "Play game", not before
-            Content.Load<SoundEffect>("Sounds/start").Play();
+            songs = new List<SoundEffect>()
+            {
+                Content.Load<SoundEffect>("Sounds/Forest"),
+                Content.Load<SoundEffect>("Sounds/Dungeon"),
+                Content.Load<SoundEffect>("Sounds/Town")
+            };
         }
 
         protected override void Update(GameTime gameTime)
@@ -93,6 +101,15 @@ namespace Project1
         public void NextLevelState()
         {
             System.Threading.Thread.Sleep(1000);
+            Content.Load<SoundEffect>("Sounds/start").Play();
+            
+            // Handle music
+            instance?.Stop();
+            instance = songs[level_].CreateInstance();
+            instance.Volume = 0.5f;
+            instance.IsLooped = true;
+            instance.Play();
+
             level_++;
             _nextState = new GameState(this, GraphicsDevice, Content, level_);
         }
@@ -100,6 +117,7 @@ namespace Project1
         public void ChangeStateEnd()
         {
             System.Threading.Thread.Sleep(1000);
+            Content.Load<SoundEffect>("Sounds/end").Play();
             _nextState = _endState;
         }
     }

@@ -27,6 +27,12 @@ namespace Project1.States
                     level_ = new Level3(game, content);
                     break;
                 case 69:
+                    game.instance?.Stop();
+                    game.instance = game.songs[2].CreateInstance();
+                    game.instance.Volume = 0.5f;
+                    game.instance.IsLooped = true;
+                    game.instance.Play();
+
                     level_ = new Survival(game, content);
                     break;
                 default:
