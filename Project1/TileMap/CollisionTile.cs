@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Project1.TileMap
 {
-    class CollisionTile : Tile
+    public class CollisionTile : Tile
     {
         private int id_;
 

@@ -96,6 +96,8 @@ namespace Project1
         public void ChangeStateMenu()
         {
             _nextState = _menuState;
+            instance?.Stop();
+            level_ = 0; // Reset to level 1
         }
 
         public void NextLevelState()
@@ -106,7 +108,7 @@ namespace Project1
             // Handle music
             instance?.Stop();
             instance = songs[level_].CreateInstance();
-            instance.Volume = 0.5f;
+            instance.Volume = 0.25f; // Doesn't work
             instance.IsLooped = true;
             instance.Play();
 

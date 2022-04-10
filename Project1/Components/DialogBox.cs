@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Project1.Components
 {
-    class DialogBox
+    public class DialogBox
     {
         private Game1 game_;
         private SpriteFont font_;

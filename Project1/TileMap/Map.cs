@@ -9,7 +9,7 @@ using System.Text;
 
 namespace Project1.TileMap
 {
-    class Map
+    public class Map
     {
         private List<CollisionTile> collison_tiles_ = new List<CollisionTile>();
 
