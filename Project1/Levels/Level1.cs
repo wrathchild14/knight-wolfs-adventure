@@ -20,7 +20,7 @@ namespace Project1
     {
         public Level1(Game1 game, ContentManager content) : base(game, content)
         {
-            light_mask = content.Load<Texture2D>("lightmask-1");
+            lightMask_ = content.Load<Texture2D>("lightmask-1");
 
             map_.Generate(new int[,]
             {
@@ -42,15 +42,15 @@ namespace Project1
             }, 128, "Tiles/Forest", 400);
             // Get generated enemies from map
             enemies_ = map_.GetEnemies();
-            camera_ = new Camera(map_.Width, map_.Height);
+            camera = new Camera(map_.Width, map_.Height);
 
-            dialog_box_ = new DialogBox(game_, Font)
+            dialogBox = new DialogBox(game_, font)
             {
                 Text = "Hello Traveller! I will be your guide for this adventure! Press Enter to proceed. You can skip the whole dialog with X\n" +
                        "You walk with WASD, and sprint with SHIFT! Attack with holding J, or don't hold it \n" +
                        "For now, explore a little"
             };
-            dialog_box_.Initialize();
+            dialogBox.Initialize();
         }
 
         public override void Update(GameTime gameTime)
@@ -65,25 +65,25 @@ namespace Project1
 
                 enemy.Update(gameTime);
 
-                float distance = Vector2.Distance(player_knight_.Position, enemy.Position);
-                if (distance < 550 && !dialog_box_.Active && !dialog_box_opened_)
+                float distance = Vector2.Distance(playerKnight_.Position, enemy.Position);
+                if (distance < 550 && !dialogBox.Active && !dialogBoxOpened_)
                 {
-                    dialog_box_opened_ = true;
-                    dialog_box_ = new DialogBox(game_, Font) { Text = "You can see some enemies ahead, attack them!" };
-                    dialog_box_.Initialize();
+                    dialogBoxOpened_ = true;
+                    dialogBox = new DialogBox(game_, font) { Text = "You can see some enemies ahead, attack them!" };
+                    dialogBox.Initialize();
                 }
             }
             destroyed_ = enemies_dead;
 
             if (destroyed_ == enemies_.Count)
             {
-                wolf_dog_.GoTo(new Vector2(3100, 700));
+                wolfDog_.GoTo(new Vector2(3100, 700));
 
-                if (!dialog_box_.Active && !second_dialog_box_opened_)
+                if (!dialogBox.Active && !secondDialogBoxOpened_)
                 {
-                    second_dialog_box_opened_ = true;
-                    dialog_box_ = new DialogBox(game_, Font) { Text = "Your dog got scared and ran away, follow him!" };
-                    dialog_box_.Initialize();
+                    secondDialogBoxOpened_ = true;
+                    dialogBox = new DialogBox(game_, font) { Text = "Your dog got scared and ran away, follow him!" };
+                    dialogBox.Initialize();
                 }
             }
 
@@ -92,8 +92,8 @@ namespace Project1
             foreach (CollisionTile tile in map_.CollisionTiles)
             {
                 if (tile.Id >= 10 && tile.Id != 15) // Temp
-                    player_knight_.Collision(tile, map_.Width, map_.Height);
-                if (tile.Id == 15 && player_knight_.IsTouching(tile.Rectangle) && enemies_dead == enemies_.Count)
+                    playerKnight_.Collision(tile, map_.Width, map_.Height);
+                if (tile.Id == 15 && playerKnight_.IsTouching(tile.Rectangle) && enemies_dead == enemies_.Count)
                     game_.NextLevelState();
 
                 foreach(var enemy in enemies_)
@@ -113,15 +113,15 @@ namespace Project1
             string serializedText = JsonSerializer.Serialize<PlayerStats>(stats);
 
             // This doesn't append (need to use "append" something)
-            File.WriteAllText(stats_path_, serializedText);
+            File.WriteAllText(statsPath, serializedText);
         }
 
         // Called in create
         public override void Load()
         {
-            var fileContent = File.ReadAllText(stats_path_);
-            player_stats_ = JsonSerializer.Deserialize<PlayerStats>(fileContent);
-            destroyed_ = player_stats_.Score;
+            var fileContent = File.ReadAllText(statsPath);
+            playerStats = JsonSerializer.Deserialize<PlayerStats>(fileContent);
+            destroyed_ = playerStats.Score;
         }
     }
 }

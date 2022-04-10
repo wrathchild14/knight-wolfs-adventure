@@ -16,8 +16,8 @@ namespace Project1.Sprites
 
         private float speed_ = 200f;
         private Sprite player_;
-        private bool state_follow_player_ = true;
-        private Vector2 target_position_;
+        private bool followPlayerBool_ = true;
+        private Vector2 targetPos_;
 
         public Wolf(Dictionary<string, Animation> animations, Sprite player) : base(animations)
         {
@@ -31,7 +31,7 @@ namespace Project1.Sprites
             {
                 float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                if (state_follow_player_)
+                if (followPlayerBool_)
                 {
                     if (!Rectangle.Intersects(player_.Rectangle))
                     {
@@ -44,9 +44,9 @@ namespace Project1.Sprites
                 }
                 else
                 {
-                    if (target_position_ != Position) // idk how much does, but it must be something
+                    if (targetPos_ != Position) // idk how much does, but it must be something
                     {
-                        Vector2 moveDir = target_position_ - Position;
+                        Vector2 moveDir = targetPos_ - Position;
                         moveDir.Normalize();
                         Position += moveDir * speed_ * dt;
 
@@ -56,31 +56,31 @@ namespace Project1.Sprites
             }
 
             SetAnimation();
-            animation_manager_.Update(gameTime);
+            animationManager.Update(gameTime);
 
             Velocity.X = 0;
         }
 
         public void GoTo(Vector2 position)
         {
-            state_follow_player_ = false;
-            target_position_ = position;
+            followPlayerBool_ = false;
+            targetPos_ = position;
         }
 
         private void SetAnimation()
         {
             if (Velocity.X < 0)
             {
-                animation_manager_.Right = false;
-                animation_manager_.Play(animations_["Running"]);
+                animationManager.Right = false;
+                animationManager.Play(animations_["Running"]);
             }
             else if (Velocity.X > 0)
             {
-                animation_manager_.Right = true;
-                animation_manager_.Play(animations_["Running"]);
+                animationManager.Right = true;
+                animationManager.Play(animations_["Running"]);
             }
             else if (Velocity.X == 0)
-                animation_manager_.Play(animations_["Idle"]);
+                animationManager.Play(animations_["Idle"]);
         }
     }
 }

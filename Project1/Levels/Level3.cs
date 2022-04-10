@@ -21,7 +21,7 @@ namespace Project1
     {
         public Level3(Game1 game, ContentManager content) : base(game, content)
         {
-            light_mask = content.Load<Texture2D>("lightmask-3");
+            lightMask_ = content.Load<Texture2D>("lightmask-3");
 
             map_.Generate(new int[,]
             {
@@ -38,14 +38,14 @@ namespace Project1
             }, 128, "Tiles/Town", 400);
             // Get generated enemies from map
             enemies_ = map_.GetEnemies();
-            camera_ = new Camera(map_.Width, map_.Height);
+            camera = new Camera(map_.Width, map_.Height);
 
-            dialog_box_ = new DialogBox(game_, Font)
+            dialogBox = new DialogBox(game_, font)
             {
                 Text = "You made it! Congratulations, but it seems like some enemies came up with you as well\n" +
                        "You will need to save and clear your hometown from the enemies"
             };
-            dialog_box_.Initialize();
+            dialogBox.Initialize();
         }
 
         public override void Update(GameTime gameTime)
@@ -62,19 +62,19 @@ namespace Project1
             destroyed_ = enemies_dead;
             if (destroyed_ == enemies_.Count)
             {
-                if (!dialog_box_.Active && !dialog_box_opened_)
+                if (!dialogBox.Active && !dialogBoxOpened_)
                 {
-                    dialog_box_opened_ = true;
+                    dialogBoxOpened_ = true;
 
-                    game_.instance?.Stop(); // shut down the music
+                    game_.Instance?.Stop(); // shut down the music
                     game_.Content.Load<SoundEffect>("Sounds/Win");
 
-                    dialog_box_ = new DialogBox(game_, Font)
+                    dialogBox = new DialogBox(game_, font)
                     {
                         Text = "Congratulations, you saved your village \n" +
                         "Esc to end the game and get to main menu (you can explore a little bit)"
                     };
-                    dialog_box_.Initialize();
+                    dialogBox.Initialize();
                 }
             }
 
@@ -82,7 +82,7 @@ namespace Project1
             foreach (CollisionTile tile in map_.CollisionTiles)
             {
                 if (tile.Id >= 14) // Temp
-                    player_knight_.Collision(tile, map_.Width, map_.Height);
+                    playerKnight_.Collision(tile, map_.Width, map_.Height);
                 //if (tile.Id == 15 && player_knight_.IsTouching(tile.Rectangle) && enemies_dead == enemies_.Count)
                 //game_.NextLevelState();
 
@@ -104,15 +104,15 @@ namespace Project1
             string serializedText = JsonSerializer.Serialize<PlayerStats>(stats);
 
             // This doesn't append (need to use "append" something)
-            File.WriteAllText(stats_path_, serializedText);
+            File.WriteAllText(statsPath, serializedText);
         }
 
         // Called in create
         public override void Load()
         {
-            var fileContent = File.ReadAllText(stats_path_);
-            player_stats_ = JsonSerializer.Deserialize<PlayerStats>(fileContent);
-            destroyed_ = player_stats_.Score;
+            var fileContent = File.ReadAllText(statsPath);
+            playerStats = JsonSerializer.Deserialize<PlayerStats>(fileContent);
+            destroyed_ = playerStats.Score;
         }
     }
 }

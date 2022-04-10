@@ -13,20 +13,20 @@ namespace Project1
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-        public static int screen_width = 1280;
-        public static int screen_height = 720;
+        public static int ScreenWidth = 1280;
+        public static int ScreenHeight = 720;
         public Vector2 CenterScreen
             => new Vector2(graphics.GraphicsDevice.Viewport.Width / 2f, graphics.GraphicsDevice.Viewport.Height / 2f);
 
-        private MenuState _menuState;
-        private State _currentState;
-        private State _nextState;
-        private State _endState;
+        private MenuState menuState_;
+        private State currentState_;
+        private State nextState_;
+        private State endState_;
 
         private int level_ = 0;
 
-        public List<SoundEffect> songs;
-        public SoundEffectInstance instance;
+        public List<SoundEffect> Songs;
+        public SoundEffectInstance Instance;
 
         public Game1()
         {
@@ -37,8 +37,8 @@ namespace Project1
 
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = screen_width;
-            graphics.PreferredBackBufferHeight = screen_height;
+            graphics.PreferredBackBufferWidth = ScreenWidth;
+            graphics.PreferredBackBufferHeight = ScreenHeight;
             graphics.ApplyChanges();
 
             IsMouseVisible = true;
@@ -47,16 +47,16 @@ namespace Project1
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Scene initialization is put in GameState for now
-            _endState = new EndState(this, GraphicsDevice, Content);
-            _menuState = new MenuState(this, GraphicsDevice, Content);
-            _currentState = _menuState;
+            endState_ = new EndState(this, GraphicsDevice, Content);
+            menuState_ = new MenuState(this, GraphicsDevice, Content);
+            currentState_ = menuState_;
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             // TODO: Effect start starts at "Play game", not before
-            songs = new List<SoundEffect>()
+            Songs = new List<SoundEffect>()
             {
                 Content.Load<SoundEffect>("Sounds/Forest"),
                 Content.Load<SoundEffect>("Sounds/Dungeon"),
@@ -66,13 +66,13 @@ namespace Project1
 
         protected override void Update(GameTime gameTime)
         {
-            if (_nextState != null)
+            if (nextState_ != null)
             {
-                _currentState = _nextState;
-                _nextState = null;
+                currentState_ = nextState_;
+                nextState_ = null;
             }
             // Handles all the updates
-            _currentState.Update(gameTime);
+            currentState_.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -81,7 +81,7 @@ namespace Project1
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            _currentState.Draw(gameTime, spriteBatch);
+            currentState_.Draw(gameTime, spriteBatch);
             spriteBatch.End();
 
             //base.Draw(gameTime);
@@ -90,13 +90,13 @@ namespace Project1
         // State-change methods
         public void ChangeState(State state)
         {
-            _nextState = state;
+            nextState_ = state;
         }
 
         public void ChangeStateMenu()
         {
-            _nextState = _menuState;
-            instance?.Stop();
+            nextState_ = menuState_;
+            Instance?.Stop();
             level_ = 0; // Reset to level 1
         }
 
@@ -106,21 +106,21 @@ namespace Project1
             Content.Load<SoundEffect>("Sounds/start").Play();
             
             // Handle music
-            instance?.Stop();
-            instance = songs[level_].CreateInstance();
-            instance.Volume = 0.25f; // Doesn't work
-            instance.IsLooped = true;
-            instance.Play();
+            Instance?.Stop();
+            Instance = Songs[level_].CreateInstance();
+            Instance.Volume = 0.25f; // Doesn't work
+            Instance.IsLooped = true;
+            Instance.Play();
 
             level_++;
-            _nextState = new GameState(this, GraphicsDevice, Content, level_);
+            nextState_ = new GameState(this, GraphicsDevice, Content, level_);
         }
 
         public void ChangeStateEnd()
         {
             System.Threading.Thread.Sleep(1000);
             Content.Load<SoundEffect>("Sounds/end").Play();
-            _nextState = _endState;
+            nextState_ = endState_;
         }
     }
 }

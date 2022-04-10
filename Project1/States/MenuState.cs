@@ -16,7 +16,7 @@ namespace Project1.States
             var buttonFont = base.content.Load<SpriteFont>("defaultFont");
 
             // Used for centering the buttons
-            var button_width = Game1.screen_width / 2 - 100;
+            var button_width = Game1.ScreenWidth / 2 - 100;
 
             Button start_game_button = new Button(buttonTexture, buttonFont)
             {
@@ -65,24 +65,24 @@ namespace Project1.States
 
         private void SurvivalButtonClick(object sender, EventArgs e)
         {
-            _Game.ChangeState(new GameState(_Game, _GraphicsDevice, content, 69));
+            game_.ChangeState(new GameState(game_, graphicsDevice_, content, 69));
         }
 
         private void LoadGameButton_Click(object sender, EventArgs e)
         {
             // Last bool is if we are loading a game from stats.json
-            _Game.ChangeState(new GameState(_Game, _GraphicsDevice, content, true));
+            game_.ChangeState(new GameState(game_, graphicsDevice_, content, true));
         }
 
         private void NewGameButton_Click(object sender, EventArgs e)
         {
             //_Game.ChangeState(new GameState(_Game, _GraphicsDevice, content, 2));
-            _Game.NextLevelState();
+            game_.NextLevelState();
         }
 
         private void optionsButton_Click(object sender, EventArgs e)
         {
-            _Game.ChangeState(new OptionsState(_Game, _GraphicsDevice, content));
+            game_.ChangeState(new OptionsState(game_, graphicsDevice_, content));
         }
 
         public override void PostUpdate(GameTime gameTime)
@@ -92,7 +92,7 @@ namespace Project1.States
 
         private void QuitGameButton_Click(object sender, EventArgs e)
         {
-            _Game.Exit();
+            game_.Exit();
         }
 
         public override void Update(GameTime gameTime)

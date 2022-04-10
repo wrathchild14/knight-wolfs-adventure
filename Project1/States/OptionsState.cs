@@ -8,7 +8,7 @@ namespace Project1.States
 {
     public class OptionsState : State
     {
-        private List<Component> _Components;
+        private List<Component> components_;
 
         public OptionsState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
@@ -17,19 +17,19 @@ namespace Project1.States
 
             Button backButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2(Game1.screen_width / 2 - 100, 250),
+                Position = new Vector2(Game1.ScreenWidth / 2 - 100, 250),
                 Text = "Back",
             };
             backButton.Click += backButton_Click;
 
             Button optionsButton = new Button(buttonTexture, buttonFont)
             {
-                Position = new Vector2(Game1.screen_width / 2 - 100, 200),
+                Position = new Vector2(Game1.ScreenWidth / 2 - 100, 200),
                 Text = "Options (to do) ...",
             };
             optionsButton.Click += optionsButton_Click;
 
-            _Components = new List<Component>()
+            components_ = new List<Component>()
             {
                 backButton,
                 optionsButton
@@ -43,12 +43,12 @@ namespace Project1.States
 
         private void backButton_Click(object sender, EventArgs e)
         {
-            _Game.ChangeStateMenu();
+            game_.ChangeStateMenu();
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            foreach (var component in _Components)
+            foreach (var component in components_)
                 component.Draw(gameTime, spriteBatch);
         }
 
@@ -58,7 +58,7 @@ namespace Project1.States
 
         public override void Update(GameTime gameTime)
         {
-            foreach (var component in _Components)
+            foreach (var component in components_)
                 component.Update(gameTime);
         }
     }

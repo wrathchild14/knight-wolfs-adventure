@@ -10,18 +10,10 @@ namespace Project1
     public class Camera
     {
         private Vector2 position_;
-        private Matrix view_matrix_;
-
-        public Texture2D current_background_;
-        public Texture2D next_background_ = null;
+        private Matrix viewMatrix_;
 
         private int width_;
         private int height_;
-
-        //public Camera(Texture2D texture2D)
-        //{
-        //    current_background_ = texture2D;
-        //}
 
         public Camera(int width, int height)
         {
@@ -31,25 +23,25 @@ namespace Project1
 
         public Matrix ViewMatrix
         {
-            get { return view_matrix_; }
+            get { return viewMatrix_; }
         }
 
         public int ScreenWidth
         {
-            get { return Game1.screen_width; }
+            get { return Game1.ScreenWidth; }
         }
 
         public int ScreenHight
         {
-            get { return Game1.screen_height; }
+            get { return Game1.ScreenHeight; }
         }
 
         public Matrix Transform { get; private set; }
 
         public void Update(Knight player)
         {
-            position_.X = player.Position.X - (ScreenWidth / 2);
-            position_.Y = player.Position.Y - (ScreenHight / 2);
+            position_.X = player.X - (ScreenWidth / 2);
+            position_.Y = player.Y - (ScreenHight / 2);
 
             // Contain camera in screen
             if (position_.X < 0)
@@ -57,27 +49,12 @@ namespace Project1
             if (position_.Y < 0)
                 position_.Y = 0;
 
-            //if (position_.X > current_background_.Width - ScreenWidth)
-            //    position_.X = current_background_.Width - ScreenWidth;
-            //if (position_.Y > current_background_.Height - ScreenHight)
-            //    position_.Y = current_background_.Height - ScreenHight;
-
             if (position_.X > width_ - ScreenWidth)
                 position_.X = width_ - ScreenWidth;
             if (position_.Y > height_ - ScreenHight)
                 position_.Y = height_ - ScreenHight;
 
-            // Going to next level
-            //if (player.Position.X > current_background_.Width && next_background_ != null)
-            //{
-            //    Console.WriteLine("Switching to next background");
-            //    current_background_ = next_background_;
-            //    next_background_ = null;
-            //    player.Position = new Vector2(0, player.Position.Y);
-            //    Console.WriteLine(current_background_.ToString());
-            //}
-
-            view_matrix_ = Matrix.CreateTranslation(new Vector3(-position_, 0));
+            viewMatrix_ = Matrix.CreateTranslation(new Vector3(-position_, 0));
         }
     }
 }

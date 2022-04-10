@@ -13,9 +13,9 @@ namespace Project1.States
     {
         private Level level_;
 
-        public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int level_number) : base(game, graphicsDevice, content)
+        public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int levelNumber) : base(game, graphicsDevice, content)
         {
-            switch(level_number)
+            switch(levelNumber)
             {
                 case 1:
                     level_ = new Level1(game, content);
@@ -27,11 +27,11 @@ namespace Project1.States
                     level_ = new Level3(game, content);
                     break;
                 case 69:
-                    game.instance?.Stop();
-                    game.instance = game.songs[2].CreateInstance();
-                    game.instance.Volume = 0.5f;
-                    game.instance.IsLooped = true;
-                    game.instance.Play();
+                    game.Instance?.Stop();
+                    game.Instance = game.Songs[2].CreateInstance();
+                    game.Instance.Volume = 0.5f;
+                    game.Instance.IsLooped = true;
+                    game.Instance.Play();
 
                     level_ = new Survival(game, content);
                     break;

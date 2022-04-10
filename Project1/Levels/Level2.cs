@@ -22,11 +22,11 @@ namespace Project1
 
         public Level2(Game1 game, ContentManager content) : base(game, content)
         {
-            light_mask = content.Load<Texture2D>("lightmask-2");
+            lightMask_ = content.Load<Texture2D>("lightmask-2");
 
-            player_knight_.Position = new Vector2(50, 400);
-            wolf_dog_.Stay = true;
-            wolf_dog_.Position = new Vector2(2100, 160);
+            playerKnight_.Position = new Vector2(50, 400);
+            wolfDog_.Stay = true;
+            wolfDog_.Position = new Vector2(2100, 160);
 
             map_.Generate(new int[,]
             {
@@ -40,15 +40,15 @@ namespace Project1
             }, 128, "Tiles/Dungeon", 200);
             // Get generated enemies from map
             enemies_ = map_.GetEnemies();
-            camera_ = new Camera(map_.Width, map_.Height);
+            camera = new Camera(map_.Width, map_.Height);
 
-            dialog_box_ = new DialogBox(game_, Font)
+            dialogBox = new DialogBox(game_, font)
             {
                 Text = "This is a dungeon, you need to be quick and find your dog.\n" +
                         "Hope he isn't a goner, search around!\n" +
                         "The dungeon is swarmed with enemies, so you gotta be careful!"
             };
-            dialog_box_.Initialize();
+            dialogBox.Initialize();
         }
 
         public void Save(PlayerStats stats)
@@ -57,15 +57,15 @@ namespace Project1
             string serializedText = JsonSerializer.Serialize<PlayerStats>(stats);
 
             // This doesn't append (need to use "append" something)
-            File.WriteAllText(stats_path_, serializedText);
+            File.WriteAllText(statsPath, serializedText);
         }
 
         // Called in create
         public override void Load()
         {
-            var fileContent = File.ReadAllText(stats_path_);
-            player_stats_ = JsonSerializer.Deserialize<PlayerStats>(fileContent);
-            destroyed_ = player_stats_.Score;
+            var fileContent = File.ReadAllText(statsPath);
+            playerStats = JsonSerializer.Deserialize<PlayerStats>(fileContent);
+            destroyed_ = playerStats.Score;
         }
 
         public override void Update(GameTime gameTime)
@@ -84,18 +84,18 @@ namespace Project1
             // Physics
             foreach (CollisionTile tile in map_.CollisionTiles) { 
                 if (tile.Id > 6 && tile.Id != 15) // Temp
-                    player_knight_.Collision(tile, map_.Width, map_.Height);
+                    playerKnight_.Collision(tile, map_.Width, map_.Height);
 
-                if (tile.Id == 15 && player_knight_.IsTouching(tile.Rectangle))
+                if (tile.Id == 15 && playerKnight_.IsTouching(tile.Rectangle))
                 { 
                     if (dog_found_)
                         game_.NextLevelState();
                     else
                     {
-                        if (!dialog_box_.Active)
+                        if (!dialogBox.Active)
                         {
-                            dialog_box_ = new DialogBox(game_, Font) { Text = "You can't leave without your dog:(." };
-                            dialog_box_.Initialize();
+                            dialogBox = new DialogBox(game_, font) { Text = "You can't leave without your dog:(." };
+                            dialogBox.Initialize();
                         }
                     }
                 }
@@ -105,15 +105,15 @@ namespace Project1
                         enemy.Collision(tile, map_.Width, map_.Height);
             }
 
-            if (player_knight_.Rectangle.Intersects(wolf_dog_.Rectangle))
+            if (playerKnight_.Rectangle.Intersects(wolfDog_.Rectangle))
             {
-                wolf_dog_.Stay = false;
+                wolfDog_.Stay = false;
                 dog_found_ = true;
-                if (!dialog_box_.Active && !dialog_box_opened_)
+                if (!dialogBox.Active && !dialogBoxOpened_)
                 {
-                    dialog_box_opened_ = true;
-                    dialog_box_ = new DialogBox(game_, Font) { Text = "You got your dog! Now get outta here!" };
-                    dialog_box_.Initialize();
+                    dialogBoxOpened_ = true;
+                    dialogBox = new DialogBox(game_, font) { Text = "You got your dog! Now get outta here!" };
+                    dialogBox.Initialize();
                 }
             }
         }

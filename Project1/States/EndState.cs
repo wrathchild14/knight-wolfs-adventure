@@ -8,26 +8,26 @@ namespace Project1.States
 {
     public class EndState : State
     {
-        private List<Component> _Components;
-        private SpriteFont _Font;
+        private List<Component> components_;
+        private SpriteFont font;
 
-        private int _screen_center;
+        private int screenCenter_;
 
         public EndState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
-            _screen_center = graphicsDevice.Viewport.Width / 2 - 100;
+            screenCenter_ = graphicsDevice.Viewport.Width / 2 - 100;
 
             var buttonTexture = content.Load<Texture2D>("Button");
-            _Font = content.Load<SpriteFont>("defaultFont");
+            font = content.Load<SpriteFont>("defaultFont");
 
-            Button backButton = new Button(buttonTexture, _Font)
+            Button backButton = new Button(buttonTexture, font)
             {
-                Position = new Vector2(_screen_center, 300),
+                Position = new Vector2(screenCenter_, 300),
                 Text = "Main Menu",
             };
             backButton.Click += backButton_Click;
 
-            _Components = new List<Component>()
+            components_ = new List<Component>()
             {
                 backButton,
             };
@@ -40,14 +40,14 @@ namespace Project1.States
 
         private void backButton_Click(object sender, EventArgs e)
         {
-            _Game.ChangeStateMenu();
+            game_.ChangeStateMenu();
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            foreach (var component in _Components)
+            foreach (var component in components_)
                 component.Draw(gameTime, spriteBatch);
-            spriteBatch.DrawString(_Font, "You died!", new Vector2(Game1.screen_width / 2, 200), Color.Red);
+            spriteBatch.DrawString(font, "You died!", new Vector2(Game1.ScreenWidth / 2, 200), Color.Red);
         }
 
         public override void PostUpdate(GameTime gameTime)
@@ -56,7 +56,7 @@ namespace Project1.States
 
         public override void Update(GameTime gameTime)
         {
-            foreach (var component in _Components)
+            foreach (var component in components_)
                 component.Update(gameTime);
         }
     }

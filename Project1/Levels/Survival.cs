@@ -22,9 +22,10 @@ namespace Project1.Levels
 
         public Survival(Game1 game, ContentManager content) : base(game, content)
         {
-            light_mask = content.Load<Texture2D>("lightmask-1");
+            lightMask_ = content.Load<Texture2D>("lightmask-1");
 
-            player_knight_.Position = new Vector2(1540, 970);
+            playerKnight_.Position = new Vector2(1540, 970);
+            wolfDog_.Position = playerKnight_.Position;
 
             map_.Generate(new int[,]
             {
@@ -48,13 +49,13 @@ namespace Project1.Levels
             }, 128, "Tiles/Forest", 1200);
             // Get generated enemies from map
             enemies_ = map_.GetEnemies();
-            camera_ = new Camera(map_.Width, map_.Height);
+            camera = new Camera(map_.Width, map_.Height);
 
-            dialog_box_ = new DialogBox(game_, Font)
+            dialogBox = new DialogBox(game_, font)
             {
                 Text = "This is survival mode, fight as many enemies as you can, they won't stop coming"
             };
-            dialog_box_.Initialize();
+            dialogBox.Initialize();
         }
 
         public override void Update(GameTime gameTime)
@@ -71,7 +72,7 @@ namespace Project1.Levels
             if (enemies_.Count < max_enemies_)
                 enemies_.Add(new Skeleton(game_.Content.Load<Texture2D>("DebugRectangle"),
                     game_.Content.Load<Texture2D>("Sprites/Healthbar"),
-                    player_knight_,
+                    playerKnight_,
                     1200,
                     new Dictionary<string, Animation>()
                             {
@@ -99,7 +100,7 @@ namespace Project1.Levels
             foreach (CollisionTile tile in map_.CollisionTiles)
             {
                 if (tile.Id >= 10 && tile.Id != 15) // Temp
-                    player_knight_.Collision(tile, map_.Width, map_.Height);
+                    playerKnight_.Collision(tile, map_.Width, map_.Height);
 
                 foreach (var enemy in enemies_)
                     if (tile.Id >= 10 && tile.Id != 15) // Temp
@@ -118,15 +119,15 @@ namespace Project1.Levels
             string serializedText = JsonSerializer.Serialize<PlayerStats>(stats);
 
             // This doesn't append (need to use "append" something)
-            File.WriteAllText(stats_path_, serializedText);
+            File.WriteAllText(statsPath, serializedText);
         }
 
         // Called in create
         public override void Load()
         {
-            var fileContent = File.ReadAllText(stats_path_);
-            player_stats_ = JsonSerializer.Deserialize<PlayerStats>(fileContent);
-            destroyed_ = player_stats_.Score;
+            var fileContent = File.ReadAllText(statsPath);
+            playerStats = JsonSerializer.Deserialize<PlayerStats>(fileContent);
+            destroyed_ = playerStats.Score;
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Project1
     {
         public bool Dead = false;
 
-        protected AnimationManager animation_manager_;
+        protected AnimationManager animationManager;
         protected Dictionary<string, Animation> animations_;
 
         protected Texture2D texture_;
@@ -33,8 +33,8 @@ namespace Project1
             {
                 position_ = value;
 
-                if (animation_manager_ != null)
-                    animation_manager_.Position = position_;
+                if (animationManager != null)
+                    animationManager.Position = position_;
             }
         }
 
@@ -68,8 +68,8 @@ namespace Project1
             {
                 layer_ = value;
 
-                if (animation_manager_ != null)
-                    animation_manager_.Layer = layer_;
+                if (animationManager != null)
+                    animationManager.Layer = layer_;
             }
         }
 
@@ -86,10 +86,10 @@ namespace Project1
                 {
                     width = texture_.Width;
                     height = texture_.Height;
-                } else if (animation_manager_ != null)
+                } else if (animationManager != null)
                 {
-                    width = animation_manager_.FrameWidth;
-                    height = animation_manager_.FrameHeight;
+                    width = animationManager.FrameWidth;
+                    height = animationManager.FrameHeight;
                 }
 
                 //return new Rectangle((int)(Position.X - Origin.X), (int)(Position.Y - Origin.Y), (int)(width * Scale), (int)(height * Scale));
@@ -111,7 +111,7 @@ namespace Project1
         public Sprite(Dictionary<string, Animation> animations)
         {
             animations_ = animations;
-            animation_manager_ = new AnimationManager(animations_.First().Value);
+            animationManager = new AnimationManager(animations_.First().Value);
             Opacity = 1f;
             Scale = 1f;
             Colour = Color.White;
@@ -127,7 +127,7 @@ namespace Project1
             if (texture_ != null)
                 spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
 
-            animation_manager_?.Draw(spriteBatch);
+            animationManager?.Draw(spriteBatch);
         }
 
         internal void Collision(CollisionTile tile, int x_offset, int y_offset)

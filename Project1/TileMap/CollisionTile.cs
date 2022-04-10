@@ -16,10 +16,10 @@ namespace Project1.TileMap
             get { return id_; }
         }
 
-        public CollisionTile(int i, Rectangle new_rectangle, String path)
+        public CollisionTile(int i, Rectangle newRectangle, String path)
         {
             texture = Content.Load<Texture2D>(path + "/Tile" + i);
-            Rectangle = new_rectangle;
+            Rectangle = newRectangle;
             id_ = i;
         }
     }

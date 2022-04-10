@@ -16,19 +16,19 @@ namespace Project1.Sprites
 
         private Vector2 velocity_;
 
-        private float speed_x_ = 3.6f;
-        private float speed_y_ = 2.5f;
+        private float speedX_ = 3.6f;
+        private float speedY_ = 2.5f;
         private bool pray_;
 
-        private Texture2D debug_attack_rectangle_;
-        private bool debug_attack_rectangle_bool_ = false;
+        private Texture2D debugAttackRectangle_;
+        private bool debugAttackRectangleBool_ = false;
 
-        private Healthbar health_bar_;
+        private Healthbar healthBar_;
 
         public Knight(Texture2D debug_rectangle, Texture2D health_bar_texture, Dictionary<string, Animation> animations) : base(animations)
         {
-            health_bar_ = new Healthbar(health_bar_texture, this);
-            debug_attack_rectangle_ = debug_rectangle;
+            healthBar_ = new Healthbar(health_bar_texture, this);
+            debugAttackRectangle_ = debug_rectangle;
             animations_["Attack"].FrameSpeed = 0.1f;
             animations_["Running"].FrameSpeed = 0.1f;
         }
@@ -37,12 +37,12 @@ namespace Project1.Sprites
         {
             //Console.W rite(position_);
             if (Dead)
-                animation_manager_.UpdateTillEnd(gameTime);
+                animationManager.UpdateTillEnd(gameTime);
             else
             {
                 TakeInput();
-                animation_manager_.Update(gameTime);
-                health_bar_.Update(gameTime);
+                animationManager.Update(gameTime);
+                healthBar_.Update(gameTime);
             }
             SetAnimation();
             velocity_.X = 0;
@@ -54,11 +54,11 @@ namespace Project1.Sprites
             Attacking = true;
 
             // Rectangle for attack zone
-            if (animation_manager_.Right)
+            if (animationManager.Right)
             {
                 AttackRectangle = new Rectangle((int)(Position.X + Rectangle.Width), (int)(Position.Y + 10), 5, 5);
             }
-            else if (!animation_manager_.Right)
+            else if (!animationManager.Right)
             {
                 AttackRectangle = new Rectangle((int)(Position.X), (int)(Position.Y + 10), 5, 5);
             }
@@ -66,18 +66,18 @@ namespace Project1.Sprites
 
         public void TakeDamage(int damage)
         {
-            health_bar_.TakeDamage(damage);
+            healthBar_.TakeDamage(damage);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (Attacking && debug_attack_rectangle_bool_)
-                spriteBatch.Draw(debug_attack_rectangle_, AttackRectangle, Color.Red);
+            if (Attacking && debugAttackRectangleBool_)
+                spriteBatch.Draw(debugAttackRectangle_, AttackRectangle, Color.Red);
 
-            if (debug_attack_rectangle_bool_)
-                spriteBatch.Draw(debug_attack_rectangle_, Rectangle, Color.Red);
+            if (debugAttackRectangleBool_)
+                spriteBatch.Draw(debugAttackRectangle_, Rectangle, Color.Red);
 
-            health_bar_?.Draw(gameTime, spriteBatch);
+            healthBar_?.Draw(gameTime, spriteBatch);
 
             base.Draw(gameTime, spriteBatch);
         }
@@ -85,27 +85,27 @@ namespace Project1.Sprites
         private void SetAnimation()
         {
             if (Dead)
-                animation_manager_.Play(animations_["Dead"]);
+                animationManager.Play(animations_["Dead"]);
             else
             {
                 if (Attacking)
-                    animation_manager_.Play(animations_["Attack"]);
+                    animationManager.Play(animations_["Attack"]);
                 else if (velocity_.X < 0)
                 {
-                    animation_manager_.Right = false;
-                    animation_manager_.Play(animations_["Running"]);
+                    animationManager.Right = false;
+                    animationManager.Play(animations_["Running"]);
                 }
                 else if (velocity_.X > 0)
                 {
-                    animation_manager_.Right = true;
-                    animation_manager_.Play(animations_["Running"]);
+                    animationManager.Right = true;
+                    animationManager.Play(animations_["Running"]);
                 }
                 else if (velocity_.Y > 0)
-                    animation_manager_.Play(animations_["Running"]);
+                    animationManager.Play(animations_["Running"]);
                 else if (pray_)
-                    animation_manager_.Play(animations_["Pray"]);
+                    animationManager.Play(animations_["Pray"]);
                 else if (velocity_.X == 0)
-                    animation_manager_.Play(animations_["Idle"]);
+                    animationManager.Play(animations_["Idle"]);
             }
         }
 
@@ -121,36 +121,36 @@ namespace Project1.Sprites
                 // Movement
                 if (Keyboard.GetState().IsKeyDown(Keys.W))
                 {
-                    Y -= speed_y_;
-                    velocity_.Y += speed_y_;
+                    Y -= speedY_;
+                    velocity_.Y += speedY_;
                 }
                 if (Keyboard.GetState().IsKeyDown(Keys.S))
                 {
-                    Y += speed_y_;
-                    velocity_.Y += speed_y_;
+                    Y += speedY_;
+                    velocity_.Y += speedY_;
                 }
                 if (Keyboard.GetState().IsKeyDown(Keys.A))
                 {
-                    X -= speed_x_;
-                    velocity_.X -= speed_x_;
+                    X -= speedX_;
+                    velocity_.X -= speedX_;
                 }
                 if (Keyboard.GetState().IsKeyDown(Keys.D))
                 {
-                    X += speed_x_;
-                    velocity_.X += speed_x_;
+                    X += speedX_;
+                    velocity_.X += speedX_;
                 }
 
                 // Sprint
                 if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
                 {
-                    speed_x_ = 5f;
-                    speed_y_ = 3.9f;
+                    speedX_ = 5f;
+                    speedY_ = 3.9f;
                     animations_["Running"].FrameSpeed = 0.075f;
                 }
                 else
                 {
-                    speed_x_ = 3.6f;
-                    speed_y_ = 2.5f;
+                    speedX_ = 3.6f;
+                    speedY_ = 2.5f;
                     animations_["Running"].FrameSpeed = 0.1f;
                 }
 

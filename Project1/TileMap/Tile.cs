@@ -27,9 +27,9 @@ namespace Project1.TileMap
             set { content = value; }
         }
 
-        public void Draw(SpriteBatch sprite_batch)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            sprite_batch.Draw(texture, rectangle, Color.White);
+            spriteBatch.Draw(texture, rectangle, Color.White);
         }
     }
 }
