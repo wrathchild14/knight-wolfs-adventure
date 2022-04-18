@@ -16,8 +16,12 @@ namespace Project1.Sprites
 
         private Vector2 velocity_;
 
-        private float speedX_ = 3.6f;
-        private float speedY_ = 2.5f;
+        private float speedX_;
+        private float speedY_;
+        private float defaultSpeedX_ = 3.2f;
+        private float defaultSpeedY_ = 2f;
+        private float sprintSpeedX_ = 3.6f;
+        private float sprintSpeedY_ = 2.4f;
         private bool pray_;
 
         private Texture2D debugAttackRectangle_;
@@ -35,7 +39,6 @@ namespace Project1.Sprites
 
         public override void Update(GameTime gameTime)
         {
-            //Console.W rite(position_);
             if (Dead)
                 animationManager.UpdateTillEnd(gameTime);
             else
@@ -143,14 +146,14 @@ namespace Project1.Sprites
                 // Sprint
                 if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
                 {
-                    speedX_ = 5f;
-                    speedY_ = 3.9f;
+                    speedX_ = sprintSpeedX_;
+                    speedY_ = sprintSpeedY_;
                     animations_["Running"].FrameSpeed = 0.075f;
                 }
                 else
                 {
-                    speedX_ = 3.6f;
-                    speedY_ = 2.5f;
+                    speedX_ = defaultSpeedX_;
+                    speedY_ = defaultSpeedY_;
                     animations_["Running"].FrameSpeed = 0.1f;
                 }
 

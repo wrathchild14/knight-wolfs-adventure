@@ -83,8 +83,6 @@ namespace Project1
             spriteBatch.Begin();
             currentState_.Draw(gameTime, spriteBatch);
             spriteBatch.End();
-
-            //base.Draw(gameTime);
         }
 
         // State-change methods
@@ -102,7 +100,7 @@ namespace Project1
 
         public void NextLevelState()
         {
-            System.Threading.Thread.Sleep(1000);
+            System.Threading.Thread.Sleep(250);
             Content.Load<SoundEffect>("Sounds/start").Play();
             
             // Handle music
@@ -118,7 +116,7 @@ namespace Project1
 
         public void ChangeStateEnd()
         {
-            System.Threading.Thread.Sleep(1000);
+            System.Threading.Thread.Sleep(250);
             Content.Load<SoundEffect>("Sounds/end").Play();
             nextState_ = endState_;
         }

@@ -19,7 +19,7 @@ namespace Project1.Sprites
         private double attackTimer_ = 1.6;
         private double elapsedAttackTime_;
 
-        private float speed_ = 50f;
+        private float speed_ = 40f;
 
         private bool attacked_ = false;
         private bool attacking_ = false;
