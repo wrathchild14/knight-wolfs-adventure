@@ -9,11 +9,13 @@ namespace Project1.States
     public class OptionsState : State
     {
         private List<Component> components_;
+        private Texture2D background_;
 
         public OptionsState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
-            var buttonTexture = base.content.Load<Texture2D>("Button");
-            var buttonFont = base.content.Load<SpriteFont>("defaultFont");
+            var buttonTexture = content.Load<Texture2D>("Button");
+            var buttonFont = content.Load<SpriteFont>("defaultFont");
+            background_ = content.Load<Texture2D>("MenuBackground");
 
             Button backButton = new Button(buttonTexture, buttonFont)
             {
@@ -48,6 +50,8 @@ namespace Project1.States
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            spriteBatch.Draw(background_, new Rectangle(0, 0, Game1.ScreenWidth, Game1.ScreenHeight), Color.White);
+
             foreach (var component in components_)
                 component.Draw(gameTime, spriteBatch);
         }
