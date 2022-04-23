@@ -13,28 +13,28 @@ namespace Project1.Sprites
         private Vector2 velocity_;
         private Knight player_;
 
-        private double attackedTimer_ = 0.2;
-        private double elapsedAttackedTime_;
+        private double attacked_timer_ = 0.2;
+        private double elapsed_attacked_time_;
 
-        private double attackTimer_ = 1.6;
-        private double elapsedAttackTime_;
+        private double attack_timer_ = 1.6;
+        private double elapsed_attack_time_;
 
         private float speed_ = 40f;
 
         private bool attacked_ = false;
         private bool attacking_ = false;
 
-        private Healthbar healthBar_;
-        private Texture2D debugRectangle_;
-        private bool debugRectangleBool_ = false;
-        private bool seenPlayerBool_ = false;
+        private Healthbar healthbar_;
+        private Texture2D debug_rectangle_;
+        private bool debug_rectangle_bool_ = false;
+        private bool seen_player_bool_ = false;
 
         public Skeleton(Texture2D debug_rect, Texture2D healthbarTexture, Knight player, int follow_distance, Dictionary<string, Animation> animations) : base(animations)
         {
             player_ = player;
-            healthBar_ = new Healthbar(healthbarTexture, this);
+            healthbar_ = new Healthbar(healthbarTexture, this);
             animations_["Attacked"].FrameSpeed = 0.1f;
-            debugRectangle_ = debug_rect;
+            debug_rectangle_ = debug_rect;
             followDistance_ = follow_distance;
         }
 
@@ -45,12 +45,12 @@ namespace Project1.Sprites
             else
             {
                 // Taking damage
-                elapsedAttackedTime_ += gameTime.ElapsedGameTime.TotalSeconds;
-                if (player_.Attacking && Rectangle.Intersects(player_.AttackRectangle) && elapsedAttackedTime_ >= attackedTimer_)
+                elapsed_attacked_time_ += gameTime.ElapsedGameTime.TotalSeconds;
+                if (player_.Attacking && Rectangle.Intersects(player_.AttackRectangle) && elapsed_attacked_time_ >= attacked_timer_)
                 {
-                    elapsedAttackedTime_ = 0;
-                    elapsedAttackTime_ = 0;
-                    healthBar_.TakeDamage(10);
+                    elapsed_attacked_time_ = 0;
+                    elapsed_attack_time_ = 0;
+                    healthbar_.TakeDamage(10);
 
                     if (animationManager.Right)
                         X -= 2;
@@ -58,15 +58,15 @@ namespace Project1.Sprites
                         X += 2;
                 }
 
-                if (elapsedAttackedTime_ <= attackedTimer_)
+                if (elapsed_attacked_time_ <= attacked_timer_)
                     attacked_ = true;
                 else
                     attacked_ = false;
 
                 float distance = Vector2.Distance(Position, player_.Position);
-                if (distance < followDistance_ || seenPlayerBool_)
+                if (distance < followDistance_ || seen_player_bool_)
                 {
-                    seenPlayerBool_ = true;
+                    seen_player_bool_ = true;
                     // Follows the player (Reused code from dog)
                     float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
                     if (!Rectangle.Intersects(player_.Rectangle))
@@ -82,20 +82,20 @@ namespace Project1.Sprites
                     {
                         // Attack
                         attacking_ = true;
-                        elapsedAttackTime_ += gameTime.ElapsedGameTime.TotalSeconds;
-                        if (elapsedAttackTime_ >= attackTimer_)
+                        elapsed_attack_time_ += gameTime.ElapsedGameTime.TotalSeconds;
+                        if (elapsed_attack_time_ >= attack_timer_)
                         {
                             //Console.WriteLine("Attacked player");
                             // player_.TakeDamage(10);
                             player_.TakeDamage(25);
-                            elapsedAttackTime_ = 0;
+                            elapsed_attack_time_ = 0;
                         }
                     }
                 }
 
                 // Updates
                 animationManager.Update(gameTime);
-                healthBar_.Update(gameTime);
+                healthbar_.Update(gameTime);
             }
 
             SetAnimation();
@@ -104,15 +104,15 @@ namespace Project1.Sprites
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (debugRectangleBool_)
-                spriteBatch.Draw(debugRectangle_, Rectangle, Color.Red);
+            if (debug_rectangle_bool_)
+                spriteBatch.Draw(debug_rectangle_, Rectangle, Color.Red);
 
             if (texture_ != null)
                 spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
 
             animationManager?.Draw(spriteBatch);
 
-            healthBar_?.Draw(gameTime, spriteBatch);
+            healthbar_?.Draw(gameTime, spriteBatch);
         }
 
         private void SetAnimation()

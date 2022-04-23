@@ -11,18 +11,18 @@ namespace Project1.States
         private List<Component> components_;
         private SpriteFont font;
 
-        private int screenCenter_;
+        private int screen_center_;
 
         public EndState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
         {
-            screenCenter_ = Game1.ScreenWidth / 2 - 100;
+            screen_center_ = Game1.ScreenWidth / 2 - 100;
 
             var buttonTexture = content.Load<Texture2D>("Button");
             font = content.Load<SpriteFont>("defaultFont");
 
             Button backButton = new Button(buttonTexture, font)
             {
-                Position = new Vector2(screenCenter_, 300),
+                Position = new Vector2(screen_center_, 300),
                 Text = "Main Menu",
             };
             backButton.Click += backButton_Click;

@@ -18,21 +18,21 @@ namespace Project1.Sprites
 
         private float speedX_;
         private float speedY_;
-        private float defaultSpeedX_ = 3.2f;
-        private float defaultSpeedY_ = 2f;
-        private float sprintSpeedX_ = 3.6f;
-        private float sprintSpeedY_ = 2.4f;
+        private float default_speedX_ = 3.2f;
+        private float default_speedY_ = 2f;
+        private float sprint_speedX_ = 3.6f;
+        private float sprint_speedY_ = 2.4f;
         private bool pray_;
 
-        private Texture2D debugAttackRectangle_;
-        private bool debugAttackRectangleBool_ = false;
+        private Texture2D debug_attack_rectangle_;
+        private bool debug_attack_rectangle_bool_ = false;
 
-        private Healthbar healthBar_;
+        private Healthbar healthbar_;
 
         public Knight(Texture2D debug_rectangle, Texture2D health_bar_texture, Dictionary<string, Animation> animations) : base(animations)
         {
-            healthBar_ = new Healthbar(health_bar_texture, this);
-            debugAttackRectangle_ = debug_rectangle;
+            healthbar_ = new Healthbar(health_bar_texture, this);
+            debug_attack_rectangle_ = debug_rectangle;
             animations_["Attack"].FrameSpeed = 0.1f;
             animations_["Running"].FrameSpeed = 0.1f;
         }
@@ -45,7 +45,7 @@ namespace Project1.Sprites
             {
                 TakeInput();
                 animationManager.Update(gameTime);
-                healthBar_.Update(gameTime);
+                healthbar_.Update(gameTime);
             }
             SetAnimation();
             velocity_.X = 0;
@@ -69,18 +69,18 @@ namespace Project1.Sprites
 
         public void TakeDamage(int damage)
         {
-            healthBar_.TakeDamage(damage);
+            healthbar_.TakeDamage(damage);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            if (Attacking && debugAttackRectangleBool_)
-                spriteBatch.Draw(debugAttackRectangle_, AttackRectangle, Color.Red);
+            if (Attacking && debug_attack_rectangle_bool_)
+                spriteBatch.Draw(debug_attack_rectangle_, AttackRectangle, Color.Red);
 
-            if (debugAttackRectangleBool_)
-                spriteBatch.Draw(debugAttackRectangle_, Rectangle, Color.Red);
+            if (debug_attack_rectangle_bool_)
+                spriteBatch.Draw(debug_attack_rectangle_, Rectangle, Color.Red);
 
-            healthBar_?.Draw(gameTime, spriteBatch);
+            healthbar_?.Draw(gameTime, spriteBatch);
 
             base.Draw(gameTime, spriteBatch);
         }
@@ -146,14 +146,14 @@ namespace Project1.Sprites
                 // Sprint
                 if (Keyboard.GetState().IsKeyDown(Keys.LeftShift))
                 {
-                    speedX_ = sprintSpeedX_;
-                    speedY_ = sprintSpeedY_;
+                    speedX_ = sprint_speedX_;
+                    speedY_ = sprint_speedY_;
                     animations_["Running"].FrameSpeed = 0.075f;
                 }
                 else
                 {
-                    speedX_ = defaultSpeedX_;
-                    speedY_ = defaultSpeedY_;
+                    speedX_ = default_speedX_;
+                    speedY_ = default_speedY_;
                     animations_["Running"].FrameSpeed = 0.1f;
                 }
 

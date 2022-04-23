@@ -20,9 +20,9 @@ namespace Project1.TileMap
 
         private int width_, height_;
         private List<Skeleton> enemies_ = new List<Skeleton>();
-        private Dictionary<string, Texture2D> skeletonTexForAnimation_;
-        private Texture2D healthBarTex_;
-        private Knight playerKnight_;
+        private Dictionary<string, Texture2D> skeleton_tex_for_animation_;
+        private Texture2D healthbar_tex_;
+        private Knight player_;
         private Texture2D debug_;
 
         public List<Skeleton> GetEnemies()
@@ -42,9 +42,9 @@ namespace Project1.TileMap
 
         public Map(Texture2D debug, Dictionary<string, Texture2D> skeletonTexForAnimation, Texture2D healthBarTex, Knight player_knight)
         {
-            skeletonTexForAnimation_ = skeletonTexForAnimation;
-            healthBarTex_ = healthBarTex;
-            playerKnight_ = player_knight;
+            skeleton_tex_for_animation_ = skeletonTexForAnimation;
+            healthbar_tex_ = healthBarTex;
+            player_ = player_knight;
             debug_ = debug;
         }
 
@@ -60,13 +60,13 @@ namespace Project1.TileMap
                         // Basic block behind enemy
                         collisionTiles_.Add(new CollisionTile(1, new Rectangle(x * size, y * size, size, size), path));
 
-                        Skeleton temp = new Skeleton(debug_, healthBarTex_, playerKnight_, skeletonFollowDist, new Dictionary<string, Animation>()
+                        Skeleton temp = new Skeleton(debug_, healthbar_tex_, player_, skeletonFollowDist, new Dictionary<string, Animation>()
                             {
-                                { "Attack", new Animation(skeletonTexForAnimation_["Attack"], 8) },
-                                { "Dead", new Animation(skeletonTexForAnimation_["Dead"], 4)},
-                                { "Idle", new Animation(skeletonTexForAnimation_["Idle"], 4)},
-                                { "Running", new Animation(skeletonTexForAnimation_["Running"], 4)},
-                                { "Attacked", new Animation(skeletonTexForAnimation_["Attacked"], 4)}
+                                { "Attack", new Animation(skeleton_tex_for_animation_["Attack"], 8) },
+                                { "Dead", new Animation(skeleton_tex_for_animation_["Dead"], 4)},
+                                { "Idle", new Animation(skeleton_tex_for_animation_["Idle"], 4)},
+                                { "Running", new Animation(skeleton_tex_for_animation_["Running"], 4)},
+                                { "Attacked", new Animation(skeleton_tex_for_animation_["Attacked"], 4)}
                             })
                         {
                             Position = new Vector2(x * size, y * size)

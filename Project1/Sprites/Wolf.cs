@@ -16,8 +16,8 @@ namespace Project1.Sprites
 
         private float speed_ = 200f;
         private Sprite player_;
-        private bool followPlayerBool_ = true;
-        private Vector2 targetPos_;
+        private bool folow_player_bool_ = true;
+        private Vector2 target_pos_;
 
         public Wolf(Dictionary<string, Animation> animations, Sprite player) : base(animations)
         {
@@ -31,7 +31,7 @@ namespace Project1.Sprites
             {
                 float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                if (followPlayerBool_)
+                if (folow_player_bool_)
                 {
                     if (!Rectangle.Intersects(player_.Rectangle))
                     {
@@ -44,9 +44,9 @@ namespace Project1.Sprites
                 }
                 else
                 {
-                    if (targetPos_ != Position) // idk how much does, but it must be something
+                    if (target_pos_ != Position)
                     {
-                        Vector2 moveDir = targetPos_ - Position;
+                        Vector2 moveDir = target_pos_ - Position;
                         moveDir.Normalize();
                         Position += moveDir * speed_ * dt;
 
@@ -63,8 +63,8 @@ namespace Project1.Sprites
 
         public void GoTo(Vector2 position)
         {
-            followPlayerBool_ = false;
-            targetPos_ = position;
+            folow_player_bool_ = false;
+            target_pos_ = position;
         }
 
         private void SetAnimation()

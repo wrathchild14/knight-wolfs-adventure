@@ -18,10 +18,10 @@ namespace Project1
         public Vector2 CenterScreen
             => new Vector2(graphics.GraphicsDevice.Viewport.Width / 2f, graphics.GraphicsDevice.Viewport.Height / 2f);
 
-        private MenuState menuState_;
-        private State currentState_;
-        private State nextState_;
-        private State endState_;
+        private MenuState menu_state_;
+        private State curr_state_;
+        private State next_state_;
+        private State end_state_;
 
         private int level_ = 0;
 
@@ -47,9 +47,9 @@ namespace Project1
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Scene initialization is put in GameState for now
-            endState_ = new EndState(this, GraphicsDevice, Content);
-            menuState_ = new MenuState(this, GraphicsDevice, Content);
-            currentState_ = menuState_;
+            end_state_ = new EndState(this, GraphicsDevice, Content);
+            menu_state_ = new MenuState(this, GraphicsDevice, Content);
+            curr_state_ = menu_state_;
             base.Initialize();
         }
 
@@ -66,13 +66,13 @@ namespace Project1
 
         protected override void Update(GameTime gameTime)
         {
-            if (nextState_ != null)
+            if (next_state_ != null)
             {
-                currentState_ = nextState_;
-                nextState_ = null;
+                curr_state_ = next_state_;
+                next_state_ = null;
             }
             // Handles all the updates
-            currentState_.Update(gameTime);
+            curr_state_.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -81,19 +81,19 @@ namespace Project1
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            currentState_.Draw(gameTime, spriteBatch);
+            curr_state_.Draw(gameTime, spriteBatch);
             spriteBatch.End();
         }
 
         // State-change methods
         public void ChangeState(State state)
         {
-            nextState_ = state;
+            next_state_ = state;
         }
 
         public void ChangeStateMenu()
         {
-            nextState_ = menuState_;
+            next_state_ = menu_state_;
             Instance?.Stop();
             level_ = 0; // Reset to level 1
         }
@@ -111,14 +111,14 @@ namespace Project1
             Instance.Play();
 
             level_++;
-            nextState_ = new GameState(this, GraphicsDevice, Content, level_);
+            next_state_ = new GameState(this, GraphicsDevice, Content, level_);
         }
 
         public void ChangeStateEnd()
         {
             System.Threading.Thread.Sleep(250);
             Content.Load<SoundEffect>("Sounds/end").Play();
-            nextState_ = endState_;
+            next_state_ = end_state_;
         }
     }
 }

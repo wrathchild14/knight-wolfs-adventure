@@ -10,7 +10,7 @@ namespace Project1
     public class Camera
     {
         private Vector2 position_;
-        private Matrix viewMatrix_;
+        private Matrix view_matrix_;
 
         private int width_;
         private int height_;
@@ -23,7 +23,7 @@ namespace Project1
 
         public Matrix ViewMatrix
         {
-            get { return viewMatrix_; }
+            get { return view_matrix_; }
         }
 
         public int ScreenWidth
@@ -54,7 +54,7 @@ namespace Project1
             if (position_.Y > height_ - ScreenHight)
                 position_.Y = height_ - ScreenHight;
 
-            viewMatrix_ = Matrix.CreateTranslation(new Vector3(-position_, 0));
+            view_matrix_ = Matrix.CreateTranslation(new Vector3(-position_, 0));
         }
     }
 }
