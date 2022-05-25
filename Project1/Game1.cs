@@ -11,7 +11,7 @@ namespace Project1
     {
         public static int ScreenWidth = 1280;
         public static int ScreenHeight = 720;
-        private State currState_;
+        private State currentState_;
         private State endState_;
         private readonly GraphicsDeviceManager graphics;
         public SoundEffectInstance Instance;
@@ -48,7 +48,7 @@ namespace Project1
             // Scene initialization is put in GameState for now
             endState_ = new EndState(this, GraphicsDevice, Content);
             menuState_ = new MenuState(this, GraphicsDevice, Content);
-            currState_ = menuState_;
+            currentState_ = menuState_;
             base.Initialize();
         }
 
@@ -67,12 +67,12 @@ namespace Project1
         {
             if (nextState_ != null)
             {
-                currState_ = nextState_;
+                currentState_ = nextState_;
                 nextState_ = null;
             }
 
             // Handles all the updates
-            currState_.Update(gameTime);
+            currentState_.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -81,7 +81,7 @@ namespace Project1
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            currState_.Draw(gameTime, spriteBatch);
+            currentState_.Draw(gameTime, spriteBatch);
             spriteBatch.End();
         }
 
