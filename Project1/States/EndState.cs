@@ -34,11 +34,6 @@ namespace Project1.States
             };
         }
 
-        private void optionsButton_Click(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
         private void backButton_Click(object sender, EventArgs e)
         {
             game_.ChangeStateMenu();
