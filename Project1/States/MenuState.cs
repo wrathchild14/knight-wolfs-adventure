@@ -1,17 +1,18 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
 
 namespace Project1.States
 {
     public class MenuState : State
     {
-        private List<Component> components_;
-        private Texture2D background_;
+        private readonly Texture2D background_;
+        private readonly List<Component> components_;
 
-        public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
+        public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice,
+            content)
         {
             var buttonTexture = content.Load<Texture2D>("Button");
             var buttonFont = content.Load<SpriteFont>("defaultFont");
@@ -20,42 +21,42 @@ namespace Project1.States
             // Used for centering the buttons
             var buttonWidth = Game1.ScreenWidth / 2 - 100;
 
-            Button startGameButton = new Button(buttonTexture, buttonFont)
+            var startGameButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2(buttonWidth, 200),
-                Text = "Play",
+                Text = "Play"
             };
             startGameButton.Click += NewGameButtonClick;
 
-            Button survivalButton = new Button(buttonTexture, buttonFont)
+            var survivalButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2(buttonWidth, 250),
-                Text = "Survival",
+                Text = "Survival"
             };
             survivalButton.Click += SurvivalButtonClick;
 
             var loadGameButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2(buttonWidth, 250),
-                Text = "Load Game",
+                Text = "Load Game"
             };
             loadGameButton.Click += LoadGameButtonClick;
 
             var optionsButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2(buttonWidth, 300),
-                Text = "Options",
+                Text = "Options"
             };
             optionsButton.Click += OptionsButtonClick;
 
             var quitGameButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2(buttonWidth, 350),
-                Text = "Quit Game",
+                Text = "Quit Game"
             };
             quitGameButton.Click += QuitGameButtonClick;
 
-            components_ = new List<Component>()
+            components_ = new List<Component>
             {
                 startGameButton,
                 quitGameButton,
@@ -105,10 +106,9 @@ namespace Project1.States
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(background_, new Rectangle(0, 0, Game1.ScreenWidth, Game1.ScreenHeight), Color.White);
-         
+
             foreach (var component in components_)
                 component.Draw(gameTime, spriteBatch);
-
         }
     }
 }

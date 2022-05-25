@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace Project1
 {
@@ -9,8 +8,8 @@ namespace Project1
         private int health_ = 100;
         private Vector2 health_position_;
         private Rectangle health_rectangle_;
-        private Texture2D health_texture_;
-        private Sprite sprite_;
+        private readonly Texture2D health_texture_;
+        private readonly Sprite sprite_;
 
         public Healthbar(Texture2D texture, Sprite sprite)
         {

@@ -1,96 +1,38 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Project1.Managers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Project1.Managers;
 
 namespace Project1.Components
 {
     public class DialogBox
     {
-        private Game1 game_;
-        private SpriteFont font_;
-
-        // All text contained in this dialog box
-        public string Text { get; set; }
-
-        // Bool that determines active state of this dialog box
-        public bool Active { get; private set; }
-
-        // X,Y coordinates of this dialog box
-        public Vector2 Position { get; set; }
-
-        // Width and Height of this dialog box
-        public Vector2 Size { get; set; }
-
-        // Color used to fill dialog box background
-        public Color FillColor { get; set; }
-
-        // Color used for border around dialog box
-        public Color BorderColor { get; set; }
-
-        // Color used for text in dialog box
-        public Color DialogColor { get; set; }
-
-        // Thickness of border
-        public int BorderWidth { get; set; }
-
-        // Background fill texture (built from FillColor)
-        private readonly Texture2D fill_texture_;
+        // Margin surrounding the text inside the dialog box
+        private const float DialogBoxMargin = 24f;
 
         // Border fill texture (built from BorderColor)
         private readonly Texture2D border_texture_;
 
-        // Collection of pages contained in this dialog box
-        private List<string> pages_;
-
-        // Margin surrounding the text inside the dialog box
-        private const float DialogBoxMargin = 24f;
+        // Background fill texture (built from FillColor)
+        private readonly Texture2D fill_texture_;
 
         // Size (in pixels) of a wide alphabet letter (W is the widest letter in almost every font) 
-        private Vector2 character_size_;
-
-        // The amount of characters allowed on a given line
-        // NOTE: If you want to use a font that is not monospaced, this will need to be reevaluated
-        //private int MaxCharsPerLine => (int)Math.Floor((Size.X - DialogBoxMargin) / character_size_.X);
-        private int MaxCharsPerLine => 49; // fixed number
-
-        // Determine the maximum amount of lines allowed per page
-        // NOTE: This will change automatically with font size
-        private int MaxLines => (int)Math.Floor((Size.Y - DialogBoxMargin) / character_size_.Y) - 1;
+        private readonly Vector2 character_size_;
 
         // The index of the current page
         private int current_page_;
+        private readonly SpriteFont font_;
+        private readonly Game1 game_;
 
         // The stopwatch interval (used for blinking indicator)
         private int interval_;
 
-        // The position and size of the dialog box fill rectangle
-        private Rectangle TextRectangle => new Rectangle(Position.ToPoint(), Size.ToPoint());
-
-        // The position and size of the bordering sides on the edges of the dialog box
-        private List<Rectangle> BorderRectangles => new List<Rectangle>
-        {
-            // Top (contains top-left & top-right corners)
-            new Rectangle(TextRectangle.X - BorderWidth, TextRectangle.Y - BorderWidth,
-                TextRectangle.Width + BorderWidth*2, BorderWidth),
-
-            // Right
-            new Rectangle(TextRectangle.X + TextRectangle.Size.X, TextRectangle.Y, BorderWidth, TextRectangle.Height),
-
-            // Bottom (contains bottom-left & bottom-right corners)
-            new Rectangle(TextRectangle.X - BorderWidth, TextRectangle.Y + TextRectangle.Size.Y,
-                TextRectangle.Width + BorderWidth*2, BorderWidth),
-
-            // Left
-            new Rectangle(TextRectangle.X - BorderWidth, TextRectangle.Y, BorderWidth, TextRectangle.Height)
-        };
-
-        // The starting position of the text inside the dialog box
-        private Vector2 TextPosition => new Vector2(Position.X + DialogBoxMargin / 2, Position.Y + DialogBoxMargin / 2);
+        // Collection of pages contained in this dialog box
+        private List<string> pages_;
 
         // Stopwatch used for the blinking (next page) indicator
         private Stopwatch stopwatch_;
@@ -121,7 +63,7 @@ namespace Project1.Components
 
             Size = new Vector2(sizeX, sizeY);
 
-            var posX = game_.CenterScreen.X - (Size.X / 2f);
+            var posX = game_.CenterScreen.X - Size.X / 2f;
             var posY = game_.GraphicsDevice.Viewport.Height - Size.Y - 30;
 
             Position = new Vector2(posX, posY);
@@ -129,6 +71,63 @@ namespace Project1.Components
             font_ = font;
             character_size_ = font_.MeasureString(new StringBuilder("W", 1));
         }
+
+        // All text contained in this dialog box
+        public string Text { get; set; }
+
+        // Bool that determines active state of this dialog box
+        public bool Active { get; private set; }
+
+        // X,Y coordinates of this dialog box
+        public Vector2 Position { get; set; }
+
+        // Width and Height of this dialog box
+        public Vector2 Size { get; set; }
+
+        // Color used to fill dialog box background
+        public Color FillColor { get; set; }
+
+        // Color used for border around dialog box
+        public Color BorderColor { get; set; }
+
+        // Color used for text in dialog box
+        public Color DialogColor { get; set; }
+
+        // Thickness of border
+        public int BorderWidth { get; set; }
+
+        // The amount of characters allowed on a given line
+        // NOTE: If you want to use a font that is not monospaced, this will need to be reevaluated
+        //private int MaxCharsPerLine => (int)Math.Floor((Size.X - DialogBoxMargin) / character_size_.X);
+        private int MaxCharsPerLine => 49; // fixed number
+
+        // Determine the maximum amount of lines allowed per page
+        // NOTE: This will change automatically with font size
+        private int MaxLines => (int)Math.Floor((Size.Y - DialogBoxMargin) / character_size_.Y) - 1;
+
+        // The position and size of the dialog box fill rectangle
+        private Rectangle TextRectangle => new Rectangle(Position.ToPoint(), Size.ToPoint());
+
+        // The position and size of the bordering sides on the edges of the dialog box
+        private List<Rectangle> BorderRectangles => new List<Rectangle>
+        {
+            // Top (contains top-left & top-right corners)
+            new Rectangle(TextRectangle.X - BorderWidth, TextRectangle.Y - BorderWidth,
+                TextRectangle.Width + BorderWidth * 2, BorderWidth),
+
+            // Right
+            new Rectangle(TextRectangle.X + TextRectangle.Size.X, TextRectangle.Y, BorderWidth, TextRectangle.Height),
+
+            // Bottom (contains bottom-left & bottom-right corners)
+            new Rectangle(TextRectangle.X - BorderWidth, TextRectangle.Y + TextRectangle.Size.Y,
+                TextRectangle.Width + BorderWidth * 2, BorderWidth),
+
+            // Left
+            new Rectangle(TextRectangle.X - BorderWidth, TextRectangle.Y, BorderWidth, TextRectangle.Height)
+        };
+
+        // The starting position of the text inside the dialog box
+        private Vector2 TextPosition => new Vector2(Position.X + DialogBoxMargin / 2, Position.Y + DialogBoxMargin / 2);
 
         // Initialize a dialog box
         // - can be used to reset the current dialog box in case of "I didn't quite get that..."
@@ -165,7 +164,7 @@ namespace Project1.Components
             {
                 KeyboardManager.GetState();
                 // Button press will proceed to the next page of the dialog box
-                if (KeyboardManager.HasBeenPressed(Keys.Enter))// && Keyboard.GetState().IsKeyUp(Keys.Enter)))
+                if (KeyboardManager.HasBeenPressed(Keys.Enter)) // && Keyboard.GetState().IsKeyUp(Keys.Enter)))
                 {
                     if (current_page_ >= pages_.Count - 1)
                     {
@@ -179,10 +178,7 @@ namespace Project1.Components
                 }
 
                 // Shortcut button to skip entire dialog box
-                if (KeyboardManager.HasBeenPressed(Keys.X))
-                {
-                    Hide();
-                }
+                if (KeyboardManager.HasBeenPressed(Keys.X)) Hide();
             }
         }
 
@@ -192,10 +188,7 @@ namespace Project1.Components
             if (Active)
             {
                 // Draw each side of the border rectangle
-                foreach (var side in BorderRectangles)
-                {
-                    spriteBatch.Draw(border_texture_, side, Color.White * 0.5f);
-                }
+                foreach (var side in BorderRectangles) spriteBatch.Draw(border_texture_, side, Color.White * 0.5f);
 
                 // Draw background fill texture (in this example, it's 50% transparent white)
                 spriteBatch.Draw(fill_texture_, TextRectangle, Color.White * 0.5f);
@@ -208,8 +201,8 @@ namespace Project1.Components
                 // NOTE: You probably want to use an image here instead of a string
                 if (BlinkIndicator() || current_page_ == pages_.Count - 1)
                 {
-                    var indicatorPosition = new Vector2(TextRectangle.X + TextRectangle.Width - (character_size_.X) - 4,
-                        TextRectangle.Y + TextRectangle.Height - (character_size_.Y));
+                    var indicatorPosition = new Vector2(TextRectangle.X + TextRectangle.Width - character_size_.X - 4,
+                        TextRectangle.Y + TextRectangle.Height - character_size_.Y);
 
                     spriteBatch.DrawString(font_, ">", indicatorPosition, Color.Red);
                 }
@@ -254,24 +247,20 @@ namespace Project1.Components
 
                         resultLines++;
                     }
+
                     currentLine.Append(currentWord);
                     currentWord.Clear();
-                    if (isLastChar || isNewLine)
-                    {
-                        result.AppendLine(currentLine.ToString());
-                    }
+                    if (isLastChar || isNewLine) result.AppendLine(currentLine.ToString());
                     if (resultLines > MaxLines || isLastChar || isNewLine)
                     {
                         pages.Add(result.ToString());
                         result.Clear();
                         resultLines = 0;
-                        if (isNewLine)
-                        {
-                            currentLine.Clear();
-                        }
+                        if (isNewLine) currentLine.Clear();
                     }
                 }
             }
+
             return pages;
         }
     }

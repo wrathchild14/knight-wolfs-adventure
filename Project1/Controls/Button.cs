@@ -1,42 +1,37 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 
 namespace Project1
 {
     public class Button : Component
     {
         #region Fields
+
         private MouseState _CurrentMouse;
-        private SpriteFont _Font;
+        private readonly SpriteFont _Font;
         private bool _IsHovering;
         private MouseState _PreviousMouse;
-        private Texture2D _Texture;
+        private readonly Texture2D _Texture;
+
         #endregion
 
         #region Properties
+
         public event EventHandler Click;
         public bool Clicked { get; private set; }
         public Color PenColour { get; set; }
         public Vector2 Position { get; set; }
-        public Rectangle Rectangle
-        {
-            get
-            {
-                return new Rectangle((int)Position.X, (int)Position.Y, _Texture.Width, _Texture.Height);
-            }
-        }
+
+        public Rectangle Rectangle => new Rectangle((int)Position.X, (int)Position.Y, _Texture.Width, _Texture.Height);
 
         public string Text { get; set; }
+
         #endregion
 
         #region Methods
+
         public Button(Texture2D texture, SpriteFont font)
         {
             _Texture = texture;
@@ -57,8 +52,8 @@ namespace Project1
 
             if (!string.IsNullOrEmpty(Text))
             {
-                var x = (Rectangle.X + (Rectangle.Width / 2)) - (_Font.MeasureString(Text).X / 2);
-                var y = (Rectangle.Y + (Rectangle.Height / 2)) - (_Font.MeasureString(Text).Y / 2);
+                var x = Rectangle.X + Rectangle.Width / 2 - _Font.MeasureString(Text).X / 2;
+                var y = Rectangle.Y + Rectangle.Height / 2 - _Font.MeasureString(Text).Y / 2;
 
                 spriteBatch.DrawString(_Font, Text, new Vector2(x, y), PenColour);
             }
@@ -77,12 +72,11 @@ namespace Project1
             {
                 _IsHovering = true;
 
-                if (_CurrentMouse.LeftButton == ButtonState.Released && _PreviousMouse.LeftButton == ButtonState.Pressed)
-                {
-                    Click?.Invoke(this, new EventArgs());
-                }
+                if (_CurrentMouse.LeftButton == ButtonState.Released &&
+                    _PreviousMouse.LeftButton == ButtonState.Pressed) Click?.Invoke(this, new EventArgs());
             }
         }
+
         #endregion
     }
 }

@@ -1,19 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Project1.Sprites;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Project1
 {
     public class Camera
     {
+        private readonly int height_;
         private Vector2 position_;
-        private Matrix view_matrix_;
 
-        private int width_;
-        private int height_;
+        private readonly int width_;
 
         public Camera(int width, int height)
         {
@@ -21,27 +16,18 @@ namespace Project1
             height_ = height;
         }
 
-        public Matrix ViewMatrix
-        {
-            get { return view_matrix_; }
-        }
+        public Matrix ViewMatrix { get; private set; }
 
-        public int ScreenWidth
-        {
-            get { return Game1.ScreenWidth; }
-        }
+        public int ScreenWidth => Game1.ScreenWidth;
 
-        public int ScreenHight
-        {
-            get { return Game1.ScreenHeight; }
-        }
+        public int ScreenHeight => Game1.ScreenHeight;
 
         public Matrix Transform { get; private set; }
 
         public void Update(Knight player)
         {
-            position_.X = player.X - (ScreenWidth / 2);
-            position_.Y = player.Y - (ScreenHight / 2);
+            position_.X = player.X - ScreenWidth / 2;
+            position_.Y = player.Y - ScreenHeight / 2;
 
             // Contain camera in screen
             if (position_.X < 0)
@@ -51,10 +37,10 @@ namespace Project1
 
             if (position_.X > width_ - ScreenWidth)
                 position_.X = width_ - ScreenWidth;
-            if (position_.Y > height_ - ScreenHight)
-                position_.Y = height_ - ScreenHight;
+            if (position_.Y > height_ - ScreenHeight)
+                position_.Y = height_ - ScreenHeight;
 
-            view_matrix_ = Matrix.CreateTranslation(new Vector3(-position_, 0));
+            ViewMatrix = Matrix.CreateTranslation(new Vector3(-position_, 0));
         }
     }
 }

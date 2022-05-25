@@ -1,14 +1,11 @@
 ﻿using Microsoft.Xna.Framework.Input;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Project1.Managers
 {
-    class KeyboardManager
+    internal class KeyboardManager
     {
-        static KeyboardState currentKeyState;
-        static KeyboardState previousKeyState;
+        private static KeyboardState currentKeyState;
+        private static KeyboardState previousKeyState;
 
         public static KeyboardState GetState()
         {

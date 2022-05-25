@@ -1,37 +1,38 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
 
 namespace Project1.States
 {
     public class OptionsState : State
     {
-        private List<Component> components_;
-        private Texture2D background_;
+        private readonly Texture2D background_;
+        private readonly List<Component> components_;
 
-        public OptionsState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice, content)
+        public OptionsState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game,
+            graphicsDevice, content)
         {
             var buttonTexture = content.Load<Texture2D>("Button");
             var buttonFont = content.Load<SpriteFont>("defaultFont");
             background_ = content.Load<Texture2D>("MenuBackground");
 
-            Button backButton = new Button(buttonTexture, buttonFont)
+            var backButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2(Game1.ScreenWidth / 2 - 100, 250),
-                Text = "Back",
+                Text = "Back"
             };
             backButton.Click += backButton_Click;
 
-            Button optionsButton = new Button(buttonTexture, buttonFont)
+            var optionsButton = new Button(buttonTexture, buttonFont)
             {
                 Position = new Vector2(Game1.ScreenWidth / 2 - 100, 200),
-                Text = "Options (to do) ...",
+                Text = "Options (to do) ..."
             };
             optionsButton.Click += optionsButton_Click;
 
-            components_ = new List<Component>()
+            components_ = new List<Component>
             {
                 backButton,
                 optionsButton

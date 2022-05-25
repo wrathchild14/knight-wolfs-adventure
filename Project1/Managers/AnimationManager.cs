@@ -1,78 +1,63 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project1.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Project1.Managers
 {
     public class AnimationManager
     {
-        public bool Right = false;
-
         private Animation animation_;
+        public bool Right = false;
         private float timer_;
         private bool updated_;
-
-        public int FrameWidth
-        {
-            get
-            {
-                return animation_.FrameWidth;
-            }
-        }
-
-        public int FrameHeight
-        {
-            get
-            {
-                return animation_.FrameHeight;
-            }
-        }
-
-        public Vector2 Position { get; set; }
-
-        public float Layer { get; set; }
 
         public AnimationManager(Animation animation)
         {
             animation_ = animation;
         }
 
+        public int FrameWidth => animation_.FrameWidth;
+
+        public int FrameHeight => animation_.FrameHeight;
+
+        public Vector2 Position { get; set; }
+
+        public float Layer { get; set; }
+
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (!updated_) 
+            if (!updated_)
                 Console.WriteLine("AnimationManager.cs - Need to call Update frist");
 
             updated_ = false;
 
             if (Right)
                 spriteBatch.Draw(animation_.Texture,
-                             Position,
-                             new Rectangle(animation_.CurrentFrame * animation_.FrameWidth,
-                                           0,
-                                           animation_.FrameWidth,
-                                           animation_.FrameHeight),
-                             Color.White,
-                             0f,
-                             new Vector2(0, 0),
-                             1f,
-                             SpriteEffects.None,
-                             Layer);
+                    Position,
+                    new Rectangle(animation_.CurrentFrame * animation_.FrameWidth,
+                        0,
+                        animation_.FrameWidth,
+                        animation_.FrameHeight),
+                    Color.White,
+                    0f,
+                    new Vector2(0, 0),
+                    1f,
+                    SpriteEffects.None,
+                    Layer);
             else
                 spriteBatch.Draw(animation_.Texture,
-                            Position,
-                            new Rectangle(animation_.CurrentFrame * animation_.FrameWidth,
-                                          0,
-                                          animation_.FrameWidth,
-                                          animation_.FrameHeight),
-                            Color.White,
-                            0f,
-                            new Vector2(0, 0),
-                            1f,
-                            SpriteEffects.FlipHorizontally,
-                            Layer);
+                    Position,
+                    new Rectangle(animation_.CurrentFrame * animation_.FrameWidth,
+                        0,
+                        animation_.FrameWidth,
+                        animation_.FrameHeight),
+                    Color.White,
+                    0f,
+                    new Vector2(0, 0),
+                    1f,
+                    SpriteEffects.FlipHorizontally,
+                    Layer);
         }
 
         public void Play(Animation animation)

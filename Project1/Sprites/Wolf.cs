@@ -1,23 +1,19 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Project1.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Project1.Sprites
 {
     public class Wolf : Sprite
     {
-        public Vector2 Velocity;
+        private bool folow_player_bool_ = true;
+        private readonly Sprite player_;
+
+        private readonly float speed_ = 200f;
 
         public bool Stay = false;
-
-        private float speed_ = 200f;
-        private Sprite player_;
-        private bool folow_player_bool_ = true;
         private Vector2 target_pos_;
+        public Vector2 Velocity;
 
         public Wolf(Dictionary<string, Animation> animations, Sprite player) : base(animations)
         {
@@ -29,13 +25,13 @@ namespace Project1.Sprites
         {
             if (!Stay)
             {
-                float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
                 if (folow_player_bool_)
                 {
                     if (!Rectangle.Intersects(player_.Rectangle))
                     {
-                        Vector2 moveDir = player_.Position - Position;
+                        var moveDir = player_.Position - Position;
                         moveDir.Normalize();
                         Position += moveDir * speed_ * dt;
 
@@ -46,7 +42,7 @@ namespace Project1.Sprites
                 {
                     if (target_pos_ != Position)
                     {
-                        Vector2 moveDir = target_pos_ - Position;
+                        var moveDir = target_pos_ - Position;
                         moveDir.Normalize();
                         Position += moveDir * speed_ * dt;
 
@@ -80,7 +76,9 @@ namespace Project1.Sprites
                 animationManager.Play(animations_["Running"]);
             }
             else if (Velocity.X == 0)
+            {
                 animationManager.Play(animations_["Idle"]);
+            }
         }
     }
 }

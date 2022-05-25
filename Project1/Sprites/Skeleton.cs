@@ -1,35 +1,34 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project1.Models;
-using System;
-using System.Collections.Generic;
 
 namespace Project1.Sprites
 {
     public class Skeleton : Sprite
     {
-        private int followDistance_ = 500;
+        private readonly double attack_timer_ = 1.6;
+
+        private bool attacked_;
+
+        private readonly double attacked_timer_ = 0.2;
+        private bool attacking_;
+        private readonly Texture2D debug_rectangle_;
+        private readonly bool debug_rectangle_bool_ = false;
+        private double elapsed_attack_time_;
+        private double elapsed_attacked_time_;
+        private readonly int followDistance_ = 500;
+
+        private readonly Healthbar healthbar_;
+        private readonly Knight player_;
+        private bool seen_player_bool_;
+
+        private readonly float speed_ = 40f;
 
         private Vector2 velocity_;
-        private Knight player_;
 
-        private double attacked_timer_ = 0.2;
-        private double elapsed_attacked_time_;
-
-        private double attack_timer_ = 1.6;
-        private double elapsed_attack_time_;
-
-        private float speed_ = 40f;
-
-        private bool attacked_ = false;
-        private bool attacking_ = false;
-
-        private Healthbar healthbar_;
-        private Texture2D debug_rectangle_;
-        private bool debug_rectangle_bool_ = false;
-        private bool seen_player_bool_ = false;
-
-        public Skeleton(Texture2D debug_rect, Texture2D healthbarTexture, Knight player, int follow_distance, Dictionary<string, Animation> animations) : base(animations)
+        public Skeleton(Texture2D debug_rect, Texture2D healthbarTexture, Knight player, int follow_distance,
+            Dictionary<string, Animation> animations) : base(animations)
         {
             player_ = player;
             healthbar_ = new Healthbar(healthbarTexture, this);
@@ -41,12 +40,15 @@ namespace Project1.Sprites
         public override void Update(GameTime gameTime)
         {
             if (Dead)
+            {
                 animationManager.UpdateTillEnd(gameTime);
+            }
             else
             {
                 // Taking damage
                 elapsed_attacked_time_ += gameTime.ElapsedGameTime.TotalSeconds;
-                if (player_.Attacking && Rectangle.Intersects(player_.AttackRectangle) && elapsed_attacked_time_ >= attacked_timer_)
+                if (player_.Attacking && Rectangle.Intersects(player_.AttackRectangle) &&
+                    elapsed_attacked_time_ >= attacked_timer_)
                 {
                     elapsed_attacked_time_ = 0;
                     elapsed_attack_time_ = 0;
@@ -63,16 +65,16 @@ namespace Project1.Sprites
                 else
                     attacked_ = false;
 
-                float distance = Vector2.Distance(Position, player_.Position);
+                var distance = Vector2.Distance(Position, player_.Position);
                 if (distance < followDistance_ || seen_player_bool_)
                 {
                     seen_player_bool_ = true;
                     // Follows the player (Reused code from dog)
-                    float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    var dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
                     if (!Rectangle.Intersects(player_.Rectangle))
                     {
                         attacking_ = false;
-                        Vector2 moveDir = player_.Position - Position;
+                        var moveDir = player_.Position - Position;
                         moveDir.Normalize();
                         Position += moveDir * speed_ * dt;
 
@@ -108,7 +110,8 @@ namespace Project1.Sprites
                 spriteBatch.Draw(debug_rectangle_, Rectangle, Color.Red);
 
             if (texture_ != null)
-                spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale, SpriteEffects.None, Layer);
+                spriteBatch.Draw(texture_, Position, null, Colour * Opacity, Rotation, Origin, Scale,
+                    SpriteEffects.None, Layer);
 
             animationManager?.Draw(spriteBatch);
 
@@ -118,11 +121,15 @@ namespace Project1.Sprites
         private void SetAnimation()
         {
             if (Dead)
+            {
                 animationManager.Play(animations_["Dead"]);
+            }
             else
             {
                 if (attacked_)
+                {
                     animationManager.Play(animations_["Attacked"]);
+                }
                 else if (velocity_.X < 0)
                 {
                     animationManager.Right = false;
@@ -134,9 +141,13 @@ namespace Project1.Sprites
                     animationManager.Play(animations_["Running"]);
                 }
                 else if (attacking_)
+                {
                     animationManager.Play(animations_["Attack"]);
+                }
                 else if (velocity_.X == 0)
+                {
                     animationManager.Play(animations_["Idle"]);
+                }
             }
         }
     }

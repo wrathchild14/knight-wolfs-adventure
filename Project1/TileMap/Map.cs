@@ -1,89 +1,78 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Project1.Models;
 using Project1.Sprites;
-using Project1.TileMap;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Project1.TileMap
 {
     public class Map
     {
-        private List<CollisionTile> collisionTiles_ = new List<CollisionTile>();
+        private readonly Texture2D debug_;
+        private readonly List<Skeleton> enemies_ = new List<Skeleton>();
+        private readonly Texture2D healthbarTex_;
+        private readonly Knight player_;
+        private readonly Dictionary<string, Texture2D> skeletonTexForAnimation;
 
-        public List<CollisionTile> CollisionTiles
+        public Map(Texture2D debug, Dictionary<string, Texture2D> skeletonTexForAnimation, Texture2D healthBarTex,
+            Knight playerKnight)
         {
-            get { return collisionTiles_; }
+            this.skeletonTexForAnimation = skeletonTexForAnimation;
+            healthbarTex_ = healthBarTex;
+            player_ = playerKnight;
+            debug_ = debug;
         }
 
-        private int width_, height_;
-        private List<Skeleton> enemies_ = new List<Skeleton>();
-        private Dictionary<string, Texture2D> skeleton_tex_for_animation_;
-        private Texture2D healthbar_tex_;
-        private Knight player_;
-        private Texture2D debug_;
+        public List<CollisionTile> CollisionTiles { get; } = new List<CollisionTile>();
+
+        public int Width { get; private set; }
+
+        public int Height { get; private set; }
 
         public List<Skeleton> GetEnemies()
         {
             return enemies_;
         }
 
-        public int Width
+        public void Generate(int[,] map, int size, string path, int skeletonFollowDist)
         {
-            get { return width_; }
-        }
+            for (var x = 0; x < map.GetLength(1); x++)
+            for (var y = 0; y < map.GetLength(0); y++)
+            {
+                var number = map[y, x];
 
-        public int Height
-        {
-            get { return height_; }
-        }
-
-        public Map(Texture2D debug, Dictionary<string, Texture2D> skeletonTexForAnimation, Texture2D healthBarTex, Knight player_knight)
-        {
-            skeleton_tex_for_animation_ = skeletonTexForAnimation;
-            healthbar_tex_ = healthBarTex;
-            player_ = player_knight;
-            debug_ = debug;
-        }
-
-        public void Generate(int[,] map, int size, String path, int skeletonFollowDist)
-        {
-            for (int x = 0; x < map.GetLength(1); x++)
-                for (int y = 0; y < map.GetLength(0); y++)
+                if (number == 99)
                 {
-                    int number = map[y, x];
+                    // Basic block behind enemy
+                    CollisionTiles.Add(new CollisionTile(1, new Rectangle(x * size, y * size, size, size), path));
 
-                    if (number == 99)
-                    {
-                        // Basic block behind enemy
-                        collisionTiles_.Add(new CollisionTile(1, new Rectangle(x * size, y * size, size, size), path));
-
-                        Skeleton temp = new Skeleton(debug_, healthbar_tex_, player_, skeletonFollowDist, new Dictionary<string, Animation>()
-                            {
-                                { "Attack", new Animation(skeleton_tex_for_animation_["Attack"], 8) },
-                                { "Dead", new Animation(skeleton_tex_for_animation_["Dead"], 4)},
-                                { "Idle", new Animation(skeleton_tex_for_animation_["Idle"], 4)},
-                                { "Running", new Animation(skeleton_tex_for_animation_["Running"], 4)},
-                                { "Attacked", new Animation(skeleton_tex_for_animation_["Attacked"], 4)}
-                            })
+                    var temp = new Skeleton(debug_, healthbarTex_, player_, skeletonFollowDist,
+                        new Dictionary<string, Animation>
                         {
-                            Position = new Vector2(x * size, y * size)
-                        };
-                        enemies_.Add(temp);
-                    }
-                    else if (number > 0)
-                        collisionTiles_.Add(new CollisionTile(number, new Rectangle(x * size, y * size, size, size), path));
-
-                    width_ = (x + 1) * size;
-                    height_ = (y + 1) * size;
+                            { "Attack", new Animation(skeletonTexForAnimation["Attack"], 8) },
+                            { "Dead", new Animation(skeletonTexForAnimation["Dead"], 4) },
+                            { "Idle", new Animation(skeletonTexForAnimation["Idle"], 4) },
+                            { "Running", new Animation(skeletonTexForAnimation["Running"], 4) },
+                            { "Attacked", new Animation(skeletonTexForAnimation["Attacked"], 4) }
+                        })
+                    {
+                        Position = new Vector2(x * size, y * size)
+                    };
+                    enemies_.Add(temp);
                 }
+                else if (number > 0)
+                {
+                    CollisionTiles.Add(new CollisionTile(number, new Rectangle(x * size, y * size, size, size), path));
+                }
+
+                Width = (x + 1) * size;
+                Height = (y + 1) * size;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (CollisionTile tile in collisionTiles_)
+            foreach (var tile in CollisionTiles)
                 tile.Draw(spriteBatch);
         }
     }

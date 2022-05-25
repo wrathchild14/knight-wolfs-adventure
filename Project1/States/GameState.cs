@@ -1,21 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Project1.Levels;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Project1.States
 {
     public class GameState : State
     {
-        private Level level_;
+        private readonly Level level_;
 
-        public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int levelNumber) : base(game, graphicsDevice, content)
+        public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int levelNumber) : base(
+            game, graphicsDevice, content)
         {
-            switch(levelNumber)
+            switch (levelNumber)
             {
                 case 1:
                     level_ = new Level1(game, content);
@@ -35,17 +32,16 @@ namespace Project1.States
 
                     level_ = new Survival(game, content);
                     break;
-                default:
-                    break;
             }
         }
 
         // GameState for loading games from the json save file
-        public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, bool sceneLoad) : base(game, graphicsDevice, content)
+        public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, bool sceneLoad) : base(game,
+            graphicsDevice, content)
         {
             level_ = new Level1(game, content);
 
-            // TODO: Imporve this
+            // TODO: Improve this
             level_.Load();
         }
 
@@ -56,7 +52,6 @@ namespace Project1.States
 
         public override void PostUpdate(GameTime gameTime)
         {
-
         }
 
         public override void Update(GameTime gameTime)

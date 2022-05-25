@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,74 +8,70 @@ using Project1.Components;
 using Project1.Models;
 using Project1.Sprites;
 using Project1.TileMap;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Project1.Levels
 {
     public abstract class Level
     {
-        protected Game1 game_;
-
-        protected Knight playerKnight_;
-        protected Wolf wolfDog_;
+        protected Camera camera;
 
         protected int destroyed_ = 0;
-        protected PlayerStats playerStats;
-        protected string statsPath = "Stats.json";
-
-        protected SoundEffect punchSound;
-        protected SoundEffect endSound;
-        protected SpriteFont font;
-
-        protected Camera camera;
         protected DialogBox dialogBox;
-        protected SpriteBatch spriteBatch_;
-        protected List<Sprite> playerSpriteList_;
-        protected List<Skeleton> enemies_ = new List<Skeleton>();
-
-        protected Map map_;
         protected bool dialogBoxOpened_ = false;
-        protected bool secondDialogBoxOpened_ = false;
+        protected SoundEffect endSound;
+        protected List<Skeleton> enemies_ = new List<Skeleton>();
+        protected SpriteFont font;
+        protected Game1 game_;
+
+        protected Effect lightingEffect_;
 
         protected Texture2D lightMask_;
 
         protected RenderTarget2D lightsTarget_;
         protected RenderTarget2D mainTarget_;
 
-        protected Effect lightingEffect_;
+        protected Map map_;
+
+        protected Knight playerKnight_;
+        protected List<Sprite> playerSpriteList_;
+        protected PlayerStats playerStats;
+
+        protected SoundEffect punchSound;
+        protected bool secondDialogBoxOpened_ = false;
+        protected SpriteBatch spriteBatch_;
+        protected string statsPath = "Stats.json";
+        protected Wolf wolfDog_;
 
         public Level(Game1 game, ContentManager content)
         {
             // Can get rid of this private
             game_ = game;
 
-            Texture2D debug = content.Load<Texture2D>("DebugRectangle");
+            var debug = content.Load<Texture2D>("DebugRectangle");
             spriteBatch_ = new SpriteBatch(game_.GraphicsDevice);
             // Content loaders
-            Texture2D healthbar_texture = content.Load<Texture2D>("Sprites/Healthbar");
+            var healthbarTexture = content.Load<Texture2D>("Sprites/Healthbar");
             // Enemy (which is generated in Map.cs)
-            Dictionary<string, Texture2D> skeleton_textures_for_animations = new Dictionary<string, Texture2D>()
+            var skeletonTexturesForAnimations = new Dictionary<string, Texture2D>
             {
                 { "Attack", content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttack") },
-                { "Dead", content.Load<Texture2D>("Sprites/Skeleton/SkeletonDeath")},
-                { "Idle", content.Load<Texture2D>("Sprites/Skeleton/SkeletonIdle")},
-                { "Running", content.Load<Texture2D>("Sprites/Skeleton/SkeletonRunning")},
-                { "Attacked", content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttacked")}
+                { "Dead", content.Load<Texture2D>("Sprites/Skeleton/SkeletonDeath") },
+                { "Idle", content.Load<Texture2D>("Sprites/Skeleton/SkeletonIdle") },
+                { "Running", content.Load<Texture2D>("Sprites/Skeleton/SkeletonRunning") },
+                { "Attacked", content.Load<Texture2D>("Sprites/Skeleton/SkeletonAttacked") }
             };
             // Player
-            playerKnight_ = new Knight(debug, healthbar_texture, new Dictionary<string, Animation>()
-            {
-                { "Dead", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightDeath"), 4) },
-                { "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 15) },
-                { "Pray", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightPray"), 12) },
-                { "Idle", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightIdle"), 8) },
-                { "Running", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunning"), 8) }
-            })
-            { Position = new Vector2(50, 600) };
+            playerKnight_ = new Knight(debug, healthbarTexture, new Dictionary<string, Animation>
+                {
+                    { "Dead", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightDeath"), 4) },
+                    { "Attack", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightAttack"), 15) },
+                    { "Pray", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightPray"), 12) },
+                    { "Idle", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightIdle"), 8) },
+                    { "Running", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunning"), 8) }
+                })
+                { Position = new Vector2(50, 600) };
             // Dog
-            wolfDog_ = new Wolf(new Dictionary<string, Animation>()
+            wolfDog_ = new Wolf(new Dictionary<string, Animation>
             {
                 { "Idle", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfIdle"), 4) },
                 { "Running", new Animation(content.Load<Texture2D>("Sprites/Wolf/WolfRunning"), 4) }
@@ -82,15 +79,15 @@ namespace Project1.Levels
             {
                 Position = new Vector2(playerKnight_.Position.X - 40, playerKnight_.Position.Y + 15)
             };
-            playerSpriteList_ = new List<Sprite>()
+            playerSpriteList_ = new List<Sprite>
             {
                 wolfDog_, playerKnight_
             };
 
-            playerStats = new PlayerStats()
+            playerStats = new PlayerStats
             {
                 Name = "Jovan",
-                Score = 0,
+                Score = 0
             };
 
             punchSound = content.Load<SoundEffect>("Sounds/punch");
@@ -99,7 +96,7 @@ namespace Project1.Levels
 
             Tile.Content = content;
 
-            map_ = new Map(debug, skeleton_textures_for_animations, healthbar_texture, playerKnight_);
+            map_ = new Map(debug, skeletonTexturesForAnimations, healthbarTexture, playerKnight_);
 
             // Load the lighting effect
             //light_mask = content.Load<Texture2D>("lightmask-1");
@@ -109,7 +106,6 @@ namespace Project1.Levels
                 game_.GraphicsDevice, Game1.ScreenWidth, Game1.ScreenHeight);
             mainTarget_ = new RenderTarget2D(
                 game_.GraphicsDevice, Game1.ScreenWidth, Game1.ScreenHeight);
-
         }
 
         public virtual void Update(GameTime gameTime)
@@ -135,7 +131,8 @@ namespace Project1.Levels
             // Create a Light Mask to pass to the pixel shader
             game_.GraphicsDevice.SetRenderTarget(lightsTarget_);
             game_.GraphicsDevice.Clear(Color.Black);
-            spriteBatch_.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null, camera.ViewMatrix);
+            spriteBatch_.Begin(SpriteSortMode.Immediate, BlendState.Additive, null, null, null, null,
+                camera.ViewMatrix);
             var offset = lightMask_.Width / 2;
             spriteBatch_.Draw(lightMask_, new Vector2(playerKnight_.X - offset, playerKnight_.Y - offset), Color.White);
             spriteBatch_.End();
@@ -143,7 +140,8 @@ namespace Project1.Levels
             // Draw the main scene to the Render Target
             game_.GraphicsDevice.SetRenderTarget(mainTarget_);
             game_.GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch_.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null, camera.ViewMatrix);
+            spriteBatch_.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, null, null, null, null,
+                camera.ViewMatrix);
 
             map_.Draw(spriteBatch_);
 
@@ -170,6 +168,5 @@ namespace Project1.Levels
         }
 
         public abstract void Load();
-
     }
 }

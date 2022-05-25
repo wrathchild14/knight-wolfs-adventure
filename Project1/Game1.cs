@@ -1,32 +1,28 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using System.Threading;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Project1.States;
-using System;
-using System.Collections.Generic;
 
 namespace Project1
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager graphics;
-        private SpriteBatch spriteBatch;
-
         public static int ScreenWidth = 1280;
         public static int ScreenHeight = 720;
-        public Vector2 CenterScreen
-            => new Vector2(graphics.GraphicsDevice.Viewport.Width / 2f, graphics.GraphicsDevice.Viewport.Height / 2f);
+        private State currState_;
+        private State endState_;
+        private readonly GraphicsDeviceManager graphics;
+        public SoundEffectInstance Instance;
 
-        private MenuState menu_state_;
-        private State curr_state_;
-        private State next_state_;
-        private State end_state_;
+        private int level_;
 
-        private int level_ = 0;
+        private MenuState menuState_;
+        private State nextState_;
 
         public List<SoundEffect> Songs;
-        public SoundEffectInstance Instance;
+        private SpriteBatch spriteBatch;
 
         public Game1()
         {
@@ -34,6 +30,9 @@ namespace Project1
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
+
+        public Vector2 CenterScreen
+            => new Vector2(graphics.GraphicsDevice.Viewport.Width / 2f, graphics.GraphicsDevice.Viewport.Height / 2f);
 
         protected override void Initialize()
         {
@@ -43,20 +42,20 @@ namespace Project1
 
             IsMouseVisible = true;
 
-            // Main spritebatch that we will pass around later
+            // Main sprite batch that we will pass around later
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Scene initialization is put in GameState for now
-            end_state_ = new EndState(this, GraphicsDevice, Content);
-            menu_state_ = new MenuState(this, GraphicsDevice, Content);
-            curr_state_ = menu_state_;
+            endState_ = new EndState(this, GraphicsDevice, Content);
+            menuState_ = new MenuState(this, GraphicsDevice, Content);
+            currState_ = menuState_;
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             // TODO: Effect start starts at "Play game", not before
-            Songs = new List<SoundEffect>()
+            Songs = new List<SoundEffect>
             {
                 Content.Load<SoundEffect>("Sounds/Forest"),
                 Content.Load<SoundEffect>("Sounds/Dungeon"),
@@ -66,13 +65,14 @@ namespace Project1
 
         protected override void Update(GameTime gameTime)
         {
-            if (next_state_ != null)
+            if (nextState_ != null)
             {
-                curr_state_ = next_state_;
-                next_state_ = null;
+                currState_ = nextState_;
+                nextState_ = null;
             }
+
             // Handles all the updates
-            curr_state_.Update(gameTime);
+            currState_.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -81,28 +81,28 @@ namespace Project1
             GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin();
-            curr_state_.Draw(gameTime, spriteBatch);
+            currState_.Draw(gameTime, spriteBatch);
             spriteBatch.End();
         }
 
         // State-change methods
         public void ChangeState(State state)
         {
-            next_state_ = state;
+            nextState_ = state;
         }
 
         public void ChangeStateMenu()
         {
-            next_state_ = menu_state_;
+            nextState_ = menuState_;
             Instance?.Stop();
             level_ = 0; // Reset to level 1
         }
 
         public void NextLevelState()
         {
-            System.Threading.Thread.Sleep(250);
+            Thread.Sleep(250);
             Content.Load<SoundEffect>("Sounds/start").Play();
-            
+
             // Handle music
             Instance?.Stop();
             Instance = Songs[level_].CreateInstance();
@@ -111,14 +111,14 @@ namespace Project1
             Instance.Play();
 
             level_++;
-            next_state_ = new GameState(this, GraphicsDevice, Content, level_);
+            nextState_ = new GameState(this, GraphicsDevice, Content, level_);
         }
 
         public void ChangeStateEnd()
         {
-            System.Threading.Thread.Sleep(250);
+            Thread.Sleep(250);
             Content.Load<SoundEffect>("Sounds/end").Play();
-            next_state_ = end_state_;
+            nextState_ = endState_;
         }
     }
 }
