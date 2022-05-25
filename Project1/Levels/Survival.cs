@@ -16,7 +16,7 @@ namespace Project1.Levels
         private int maxEnemies_ = 20;
         private readonly Random random = new Random();
 
-        public Survival(Game1 game, ContentManager content) : base(game, content)
+        public Survival(KWAGame game, ContentManager content) : base(game, content)
         {
             lightMask_ = content.Load<Texture2D>("lightmask-1");
 

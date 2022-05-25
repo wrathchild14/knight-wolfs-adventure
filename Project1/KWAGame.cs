@@ -7,7 +7,7 @@ using Project1.States;
 
 namespace Project1
 {
-    public class Game1 : Game
+    public class KWAGame : Game
     {
         public static int ScreenWidth = 1280;
         public static int ScreenHeight = 720;
@@ -24,7 +24,7 @@ namespace Project1
         public List<SoundEffect> Songs;
         private SpriteBatch spriteBatch;
 
-        public Game1()
+        public KWAGame()
         {
             // Setting up graphics and content
             graphics = new GraphicsDeviceManager(this);

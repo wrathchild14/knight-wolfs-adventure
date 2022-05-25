@@ -7,10 +7,10 @@ namespace Project1.States
     public abstract class State
     {
         protected ContentManager content;
-        protected Game1 game_;
+        protected KWAGame game_;
         protected GraphicsDevice graphicsDevice_;
 
-        public State(Game1 game, GraphicsDevice graphicsDevice, ContentManager content)
+        public State(KWAGame game, GraphicsDevice graphicsDevice, ContentManager content)
         {
             game_ = game;
             graphicsDevice_ = graphicsDevice;

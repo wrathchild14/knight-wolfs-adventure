@@ -13,10 +13,10 @@ namespace Project1.States
 
         private readonly int screen_center_;
 
-        public EndState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice,
+        public EndState(KWAGame game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice,
             content)
         {
-            screen_center_ = Game1.ScreenWidth / 2 - 100;
+            screen_center_ = KWAGame.ScreenWidth / 2 - 100;
 
             var buttonTexture = content.Load<Texture2D>("Button");
             font = content.Load<SpriteFont>("defaultFont");
@@ -43,7 +43,7 @@ namespace Project1.States
         {
             foreach (var component in components_)
                 component.Draw(gameTime, spriteBatch);
-            spriteBatch.DrawString(font, "You died!", new Vector2(Game1.ScreenWidth / 2 - 100, 200), Color.Red);
+            spriteBatch.DrawString(font, "You died!", new Vector2(KWAGame.ScreenWidth / 2 - 100, 200), Color.Red);
         }
 
         public override void PostUpdate(GameTime gameTime)

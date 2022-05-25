@@ -9,7 +9,7 @@ namespace Project1.States
     {
         private readonly Level level_;
 
-        public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, int levelNumber) : base(
+        public GameState(KWAGame game, GraphicsDevice graphicsDevice, ContentManager content, int levelNumber) : base(
             game, graphicsDevice, content)
         {
             switch (levelNumber)
@@ -36,7 +36,7 @@ namespace Project1.States
         }
 
         // GameState for loading games from the json save file
-        public GameState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content, bool sceneLoad) : base(game,
+        public GameState(KWAGame game, GraphicsDevice graphicsDevice, ContentManager content, bool sceneLoad) : base(game,
             graphicsDevice, content)
         {
             level_ = new Level1(game, content);

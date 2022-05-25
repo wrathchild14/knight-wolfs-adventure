@@ -21,7 +21,7 @@ namespace Project1.Levels
         protected SoundEffect endSound;
         protected List<Skeleton> enemies_ = new List<Skeleton>();
         protected SpriteFont font;
-        protected Game1 game_;
+        protected KWAGame game_;
 
         protected Effect lightingEffect_;
 
@@ -42,7 +42,7 @@ namespace Project1.Levels
         protected string statsPath = "Stats.json";
         protected Wolf wolfDog_;
 
-        public Level(Game1 game, ContentManager content)
+        public Level(KWAGame game, ContentManager content)
         {
             // Can get rid of this private
             game_ = game;
@@ -103,9 +103,9 @@ namespace Project1.Levels
             lightingEffect_ = content.Load<Effect>("Effect1");
 
             lightsTarget_ = new RenderTarget2D(
-                game_.GraphicsDevice, Game1.ScreenWidth, Game1.ScreenHeight);
+                game_.GraphicsDevice, KWAGame.ScreenWidth, KWAGame.ScreenHeight);
             mainTarget_ = new RenderTarget2D(
-                game_.GraphicsDevice, Game1.ScreenWidth, Game1.ScreenHeight);
+                game_.GraphicsDevice, KWAGame.ScreenWidth, KWAGame.ScreenHeight);
         }
 
         public virtual void Update(GameTime gameTime)

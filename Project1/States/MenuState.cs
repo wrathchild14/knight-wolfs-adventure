@@ -11,7 +11,7 @@ namespace Project1.States
         private readonly Texture2D background_;
         private readonly List<Component> components_;
 
-        public MenuState(Game1 game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice,
+        public MenuState(KWAGame game, GraphicsDevice graphicsDevice, ContentManager content) : base(game, graphicsDevice,
             content)
         {
             var buttonTexture = content.Load<Texture2D>("Button");
@@ -19,7 +19,7 @@ namespace Project1.States
             background_ = content.Load<Texture2D>("MenuBackground");
 
             // Used for centering the buttons
-            var buttonWidth = Game1.ScreenWidth / 2 - 100;
+            var buttonWidth = KWAGame.ScreenWidth / 2 - 100;
 
             var startGameButton = new Button(buttonTexture, buttonFont)
             {
@@ -85,7 +85,7 @@ namespace Project1.States
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(background_, new Rectangle(0, 0, Game1.ScreenWidth, Game1.ScreenHeight), Color.White);
+            spriteBatch.Draw(background_, new Rectangle(0, 0, KWAGame.ScreenWidth, KWAGame.ScreenHeight), Color.White);
 
             foreach (var component in components_)
                 component.Draw(gameTime, spriteBatch);

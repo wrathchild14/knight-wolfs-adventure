@@ -12,7 +12,7 @@ namespace Project1
     {
         private bool dog_found_;
 
-        public Level2(Game1 game, ContentManager content) : base(game, content)
+        public Level2(KWAGame game, ContentManager content) : base(game, content)
         {
             lightMask_ = content.Load<Texture2D>("lightmask-2");
 

@@ -18,9 +18,9 @@ namespace Project1
 
         public Matrix ViewMatrix { get; private set; }
 
-        public int ScreenWidth => Game1.ScreenWidth;
+        public int ScreenWidth => KWAGame.ScreenWidth;
 
-        public int ScreenHeight => Game1.ScreenHeight;
+        public int ScreenHeight => KWAGame.ScreenHeight;
 
         public Matrix Transform { get; private set; }
 

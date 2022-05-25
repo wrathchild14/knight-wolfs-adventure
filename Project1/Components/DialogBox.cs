@@ -26,7 +26,7 @@ namespace Project1.Components
         // The index of the current page
         private int current_page_;
         private readonly SpriteFont font_;
-        private readonly Game1 game_;
+        private readonly KWAGame game_;
 
         // The stopwatch interval (used for blinking indicator)
         private int interval_;
@@ -38,7 +38,7 @@ namespace Project1.Components
         private Stopwatch stopwatch_;
 
         // Default constructor
-        public DialogBox(Game1 game, SpriteFont font)
+        public DialogBox(KWAGame game, SpriteFont font)
         {
             game_ = game;
 

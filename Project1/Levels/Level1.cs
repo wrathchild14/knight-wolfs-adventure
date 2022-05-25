@@ -10,7 +10,7 @@ namespace Project1
 {
     public class Level1 : Level
     {
-        public Level1(Game1 game, ContentManager content) : base(game, content)
+        public Level1(KWAGame game, ContentManager content) : base(game, content)
         {
             lightMask_ = content.Load<Texture2D>("lightmask-1");
 
