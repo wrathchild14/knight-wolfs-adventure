@@ -1,4 +1,4 @@
-# Side scrolling adventure game in the making
+# Side scrolling adventure game
 
 Made using Monogame framework.
 
