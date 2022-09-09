@@ -7,19 +7,19 @@ namespace Project1.Managers
 {
     public class AnimationManager
     {
-        private Animation animation_;
+        private Animation _animation;
         public bool Right = false;
-        private float timer_;
-        private bool updated_;
+        private float _timer;
+        private bool _updated;
 
         public AnimationManager(Animation animation)
         {
-            animation_ = animation;
+            _animation = animation;
         }
 
-        public int FrameWidth => animation_.FrameWidth;
+        public int FrameWidth => _animation.FrameWidth;
 
-        public int FrameHeight => animation_.FrameHeight;
+        public int FrameHeight => _animation.FrameHeight;
 
         public Vector2 Position { get; set; }
 
@@ -27,78 +27,64 @@ namespace Project1.Managers
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if (!updated_)
-                Console.WriteLine("AnimationManager.cs - Need to call Update frist");
+            if (!_updated)
+                Console.WriteLine("AnimationManager.cs - Need to call Update first");
 
-            updated_ = false;
+            _updated = false;
 
-            if (Right)
-                spriteBatch.Draw(animation_.Texture,
-                    Position,
-                    new Rectangle(animation_.CurrentFrame * animation_.FrameWidth,
-                        0,
-                        animation_.FrameWidth,
-                        animation_.FrameHeight),
-                    Color.White,
-                    0f,
-                    new Vector2(0, 0),
-                    1f,
-                    SpriteEffects.None,
-                    Layer);
-            else
-                spriteBatch.Draw(animation_.Texture,
-                    Position,
-                    new Rectangle(animation_.CurrentFrame * animation_.FrameWidth,
-                        0,
-                        animation_.FrameWidth,
-                        animation_.FrameHeight),
-                    Color.White,
-                    0f,
-                    new Vector2(0, 0),
-                    1f,
-                    SpriteEffects.FlipHorizontally,
-                    Layer);
+            spriteBatch.Draw(_animation.Texture,
+                Position,
+                new Rectangle(_animation.CurrentFrame * _animation.FrameWidth,
+                    0,
+                    _animation.FrameWidth,
+                    _animation.FrameHeight),
+                Color.White,
+                0f,
+                new Vector2(0, 0),
+                1f,
+                Right ? SpriteEffects.None : SpriteEffects.FlipHorizontally,
+                Layer);
         }
 
         public void Play(Animation animation)
         {
-            if (animation_ == animation)
+            if (_animation == animation)
                 return;
 
-            animation_ = animation;
-            animation_.CurrentFrame = 0;
-            timer_ = 0;
+            _animation = animation;
+            _animation.CurrentFrame = 0;
+            _timer = 0;
         }
 
         public void Stop()
         {
-            timer_ = 0f;
-            animation_.CurrentFrame = 0;
+            _timer = 0f;
+            _animation.CurrentFrame = 0;
         }
 
-        public void UpdateTillEnd(GameTime game_time)
+        public void UpdateTillEnd(GameTime gameTime)
         {
-            updated_ = true;
+            _updated = true;
 
-            timer_ += (float)game_time.ElapsedGameTime.TotalSeconds;
-            if (timer_ > animation_.FrameSpeed)
+            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (_timer > _animation.FrameSpeed)
             {
-                timer_ = 0f;
-                animation_.CurrentFrame++;
+                _timer = 0f;
+                _animation.CurrentFrame++;
             }
         }
 
-        public void Update(GameTime game_time)
+        public void Update(GameTime gameTime)
         {
-            updated_ = true;
+            _updated = true;
 
-            timer_ += (float)game_time.ElapsedGameTime.TotalSeconds;
-            if (timer_ > animation_.FrameSpeed)
+            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (_timer > _animation.FrameSpeed)
             {
-                timer_ = 0f;
-                animation_.CurrentFrame++;
-                if (animation_.CurrentFrame >= animation_.FrameCount)
-                    animation_.CurrentFrame = 0;
+                _timer = 0f;
+                _animation.CurrentFrame++;
+                if (_animation.CurrentFrame >= _animation.FrameCount)
+                    _animation.CurrentFrame = 0;
             }
         }
     }
