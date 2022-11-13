@@ -18,16 +18,14 @@ namespace Project1
 
         public Matrix ViewMatrix { get; private set; }
 
-        public int ScreenWidth => KWAGame.ScreenWidth;
+        private static int ScreenWidth => KWAGame.ScreenWidth;
 
-        public int ScreenHeight => KWAGame.ScreenHeight;
-
-        public Matrix Transform { get; private set; }
+        private static int ScreenHeight => KWAGame.ScreenHeight;
 
         public void Update(Knight player)
         {
-            position_.X = player.X - ScreenWidth / 2;
-            position_.Y = player.Y - ScreenHeight / 2;
+            position_.X = player.X - ScreenWidth / 2.0f;
+            position_.Y = player.Y - ScreenHeight / 2.0f;
 
             // Contain camera in screen
             if (position_.X < 0)
