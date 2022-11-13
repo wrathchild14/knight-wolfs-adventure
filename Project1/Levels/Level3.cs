@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -77,9 +78,8 @@ namespace Project1
                 //if (tile.Id == 15 && player_knight_.IsTouching(tile.Rectangle) && enemies_dead == enemies_.Count)
                 //game_.NextLevelState();
 
-                foreach (var enemy in enemies_)
-                    if (tile.Id >= 14) // Temp
-                        enemy.Collision(tile, map_.Width, map_.Height);
+                foreach (var enemy in enemies_.Where(enemy => tile.Id >= 14))
+                    enemy.Collision(tile, map_.Width, map_.Height);
             }
         }
 

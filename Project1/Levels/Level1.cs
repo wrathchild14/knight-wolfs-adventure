@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -90,9 +91,8 @@ namespace Project1
                 if (tile.Id == 15 && playerKnight_.IsTouching(tile.Rectangle) && enemiesDead == enemies_.Count)
                     game_.NextLevelState();
 
-                foreach (var enemy in enemies_)
-                    if (tile.Id >= 10 && tile.Id != 15) // Temp
-                        enemy.Collision(tile, map_.Width, map_.Height);
+                foreach (var enemy in enemies_.Where(enemy => tile.Id >= 10 && tile.Id != 15))
+                    enemy.Collision(tile, map_.Width, map_.Height);
             }
         }
 

@@ -126,7 +126,8 @@ namespace Project1.Levels
             camera.Update(playerKnight_);
         }
 
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        // handles the drawing of all levels that inherit from the class
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Create a Light Mask to pass to the pixel shader
             game_.GraphicsDevice.SetRenderTarget(lightsTarget_);

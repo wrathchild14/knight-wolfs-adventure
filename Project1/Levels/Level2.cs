@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Linq;
 using System.Text.Json;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -96,9 +97,8 @@ namespace Project1
                     }
                 }
 
-                foreach (var enemy in enemies_)
-                    if (tile.Id > 6 && tile.Id != 15) // Temp
-                        enemy.Collision(tile, map_.Width, map_.Height);
+                foreach (var enemy in enemies_.Where(enemy => tile.Id > 6 && tile.Id != 15))
+                    enemy.Collision(tile, map_.Width, map_.Height);
             }
 
             if (playerKnight_.Rectangle.Intersects(wolfDog_.Rectangle))
