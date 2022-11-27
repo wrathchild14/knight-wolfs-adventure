@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 
-namespace Project1.Models
+namespace Components
 {
     public class Animation
     {

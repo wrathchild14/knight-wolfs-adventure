@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Project1.Models;
 
-namespace Project1.Sprites
+namespace Sprites
 {
     public class Skeleton : Sprite
     {

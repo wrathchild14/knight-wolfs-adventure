@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Components;
+using KWA;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Project1.Components;
-using Project1.Levels;
 
-namespace Project1
+namespace Levels
 {
     public class Level1 : Level
     {
@@ -51,7 +51,7 @@ namespace Project1
         {
             base.Update(gameTime);
 
-            var  enemiesDead = 0;
+            var enemiesDead = 0;
             foreach (var enemy in enemies_)
             {
                 if (enemy.Dead)

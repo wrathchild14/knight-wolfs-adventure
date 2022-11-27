@@ -1,9 +1,9 @@
 ﻿using System;
+using Components;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Project1.Models;
 
-namespace Project1.Managers
+namespace Managers
 {
     public class AnimationManager
     {

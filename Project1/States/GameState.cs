@@ -1,9 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using KWA;
+using Levels;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Project1.Levels;
 
-namespace Project1.States
+namespace States
 {
     public class GameState : State
     {

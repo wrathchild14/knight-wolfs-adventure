@@ -1,15 +1,15 @@
 ﻿using System.Collections.Generic;
+using Components;
+using KWA;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Project1.Components;
-using Project1.Models;
-using Project1.Sprites;
-using Project1.TileMap;
+using Sprites;
+using TileMap;
 
-namespace Project1.Levels
+namespace Levels
 {
     public abstract class Level
     {
@@ -69,7 +69,7 @@ namespace Project1.Levels
                     { "Idle", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightIdle"), 8) },
                     { "Running", new Animation(content.Load<Texture2D>("Sprites/Knight/KnightRunning"), 8) }
                 })
-                { Position = new Vector2(50, 600) };
+            { Position = new Vector2(50, 600) };
             // Dog
             wolfDog_ = new Wolf(new Dictionary<string, Animation>
             {

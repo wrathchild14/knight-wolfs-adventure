@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
+using Components;
+using KWA;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using Project1.Components;
-using Project1.Models;
-using Project1.Sprites;
+using Sprites;
 
-namespace Project1.Levels
+namespace Levels
 {
     internal class Survival : Level
     {

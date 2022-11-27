@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Project1.TileMap
+namespace TileMap
 {
     public class Tile
     {

@@ -1,27 +1,27 @@
 ﻿using Microsoft.Xna.Framework.Input;
 
-namespace Project1.Managers
+namespace Managers
 {
     internal class KeyboardManager
     {
-        private static KeyboardState currentKeyState;
-        private static KeyboardState previousKeyState;
+        private static KeyboardState currentKeyState_;
+        private static KeyboardState previousKeyState_;
 
         public static KeyboardState GetState()
         {
-            previousKeyState = currentKeyState;
-            currentKeyState = Keyboard.GetState();
-            return currentKeyState;
+            previousKeyState_ = currentKeyState_;
+            currentKeyState_ = Keyboard.GetState();
+            return currentKeyState_;
         }
 
         public static bool IsPressed(Keys key)
         {
-            return currentKeyState.IsKeyDown(key);
+            return currentKeyState_.IsKeyDown(key);
         }
 
         public static bool HasBeenPressed(Keys key)
         {
-            return currentKeyState.IsKeyDown(key) && !previousKeyState.IsKeyDown(key);
+            return currentKeyState_.IsKeyDown(key) && !previousKeyState_.IsKeyDown(key);
         }
     }
 }

@@ -5,9 +5,10 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Project1.Managers;
+using Managers;
+using KWA;
 
-namespace Project1.Components
+namespace Components
 {
     public class DialogBox
     {

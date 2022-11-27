@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Components;
+using Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Project1.Managers;
-using Project1.Models;
-using Project1.TileMap;
+using TileMap;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Project1
+namespace Components
 {
     public abstract class Sprite : Component
     {

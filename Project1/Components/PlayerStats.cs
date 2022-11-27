@@ -1,4 +1,4 @@
-﻿namespace Project1
+﻿namespace Components
 {
     public class PlayerStats
     {

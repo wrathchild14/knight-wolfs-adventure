@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Components;
 using Microsoft.Xna.Framework;
-using Project1.Models;
+using System.Collections.Generic;
 
-namespace Project1.Sprites
+namespace Sprites
 {
     public class Wolf : Sprite
     {

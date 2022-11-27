@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace Project1.TileMap
+namespace TileMap
 {
     internal static class RectangleHelper
     {

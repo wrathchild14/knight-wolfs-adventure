@@ -1,8 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using KWA;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Project1.States
+namespace States
 {
     public abstract class State
     {

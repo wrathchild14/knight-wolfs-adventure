@@ -1,7 +1,8 @@
-﻿using Microsoft.Xna.Framework;
-using Project1.Sprites;
+﻿using KWA;
+using Microsoft.Xna.Framework;
+using Sprites;
 
-namespace Project1
+namespace Components
 {
     public class Camera
     {

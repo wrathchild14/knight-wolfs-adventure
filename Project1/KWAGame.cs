@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
-using Project1.States;
+using States;
+using System.Collections.Generic;
+using System.Threading;
 
-namespace Project1
+namespace KWA
 {
     public class KWAGame : Game
     {
