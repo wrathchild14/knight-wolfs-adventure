@@ -38,8 +38,7 @@ void Renderer::sprite(const std::string& family, const std::string& animation, i
          static_cast<float>(t.height) * scale},
         {0, 0}, 0, tint);
 }
-void Renderer::world(const World& w, float clock, bool showMap) {
-    ClearBackground(ink);
+Camera2D Renderer::camera(const World& w) {
     const auto& p = w.player();
     const auto& l = w.level();
     const float worldWidth = static_cast<float>(l.width) * Level::tileSize,
@@ -48,8 +47,15 @@ void Renderer::world(const World& w, float clock, bool showMap) {
         worldWidth > width ? std::clamp(p.position.x, 640.0f, worldWidth - 640) : worldWidth / 2;
     const float cy = worldHeight > height ? std::clamp(p.position.y, 360.0f, worldHeight - 360)
                                           : worldHeight / 2;
-    Camera2D camera{{640, 360}, {cx, cy}, 0, 1};
-    BeginMode2D(camera);
+    return {{640, 360}, {cx, cy}, 0, 1};
+}
+void Renderer::world(const World& w, float clock) {
+    ClearBackground(ink);
+    const auto& p = w.player();
+    const auto& l = w.level();
+    const auto view = camera(w);
+    const float cx = view.target.x, cy = view.target.y;
+    BeginMode2D(view);
     for (int y = 0; y < l.height; ++y)
         for (int x = 0; x < l.width; ++x) {
             const float px = static_cast<float>(x) * 64, py = static_cast<float>(y) * 64;
@@ -177,11 +183,8 @@ void Renderer::world(const World& w, float clock, bool showMap) {
             }
     }
     EndMode2D();
-    if (l.theme == "Dungeon")
-        DrawRectangle(0, 0, width, height, Fade({10, 18, 35, 255}, 0.15f));
-    for (const auto& ev : w.events())
-        if (ev.kind == EventKind::Hurt && ev.remaining > 0.5f)
-            DrawRectangle(0, 0, width, height, Fade(RED, (ev.remaining - 0.5f) * 0.7f));
+}
+void Renderer::overlay(const World& w, bool showMap) {
     hud(w);
     map(w, showMap);
 }

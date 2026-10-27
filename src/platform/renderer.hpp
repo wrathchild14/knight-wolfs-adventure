@@ -6,7 +6,9 @@ class Renderer {
   public:
     static constexpr int width = 1280, height = 720;
     explicit Renderer(Assets& assets) : assets_(assets) {}
-    void world(const World& world, float clock, bool showMap);
+    static Camera2D camera(const World& world);
+    void world(const World& world, float clock);
+    void overlay(const World& world, bool showMap);
     void menu(float clock, int best);
     void panel(const char* eyebrow, const char* title, const char* body, const char* footer);
     void text(const char* value, int x, int y, int size, Color color) const;

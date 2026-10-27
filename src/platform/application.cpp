@@ -1,4 +1,5 @@
 #include "application.hpp"
+#include "post_effects.hpp"
 #include <algorithm>
 #include <cstdlib>
 #include <fstream>
@@ -151,6 +152,11 @@ int run(const Options& options) {
     Assets assets(root);
     Renderer renderer(assets);
     Canvas canvas;
+    PostEffects effects(root);
+    if (options.noEffects)
+        effects.disable();
+    if (options.smokeFrames > 0 && !options.noEffects && !effects.ready())
+        throw std::runtime_error("Shader compilation failed during graphics smoke test");
     Audio audio;
     World world;
     enum class Screen { Menu, Playing, Paused, Guide, Upgrade, End };
@@ -191,14 +197,22 @@ int run(const Options& options) {
         assets.texture("Sprites/Wolf/WolfRunning.png");
         assets.texture("Sprites/Wolf/WolfIdle.png");
     }
-    if (options.smokePlay)
+    if (options.smokePlay) {
         start(Mode::Campaign);
+        if (options.smokeStage > 0) {
+            world.start(Level::load(root / "levels" / levelFile(options.smokeStage)),
+                        Mode::Campaign, options.smokeStage);
+            music(options.smokeStage);
+        }
+    }
     while (!WindowShouldClose()) {
-        const float dt = std::min(GetFrameTime(), 0.1f);
+        const float dt = options.smokeFrames > 0 ? 1.0f / 60.0f : std::min(GetFrameTime(), 0.1f);
         clock += dt;
         audio.update();
         if (IsKeyPressed(KEY_F11))
             ToggleFullscreen();
+        if (IsKeyPressed(KEY_F2))
+            effects.cycle();
         if (IsKeyPressed(KEY_M))
             audio.toggle();
         if (!IsWindowFocused() && screen == Screen::Playing && options.smokeFrames == 0)
@@ -300,11 +314,22 @@ int run(const Options& options) {
                 }
             }
         }
+        const bool atTitle =
+            screen == Screen::Menu || (screen == Screen::Guide && guideReturn == Screen::Menu);
+        if (!atTitle) {
+            effects.begin(world, Renderer::camera(world), clock);
+            renderer.world(world, clock);
+            effects.end();
+        }
         BeginTextureMode(canvas.target);
-        if (screen == Screen::Menu || (screen == Screen::Guide && guideReturn == Screen::Menu))
+        if (atTitle)
             renderer.menu(clock, best);
-        else
-            renderer.world(world, clock, IsKeyDown(KEY_TAB));
+        else {
+            ClearBackground(BLACK);
+            effects.composite();
+            renderer.overlay(world, IsKeyDown(KEY_TAB));
+            renderer.text(effects.label(), 36, Renderer::height - 24, 12, {150, 169, 175, 255});
+        }
         if (screen == Screen::Guide)
             renderer.panel(
                 "FIELD GUIDE", "Fight with intent",
@@ -319,7 +344,7 @@ int run(const Options& options) {
             renderer.panel("TAKE A BREATH", "Journey paused",
                            "ENTER / ESC    Resume\nF1                     Field guide\nBACKSPACE   "
                            "    Return to title\n\nLeaving a run discards its current progress.",
-                           "M  Toggle sound     F11  Fullscreen");
+                           "F2  Cycle effects     M  Sound     F11  Fullscreen");
         if (screen == Screen::Upgrade)
             renderer.panel(
                 "CHAPTER COMPLETE", "Rest at the waystone",

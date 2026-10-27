@@ -36,7 +36,7 @@ if(KWA_BUILD_GAME)
     FetchContent_MakeAvailable(raylib)
     set_property(DIRECTORY "${raylib_SOURCE_DIR}" PROPERTY EXCLUDE_FROM_ALL TRUE)
   endif()
-  add_executable(knight_wolf src/main.cpp src/platform/assets.cpp src/platform/renderer.cpp src/platform/application.cpp)
+  add_executable(knight_wolf src/main.cpp src/platform/assets.cpp src/platform/renderer.cpp src/platform/post_effects.cpp src/platform/application.cpp)
   target_link_libraries(knight_wolf PRIVATE kwa_core raylib)
   target_include_directories(knight_wolf PRIVATE src/platform)
   if(MINGW)
@@ -50,6 +50,11 @@ if(KWA_BUILD_GAME)
   add_custom_command(TARGET knight_wolf POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Project1/Content" "$<TARGET_FILE_DIR:knight_wolf>/assets/content"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/levels" "$<TARGET_FILE_DIR:knight_wolf>/assets/levels")
+  # Copy loose shader sources on every build, even when only GLSL has changed.
+  add_custom_target(kwa_shaders ALL
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/shaders" "$<TARGET_FILE_DIR:knight_wolf>/assets/shaders")
+  add_dependencies(knight_wolf kwa_shaders)
+  install(DIRECTORY assets/shaders DESTINATION assets)
   install(TARGETS knight_wolf RUNTIME DESTINATION .)
   install(DIRECTORY Project1/Content/ DESTINATION assets/content PATTERN "*.mgcb" EXCLUDE PATTERN "*.spritefont" EXCLUDE PATTERN "*.fx" EXCLUDE)
   install(DIRECTORY assets/levels DESTINATION assets)
