@@ -363,3 +363,10 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+# C++ build and package outputs
+/build*/
+/package*/
+/dist/
+/CMakeUserPresets.json
+*.core
+/core
