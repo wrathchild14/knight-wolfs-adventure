@@ -1,0 +1,48 @@
+name: Build and test
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Linux dependencies
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libasound2-dev libx11-dev libxrandr-dev libxi-dev libgl1-mesa-dev libxcursor-dev libxinerama-dev xvfb
+      - name: Configure
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      - name: Build
+        run: cmake --build build --config Release --parallel 4
+      - name: Gameplay tests
+        run: ctest --test-dir build -C Release --output-on-failure
+      - name: Linux graphics smoke test
+        if: runner.os == 'Linux'
+        run: xvfb-run -a ./build/knight_wolf --smoke-test 60 --smoke-play
+      - name: Package
+        run: cmake --install build --config Release --prefix package
+      - name: Archive Linux game
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p release
+          tar -czf release/knight-wolf-linux-x64.tar.gz -C package .
+      - name: Archive Windows game
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force release | Out-Null
+          Compress-Archive -Path package/* -DestinationPath release/knight-wolf-windows-x64.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: knight-wolf-${{ runner.os }}
+          path: release/*
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
